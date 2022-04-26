@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:login_bloc/config/theme.dart';
-import 'package:login_bloc/screens/misspassword/misspassword.dart';
-import 'package:login_bloc/screens/otpscreen/otprigesterscreen.dart';
-import 'package:login_bloc/screens/otpscreen/otpscreen.dart';
-import 'package:login_bloc/screens/registerscreen/registerscreen.dart';
-import 'package:login_bloc/widgets/button_widget.dart';
-import 'package:login_bloc/config/fonts.dart';
+import 'package:home_services/config/theme.dart';
+import 'package:home_services/screens/misspassword/misspassword.dart';
+import 'package:home_services/screens/otpscreen/otpscreen.dart';
+import 'package:home_services/screens/registerscreen/registerscreen.dart';
+import 'package:home_services/widgets/button_widget.dart';
+import 'package:home_services/config/fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -50,9 +49,8 @@ class _LoginScreenState extends  State<LoginScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Scaffold(
+      return Scaffold(
+        backgroundColor: ColorApp.purpleColor,
         body: Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 16, right: 16),
@@ -231,7 +229,6 @@ class _LoginScreenState extends  State<LoginScreen>{
             ),
       )
           )
-      ),
-    );
+      );
   }
 }
