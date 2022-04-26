@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:login_bloc/config/theme.dart';
-import 'package:login_bloc/screens/otpscreen/otpscreen.dart';
-import 'package:login_bloc/widgets/button_widget.dart';
-import 'package:login_bloc/widgets/input_widget.dart';
-import 'package:login_bloc/config/fonts.dart';
+import 'package:home_services/config/theme.dart';
+import 'package:home_services/screens/otpscreen/otpscreen.dart';
+import 'package:home_services/widgets/button_widget.dart';
+import 'package:home_services/widgets/input_widget.dart';
+import 'package:home_services/config/fonts.dart';
 
 class MissPassWord extends StatefulWidget {
   const MissPassWord({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:login_bloc/screens/otpscreen/otpscreen.dart';
+import 'package:home_services/screens/otpscreen/otpscreen.dart';
 
 import '../loginscreen/loginscreen.dart';
 

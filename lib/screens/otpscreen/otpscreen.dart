@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:login_bloc/screens/loginscreen/loginscreen.dart';
-import 'package:login_bloc/widgets/button_widget.dart';
+import 'package:home_services/screens/loginscreen/loginscreen.dart';
+import 'package:home_services/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:login_bloc/config/theme.dart';
-import 'package:login_bloc/config/fonts.dart';
+import 'package:home_services/config/theme.dart';
+import 'package:home_services/config/fonts.dart';
 
 import '../setpassscreen/setpassscreen.dart';
 
