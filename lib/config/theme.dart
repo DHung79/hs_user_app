@@ -14,4 +14,5 @@ class ColorApp {
   static const textColor5 = Color.fromRGBO(198, 135, 171, 1);
   static const textColor6 = Color.fromRGBO(157, 179, 192, 1);
   static const errorColor = Color.fromRGBO(255, 78, 78, 1);
+  static const bgNav = Color.fromRGBO(244, 231, 238, 1);
 }
