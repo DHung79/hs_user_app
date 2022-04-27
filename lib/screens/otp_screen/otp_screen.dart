@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:home_services/screens/loginscreen/loginscreen.dart';
+import 'package:home_services/screens/login_screen/login_screen.dart';
 import 'package:home_services/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:home_services/config/theme.dart';

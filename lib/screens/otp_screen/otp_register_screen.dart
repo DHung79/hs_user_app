@@ -8,15 +8,15 @@ import 'package:home_services/config/theme.dart';
 import 'package:home_services/config/fonts.dart';
 
 
-class OtpRigesterScreen extends StatefulWidget {
-  const OtpRigesterScreen({Key? key}) : super(key: key);
+class OtpRegisterScreen extends StatefulWidget {
+  const OtpRegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpRigesterScreenState createState() =>
-      _OtpRigesterScreenState();
+  _OtpRegisterScreenState createState() =>
+      _OtpRegisterScreenState();
 }
 
-class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
+class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
 
   TextEditingController textEditingController = TextEditingController();
   // ..text = "123456";
