@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:home_services/config/theme.dart';
-import 'package:home_services/screens/otpscreen/otpscreen.dart';
+import 'package:home_services/screens/otp_screen/otp_screen.dart';
 import 'package:home_services/widgets/button_widget.dart';
 import 'package:home_services/widgets/input_widget.dart';
 import 'package:home_services/config/fonts.dart';
@@ -31,7 +31,6 @@ class _MissPassWordState extends State<MissPassWord> {
 
   @override
   Widget build(BuildContext context) {
-    print(1);
     return Scaffold(
       body: Container(
         alignment: Alignment.centerRight,

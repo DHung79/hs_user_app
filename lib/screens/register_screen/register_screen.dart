@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:home_services/config/theme.dart';
-import 'package:home_services/screens/otpscreen/otprigesterscreen.dart';
+import 'package:home_services/screens/otp_screen/otp_register_screen.dart';
 import 'package:home_services/widgets/button_widget.dart';
 import 'package:home_services/widgets/input_widget.dart';
 import 'package:home_services/config/fonts.dart';
@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   ahihi() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const OtpRigesterScreen()));
+          MaterialPageRoute(builder: (context) => const OtpRegisterScreen()));
     } else {
       _autovalidateMode = AutovalidateMode.onUserInteraction;
     }
