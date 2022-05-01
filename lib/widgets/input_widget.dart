@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/config/fonts.dart';
 
 class InputLogin extends StatefulWidget {
   final String hintText;

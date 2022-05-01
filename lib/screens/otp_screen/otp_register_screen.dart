@@ -2,22 +2,28 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:home_services/widgets/button_widget.dart';
+import 'package:hs_user_app/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/config/fonts.dart';
 
-
-class OtpRigesterScreen extends StatefulWidget {
-  const OtpRigesterScreen({Key? key}) : super(key: key);
+class OtpRegisterScreen extends StatefulWidget {
+  const OtpRegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpRigesterScreenState createState() =>
-      _OtpRigesterScreenState();
+<<<<<<< Updated upstream:lib/screens/otp_screen/otp_register_screen.dart
+  _OtpRegisterScreenState createState() =>
+      _OtpRegisterScreenState();
+}
+
+class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
+
+=======
+  _OtpRigesterScreenState createState() => _OtpRigesterScreenState();
 }
 
 class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
-
+>>>>>>> Stashed changes:lib/screens/otpscreen/otprigesterscreen.dart
   TextEditingController textEditingController = TextEditingController();
   // ..text = "123456";
 
@@ -57,8 +63,7 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
               width: 145,
               decoration: BoxDecoration(
                   color: ColorApp.secondaryColor1,
-                  borderRadius: BorderRadius.circular(22)
-              ),
+                  borderRadius: BorderRadius.circular(22)),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -70,8 +75,13 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
                     ),
                     backgroundColor: Colors.white,
                   ),
-                  const SizedBox(width: 16,),
-                  Text('Nhập email', style: FontStyle().typeEmailFont,)
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                    'Nhập email',
+                    style: FontStyle().typeEmailFont,
+                  )
                 ],
               ),
             ),
@@ -79,10 +89,20 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Nhập mã OTP', style: FontStyle().missPassFont,),
-                  const SizedBox(height: 24,),
-                  Text('Mã OTP không đúng', style: FontStyle().errorFont,),
-                  const SizedBox(height: 5,),
+                  Text(
+                    'Nhập mã OTP',
+                    style: FontStyle().missPassFont,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Text(
+                    'Mã OTP không đúng',
+                    style: FontStyle().errorFont,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Form(
                     key: formKey,
                     child: Padding(
@@ -124,10 +144,19 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
                           onChanged: (v) {},
                         )),
                   ),
-                  ButtonLogin(text: 'TIẾP TỤC', login: true, style: FontStyle().loginFont, otp: true, forward: '/setpass',),
+                  ButtonLogin(
+                    text: 'TIẾP TỤC',
+                    login: true,
+                    style: FontStyle().loginFont,
+                    otp: true,
+                    forward: '/setpass',
+                  ),
                   // const SizedBox(height: 24,),
                   TextButton(
-                    child: Text('Gửi lại', style: FontStyle().sendOTPFont,),
+                    child: Text(
+                      'Gửi lại',
+                      style: FontStyle().sendOTPFont,
+                    ),
                     onPressed: () {},
                   )
                 ],
