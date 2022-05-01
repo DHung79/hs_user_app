@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../config/theme.dart';
 import '/config/theme.dart';
 
 class NotificationScreen extends StatefulWidget {
