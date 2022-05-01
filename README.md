@@ -1,4 +1,4 @@
-# home_services
+# hs_user_app
 
 A new Flutter project.
 

@@ -2,21 +2,35 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:home_services/widgets/button_widget.dart';
+import 'package:hs_user_app/screens/login_screen/login_screen.dart';
+import 'package:hs_user_app/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/config/fonts.dart';
+
+import '../setpassscreen/setpassscreen.dart';
 
 
-class OtpRigesterScreen extends StatefulWidget {
-  const OtpRigesterScreen({Key? key}) : super(key: key);
+
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpRigesterScreenState createState() =>
-      _OtpRigesterScreenState();
+  _OtpScreenState createState() =>
+      _OtpScreenState();
 }
 
-class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
+class _OtpScreenState extends State<OtpScreen> {
+
+  ahihi() {
+    if (formKey.currentState!.validate() && errorMessage.isEmpty) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } else {
+      // _autovalidateMode = AutovalidateMode.onUserInteraction;
+    }
+  }
+  String errorMessage = '';
 
   TextEditingController textEditingController = TextEditingController();
   // ..text = "123456";
@@ -27,7 +41,6 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
   String currentText = "";
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     errorController = StreamController<ErrorAnimationType>();
@@ -124,7 +137,7 @@ class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
                           onChanged: (v) {},
                         )),
                   ),
-                  ButtonLogin(text: 'TIẾP TỤC', login: true, style: FontStyle().loginFont, otp: true, forward: '/setpass',),
+                  ButtonLogin(text: 'TIẾP TỤC', login: true, style: FontStyle().loginFont, otp: true, forward: '/createpass', onPressed: ahihi,),
                   // const SizedBox(height: 24,),
                   TextButton(
                     child: Text('Gửi lại', style: FontStyle().sendOTPFont,),

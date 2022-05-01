@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/widgets/button_widget.dart';
-import 'package:home_services/widgets/input_widget.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/widgets/button_widget.dart';
+import 'package:hs_user_app/widgets/input_widget.dart';
+import 'package:hs_user_app/config/fonts.dart';
 
 class SetPassScreen extends StatelessWidget {
   const SetPassScreen({Key? key, required this.rigesterAccount}) : super(key: key);
