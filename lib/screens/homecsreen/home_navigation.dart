@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/fonts.dart';
 import 'package:hs_user_app/config/theme.dart';
 import 'package:hs_user_app/screens/homecsreen/bookingpage/bookingpage.dart';
 import 'package:hs_user_app/screens/homecsreen/homepage/homepage.dart';
