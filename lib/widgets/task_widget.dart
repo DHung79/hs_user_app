@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/config/fonts.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/models/task_model.dart';
+import '/config/fonts.dart';
+import '/config/theme.dart';
+import '/models/task_model.dart';
 
 class TaskWidget extends StatelessWidget {
   TaskModel? taskModel;
