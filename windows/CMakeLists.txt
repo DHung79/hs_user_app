@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(home_services LANGUAGES CXX)
+project(hs_user_app LANGUAGES CXX)
 
-set(BINARY_NAME "home_services")
+set(BINARY_NAME "hs_user_app")
 
 cmake_policy(SET CMP0063 NEW)
 

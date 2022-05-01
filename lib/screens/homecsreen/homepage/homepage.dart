@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hs_user_app/config/fonts.dart';
 
 import '../../../config/theme.dart';
 
@@ -82,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   'Dịch vụ',
-                  //  style: FontStyle().serviceFont,
+                  // style: FontStyle().serviceFont,
                 ),
                 const SizedBox(
                   height: 16,
@@ -106,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                         child: Image.asset('assets/images/logodemo.png'),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 16),
+                        margin: const EdgeInsets.only(left: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

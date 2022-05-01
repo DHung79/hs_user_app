@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
-import '../loginscreen/loginscreen.dart';
+import '../login_screen/login_screen.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
