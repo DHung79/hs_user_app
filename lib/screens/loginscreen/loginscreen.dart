@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/misspassword/misspassword.dart';
-import 'package:hs_user_app/screens/otpscreen/otpscreen.dart';
-import 'package:hs_user_app/screens/registerscreen/registerscreen.dart';
+import '../miss_password/miss_password.dart';
+import '../otp_screen/otp_screen.dart';
+import '../register_screen/register_screen.dart';
 import 'package:hs_user_app/widgets/button_widget.dart';
 import 'package:hs_user_app/config/fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
