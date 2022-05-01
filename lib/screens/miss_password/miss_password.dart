@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hs_user_app/config/theme.dart';
 import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
 import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/widgets/input_widget.dart';
 import 'package:hs_user_app/config/fonts.dart';
 
 class MissPassWord extends StatefulWidget {
@@ -78,10 +77,11 @@ class _MissPassWordState extends State<MissPassWord> {
                       ),
                       child: TextFormField(
                         onFieldSubmitted: (value) {
-                          if(value == textMiss) {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => OtpScreen()
-                            ));
+                          if (value == textMiss) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtpScreen()));
                           }
                         },
                         validator: (value) {

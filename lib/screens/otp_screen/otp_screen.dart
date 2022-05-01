@@ -8,28 +8,23 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:hs_user_app/config/theme.dart';
 import 'package:hs_user_app/config/fonts.dart';
 
-import '../setpassscreen/setpassscreen.dart';
-
-
-
 class OtpScreen extends StatefulWidget {
   const OtpScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpScreenState createState() =>
-      _OtpScreenState();
+  _OtpScreenState createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-
   ahihi() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     } else {
       // _autovalidateMode = AutovalidateMode.onUserInteraction;
     }
   }
+
   String errorMessage = '';
 
   TextEditingController textEditingController = TextEditingController();
@@ -70,8 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
               width: 145,
               decoration: BoxDecoration(
                   color: ColorApp.secondaryColor1,
-                  borderRadius: BorderRadius.circular(22)
-              ),
+                  borderRadius: BorderRadius.circular(22)),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -83,8 +77,13 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     backgroundColor: Colors.white,
                   ),
-                  const SizedBox(width: 16,),
-                  Text('Nhập email', style: FontStyle().typeEmailFont,)
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                    'Nhập email',
+                    style: FontStyle().typeEmailFont,
+                  )
                 ],
               ),
             ),
@@ -92,10 +91,20 @@ class _OtpScreenState extends State<OtpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Nhập mã OTP', style: FontStyle().missPassFont,),
-                  const SizedBox(height: 24,),
-                  Text('Mã OTP không đúng', style: FontStyle().errorFont,),
-                  const SizedBox(height: 5,),
+                  Text(
+                    'Nhập mã OTP',
+                    style: FontStyle().missPassFont,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Text(
+                    'Mã OTP không đúng',
+                    style: FontStyle().errorFont,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Form(
                     key: formKey,
                     child: Padding(
@@ -137,10 +146,20 @@ class _OtpScreenState extends State<OtpScreen> {
                           onChanged: (v) {},
                         )),
                   ),
-                  ButtonLogin(text: 'TIẾP TỤC', login: true, style: FontStyle().loginFont, otp: true, forward: '/createpass', onPressed: ahihi,),
+                  ButtonLogin(
+                    text: 'TIẾP TỤC',
+                    login: true,
+                    style: FontStyle().loginFont,
+                    otp: true,
+                    forward: '/createpass',
+                    onPressed: ahihi,
+                  ),
                   // const SizedBox(height: 24,),
                   TextButton(
-                    child: Text('Gửi lại', style: FontStyle().sendOTPFont,),
+                    child: Text(
+                      'Gửi lại',
+                      style: FontStyle().sendOTPFont,
+                    ),
                     onPressed: () {},
                   )
                 ],

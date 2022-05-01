@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/screens/loginscreen/loginscreen.dart';
+import 'package:hs_user_app/screens/homecsreen/home_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,10 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -7,17 +7,14 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:hs_user_app/config/theme.dart';
 import 'package:hs_user_app/config/fonts.dart';
 
-
 class OtpRegisterScreen extends StatefulWidget {
   const OtpRegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _OtpRegisterScreenState createState() =>
-      _OtpRegisterScreenState();
+  _OtpRegisterScreenState createState() => _OtpRegisterScreenState();
 }
 
 class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
-
   TextEditingController textEditingController = TextEditingController();
   // ..text = "123456";
 
@@ -57,8 +54,7 @@ class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
               width: 145,
               decoration: BoxDecoration(
                   color: ColorApp.secondaryColor1,
-                  borderRadius: BorderRadius.circular(22)
-              ),
+                  borderRadius: BorderRadius.circular(22)),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -70,8 +66,13 @@ class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
                     ),
                     backgroundColor: Colors.white,
                   ),
-                  const SizedBox(width: 16,),
-                  Text('Nhập email', style: FontStyle().typeEmailFont,)
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                    'Nhập email',
+                    style: FontStyle().typeEmailFont,
+                  )
                 ],
               ),
             ),
@@ -79,10 +80,20 @@ class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Nhập mã OTP', style: FontStyle().missPassFont,),
-                  const SizedBox(height: 24,),
-                  Text('Mã OTP không đúng', style: FontStyle().errorFont,),
-                  const SizedBox(height: 5,),
+                  Text(
+                    'Nhập mã OTP',
+                    style: FontStyle().missPassFont,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Text(
+                    'Mã OTP không đúng',
+                    style: FontStyle().errorFont,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Form(
                     key: formKey,
                     child: Padding(
@@ -124,10 +135,19 @@ class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
                           onChanged: (v) {},
                         )),
                   ),
-                  ButtonLogin(text: 'TIẾP TỤC', login: true, style: FontStyle().loginFont, otp: true, forward: '/setpass',),
+                  ButtonLogin(
+                    text: 'TIẾP TỤC',
+                    login: true,
+                    style: FontStyle().loginFont,
+                    otp: true,
+                    forward: '/setpass',
+                  ),
                   // const SizedBox(height: 24,),
                   TextButton(
-                    child: Text('Gửi lại', style: FontStyle().sendOTPFont,),
+                    child: Text(
+                      'Gửi lại',
+                      style: FontStyle().sendOTPFont,
+                    ),
                     onPressed: () {},
                   )
                 ],
