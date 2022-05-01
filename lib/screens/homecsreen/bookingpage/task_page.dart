@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hs_user_app/config/fonts.dart';
-import 'package:hs_user_app/widgets/task_widget.dart';
+import '/config/fonts.dart';
+import '../../../widgets/task_widget.dart';
 
 class TaskPage extends StatelessWidget {
   const TaskPage({Key? key}) : super(key: key);
@@ -45,7 +45,6 @@ class TaskPage extends StatelessWidget {
                   Padding(
                     child: Text(
                       'Việc từng đăng',
-                      style: FontStyle().Tasked,
                     ),
                     padding: const EdgeInsets.only(top: 24),
                   ),

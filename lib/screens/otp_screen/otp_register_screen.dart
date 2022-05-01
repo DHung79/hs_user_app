@@ -11,19 +11,10 @@ class OtpRegisterScreen extends StatefulWidget {
   const OtpRegisterScreen({Key? key}) : super(key: key);
 
   @override
-<<<<<<< Updated upstream:lib/screens/otp_screen/otp_register_screen.dart
-  _OtpRegisterScreenState createState() =>
-      _OtpRegisterScreenState();
+  _OtpRegisterScreenState createState() => _OtpRegisterScreenState();
 }
 
 class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
-
-=======
-  _OtpRigesterScreenState createState() => _OtpRigesterScreenState();
-}
-
-class _OtpRigesterScreenState extends State<OtpRigesterScreen> {
->>>>>>> Stashed changes:lib/screens/otpscreen/otprigesterscreen.dart
   TextEditingController textEditingController = TextEditingController();
   // ..text = "123456";
 

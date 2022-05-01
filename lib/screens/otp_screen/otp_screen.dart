@@ -2,18 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-<<<<<<< Updated upstream
-<<<<<<<< Updated upstream:lib/screens/otp_screen/otp_screen.dart
-import 'package:home_services/screens/login_screen/login_screen.dart';
-import 'package:home_services/widgets/button_widget.dart';
-========
-import 'package:hs_user_app/screens/loginscreen/loginscreen.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
->>>>>>>> Stashed changes:lib/screens/otpscreen/otpscreen.dart
-=======
 import 'package:hs_user_app/screens/login_screen/login_screen.dart';
 import 'package:hs_user_app/widgets/button_widget.dart';
->>>>>>> Stashed changes
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:hs_user_app/config/theme.dart';
 import 'package:hs_user_app/config/fonts.dart';

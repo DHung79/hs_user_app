@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hs_user_app/config/theme.dart';
+import 'theme.dart';
 
 class FontStyle {
   TextStyle mainFont = GoogleFonts.lexend(

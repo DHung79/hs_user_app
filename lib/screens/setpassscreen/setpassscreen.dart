@@ -66,14 +66,14 @@ class SetPassScreen extends StatelessWidget {
                         const SizedBox(
                           height: 24,
                         ),
-                        const InputLogin(
+                        InputLogin(
                           hintText: 'NHẬP MẬT KHẨU MỚI',
                           showPassWord: false,
                         ),
                         const SizedBox(
                           height: 24,
                         ),
-                        const InputLogin(
+                        InputLogin(
                           hintText: 'NHẬP LẠI',
                           showPassWord: false,
                         ),
