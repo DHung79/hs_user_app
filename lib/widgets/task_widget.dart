@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:home_services/config/fonts.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/models/task_model.dart';
+import 'package:hs_user_app/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/models/task_model.dart';
 
 class TaskWidget extends StatelessWidget {
   TaskModel? taskModel;
@@ -48,7 +48,7 @@ class TaskWidget extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         // height: 638,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(builder: (context, size) {
@@ -158,7 +158,7 @@ class TaskWidget extends StatelessWidget {
           ),
           Text(
             text,
-            style: FontStyle().textTitleFont,
+            // style: FontStyle().textTitleFont,
           ),
         ],
       ),
@@ -174,11 +174,11 @@ class TaskWidget extends StatelessWidget {
           children: [
             Text(
               task.title,
-              style: FontStyle().titleFont,
+              // style: FontStyle().titleFont,
             ),
             Text(
               task.postTime,
-              style: FontStyle().postTimeFont,
+              // style: FontStyle().postTimeFont,
             ),
           ],
         ),
@@ -190,7 +190,7 @@ class TaskWidget extends StatelessWidget {
               const EdgeInsets.only(top: 4, bottom: 4, right: 12, left: 12),
           child: Text(
             task.taskStatus,
-            style: FontStyle().statusFont,
+            // style: FontStyle().statusFont,
           ),
         ),
       ],
@@ -214,7 +214,7 @@ class TaskWidget extends StatelessWidget {
           ),
           Text(
             task.userName,
-            style: FontStyle().textTitleFont,
+            // style: FontStyle().textTitleFont,
           )
         ],
       ),

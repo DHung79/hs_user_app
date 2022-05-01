@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:home_services/screens/otp_screen/otp_screen.dart';
+import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
 import '../login_screen/login_screen.dart';
 
 class MainPage extends StatelessWidget {
@@ -12,7 +12,7 @@ class MainPage extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if(snapshot.hasData) {
+          if (snapshot.hasData) {
             return const OtpScreen();
           } else {
             return const LoginScreen();
