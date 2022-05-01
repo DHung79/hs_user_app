@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/homecsreen/bookingpage/bookingpage.dart';
-import 'package:hs_user_app/screens/homecsreen/homepage/homepage.dart';
+import '/config/theme.dart';
+import '/screens/homecsreen/bookingpage/bookingpage.dart';
+import '/screens/homecsreen/homepage/homepage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
