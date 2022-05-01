@@ -50,7 +50,7 @@ class TaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         // height: 638,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height / 1.81,
         child: FutureBuilder(builder: (context, size) {
           return Container(
             // margin: EdgeInsets.only(top: 142),
