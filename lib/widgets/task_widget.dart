@@ -55,7 +55,7 @@ class TaskWidget extends StatelessWidget {
           return Container(
             // margin: EdgeInsets.only(top: 142),
             // margin: const EdgeInsets.all(30),
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            // padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             color: Colors.white,
             // height: size.maxHeight,
             child: ListView.builder(
