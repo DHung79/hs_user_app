@@ -17,6 +17,8 @@ class FontStyle {
   );
   TextStyle googleFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w700, color: ColorApp.orangeColor, fontSize: 16);
+  TextStyle expService = GoogleFonts.lexend(
+      fontWeight: FontWeight.w400, color: ColorApp.orangeColor, fontSize: 16);
   TextStyle noAccountFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w700,
       color: ColorApp.secondaryColor3,
@@ -35,4 +37,8 @@ class FontStyle {
       fontWeight: FontWeight.w400, color: ColorApp.textColor2, fontSize: 16);
   TextStyle otpTextFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w400, fontSize: 24, color: ColorApp.textColor2);
+  TextStyle titleFontService = GoogleFonts.lexend(
+      fontWeight: FontWeight.w500, color: ColorApp.purpleColor, fontSize: 16);
+  TextStyle serviceFont = GoogleFonts.lexend(
+      fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 16);
 }
