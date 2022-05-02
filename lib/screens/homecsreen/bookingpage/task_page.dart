@@ -45,6 +45,7 @@ class TaskPage extends StatelessWidget {
                   Padding(
                     child: Text(
                       'Việc từng đăng',
+                      style: FontStyle().serviceFont,
                     ),
                     padding: const EdgeInsets.only(top: 24),
                   ),

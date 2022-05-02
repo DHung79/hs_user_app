@@ -12,7 +12,7 @@ class TaskWidget extends StatelessWidget {
       'Don dep theo ngay',
       '17 gio',
       'thu 7 ngay 5',
-      'Thang cong',
+      'Thành công',
       'Thu 6',
       '232',
       'Nguyen Phi',
@@ -22,7 +22,7 @@ class TaskWidget extends StatelessWidget {
       'Don dep theo thang',
       '23 gio',
       'thu 2 ngay 7',
-      'That Bai',
+      'Thành công',
       'Thu 3',
       '432',
       'Dao Hung',
@@ -64,7 +64,7 @@ class TaskWidget extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       // height: 400,
                       // constraints: BoxConstraints(minHeight: 100),
                       // width: 100,
@@ -158,7 +158,7 @@ class TaskWidget extends StatelessWidget {
           ),
           Text(
             text,
-            // style: FontStyle().textTitleFont,
+            style: FontStyle().textInPostTask,
           ),
         ],
       ),
@@ -174,11 +174,11 @@ class TaskWidget extends StatelessWidget {
           children: [
             Text(
               task.title,
-              // style: FontStyle().titleFont,
+              style: FontStyle().textInPostTask,
             ),
             Text(
               task.postTime,
-              // style: FontStyle().postTimeFont,
+              style: FontStyle().textInPostTask,
             ),
           ],
         ),
@@ -190,7 +190,7 @@ class TaskWidget extends StatelessWidget {
               const EdgeInsets.only(top: 4, bottom: 4, right: 12, left: 12),
           child: Text(
             task.taskStatus,
-            // style: FontStyle().statusFont,
+            style: FontStyle().statusFont,
           ),
         ),
       ],
@@ -214,7 +214,7 @@ class TaskWidget extends StatelessWidget {
           ),
           Text(
             task.userName,
-            // style: FontStyle().textTitleFont,
+            style: FontStyle().textInPostTask,
           )
         ],
       ),
