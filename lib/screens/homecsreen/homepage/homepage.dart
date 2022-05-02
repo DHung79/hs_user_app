@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import '../../../config/fonts.dart';
 import '../../../config/theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Text(
                                 'Chọn địa chỉ',
-                                // style: FontStyle().pickMapFont,
+                                style: FontStyle().titleFontService,
                               ),
                             ],
                           ),
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   'Dịch vụ',
-                  // style: FontStyle().serviceFont,
+                  style: FontStyle().serviceFont,
                 ),
                 const SizedBox(
                   height: 16,
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Text(
                               'Dọn dẹp theo giờ',
-                              // style: FontStyle().titleFontService,
+                              style: FontStyle().titleFontService,
                             ),
                             const SizedBox(
                               height: 10,
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center,
                         child: Text(
                           'Trải nghiệm dịch vụ',
-                          // style: FontStyle().expService,
+                          style: FontStyle().expService,
                         ),
                       ),
                       const SizedBox(
