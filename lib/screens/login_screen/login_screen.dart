@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/miss_password/miss_password.dart';
-import 'package:hs_user_app/screens/register_screen/register_screen.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/screens/miss_password/miss_password.dart';
+import '/screens/register_screen/register_screen.dart';
+import '/widgets/button_widget.dart';
+import '/config/fonts.dart';
 import '../main_page/main_page.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/screens/otp_screen/otp_screen.dart';
+import '/widgets/button_widget.dart';
+import '/config/fonts.dart';
 
 class MissPassWord extends StatefulWidget {
   const MissPassWord({Key? key}) : super(key: key);

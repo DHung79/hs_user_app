@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
+import '/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/config/fonts.dart';
 
 class OtpRegisterScreen extends StatefulWidget {
   const OtpRegisterScreen({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/widgets/input_widget.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/widgets/button_widget.dart';
+import '/widgets/input_widget.dart';
+import '/config/fonts.dart';
 
 class SetPassScreen extends StatelessWidget {
   const SetPassScreen({Key? key, required this.rigesterAccount})
@@ -66,14 +66,14 @@ class SetPassScreen extends StatelessWidget {
                         const SizedBox(
                           height: 24,
                         ),
-                        InputLogin(
+                        const InputLogin(
                           hintText: 'NHẬP MẬT KHẨU MỚI',
                           showPassWord: false,
                         ),
                         const SizedBox(
                           height: 24,
                         ),
-                        InputLogin(
+                        const InputLogin(
                           hintText: 'NHẬP LẠI',
                           showPassWord: false,
                         ),
@@ -143,14 +143,14 @@ class SetPassScreen extends StatelessWidget {
                         const SizedBox(
                           height: 24,
                         ),
-                        InputLogin(
+                        const InputLogin(
                           hintText: 'NHẬP MẬT KHẨU MỚI',
                           showPassWord: false,
                         ),
                         const SizedBox(
                           height: 24,
                         ),
-                        InputLogin(
+                        const InputLogin(
                           hintText: 'NHẬP LẠI',
                           showPassWord: false,
                         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/screens/homecsreen/home_navigation.dart';
+import '/screens/homecsreen/home_navigation.dart';
 
 void main() {
   runApp(const MyApp());
