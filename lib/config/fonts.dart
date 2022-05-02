@@ -39,6 +39,10 @@ class FontStyle {
       fontWeight: FontWeight.w400, fontSize: 24, color: ColorApp.textColor2);
   TextStyle titleFontService = GoogleFonts.lexend(
       fontWeight: FontWeight.w500, color: ColorApp.purpleColor, fontSize: 16);
+  TextStyle topNavActive = GoogleFonts.lexend(
+      fontWeight: FontWeight.w400, color: ColorApp.purpleColor, fontSize: 14);
+  TextStyle topNavNotActive = GoogleFonts.lexend(
+      fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 14);
   TextStyle serviceFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 16);
 }
