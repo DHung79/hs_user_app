@@ -19,6 +19,8 @@ class FontStyle {
       fontWeight: FontWeight.w700, color: ColorApp.orangeColor, fontSize: 16);
   TextStyle expService = GoogleFonts.lexend(
       fontWeight: FontWeight.w400, color: ColorApp.orangeColor, fontSize: 16);
+  TextStyle postNow = GoogleFonts.lexend(
+      fontWeight: FontWeight.w500, color: ColorApp.orangeColor, fontSize: 14);
   TextStyle noAccountFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w700,
       color: ColorApp.secondaryColor3,
@@ -47,6 +49,11 @@ class FontStyle {
       fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 16);
   TextStyle textInPostTask = GoogleFonts.lexend(
       fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 14);
+  TextStyle textHelloContent = GoogleFonts.lexend(
+    fontWeight: FontWeight.w400,
+    color: const Color.fromRGBO(128, 148, 159, 1),
+    fontSize: 14,
+  );
   TextStyle statusFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w500,
       color: const Color.fromRGBO(102, 199, 25, 1),
