@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/config/fonts.dart';
-import 'package:hs_user_app/config/theme.dart';
+import '/config/fonts.dart';
+import '/config/theme.dart';
 import '../../../config/theme.dart';
 import 'task_page.dart';
 
@@ -48,7 +48,12 @@ class _BookingPageState extends State<BookingPage> {
                 //     MaterialPageRoute(
                 //         builder: (context) => const LoginScreen()));
               },
-              child: Text('Hiện tại')),
+              child: Text(
+                'Hiện tại',
+                style: _selectIndex == 0
+                    ? FontStyle().topNavActive
+                    : FontStyle().topNavNotActive,
+              )),
         ),
         Container(
           width: MediaQuery.of(context).size.width / 3,
@@ -64,7 +69,12 @@ class _BookingPageState extends State<BookingPage> {
               onPressed: () {
                 _onItemTapped(1);
               },
-              child: Text('Đăng việc')),
+              child: Text(
+                'Đăng việc',
+                style: _selectIndex == 1
+                    ? FontStyle().topNavActive
+                    : FontStyle().topNavNotActive,
+              )),
         ),
         Container(
           width: MediaQuery.of(context).size.width / 3,
@@ -82,7 +92,12 @@ class _BookingPageState extends State<BookingPage> {
               onPressed: () {
                 _onItemTapped(2);
               },
-              child: Text('Lịch sử')),
+              child: Text(
+                'Lịch sử',
+                style: _selectIndex == 2
+                    ? FontStyle().topNavActive
+                    : FontStyle().topNavNotActive,
+              )),
         ),
       ]),
       body: add == false ? emptyTask() : const TaskPage(),
