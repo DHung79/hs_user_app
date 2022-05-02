@@ -28,7 +28,8 @@ class _HomePageState extends State<HomePage> {
                 ],
                 borderRadius: BorderRadius.vertical(
                     top: Radius.zero, bottom: Radius.circular(10))),
-            padding: const EdgeInsets.all(16),
+            padding:
+                const EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [avatarHome(), helloContent(), notification()],
