@@ -90,66 +90,73 @@ class _PostTaskState extends State<PostTask> {
         // const SizedBox(
         //   height: 12,
         // ),
-        Container(
-          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-          child: Column(children: [
-            timeStart(),
-            const SizedBox(
-              height: 51,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Ghi chú cho người làm',
-                  style: FontStyle().titleStart,
-                ),
-                const SizedBox(
-                    height: 144,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 16, bottom: 16),
-                      child: TextField(
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: ColorApp.textColor6),
-                          ),
-                        ),
-                      ),
-                    ))
-              ],
-            )
-          ]),
-        ),
+        noteTasker(),
         contentSwitch(),
         const SizedBox(
           height: 71,
         ),
-        Container(
-          padding: const EdgeInsets.all(16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: ColorApp.bgPay,
-            ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '200.000 VNĐ/2h',
-                    style: FontStyle().registerFont,
-                  ),
-                  Text(
-                    'TIẾP THEO',
-                    style: FontStyle().registerFont,
-                  )
-                ]),
-          ),
-        ),
+        payButton(),
       ]),
     );
+  }
+
+  Container noteTasker() {
+    return Container(
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        child: Column(children: [
+          timeStart(),
+          const SizedBox(
+            height: 51,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Ghi chú cho người làm',
+                style: FontStyle().titleStart,
+              ),
+              const SizedBox(
+                  height: 144,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16, bottom: 16),
+                    child: TextField(
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 1, color: ColorApp.textColor6),
+                        ),
+                      ),
+                    ),
+                  ))
+            ],
+          )
+        ]),
+      );
+  }
+
+  Container payButton() {
+    return Container(
+        padding: const EdgeInsets.all(16),
+      child: TextButton(
+          style: TextButton.styleFrom(
+              backgroundColor: ColorApp.bgPay,
+              padding: const EdgeInsets.all(16)),
+          onPressed: () {},
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '200.000 VNĐ/2h',
+                  style: FontStyle().registerFont,
+                ),
+                Text(
+                  'TIẾP THEO',
+                  style: FontStyle().registerFont,
+                )
+              ]),
+        ),
+      );
   }
 
   Container contentSwitch() {
