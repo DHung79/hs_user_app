@@ -1,10 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/screens/misspassword/misspassword.dart';
-import 'package:home_services/screens/otpscreen/otpscreen.dart';
-import 'package:home_services/screens/registerscreen/registerscreen.dart';
-import 'package:home_services/widgets/button_widget.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:home_services/screens/loginscreen/login_controller.dart';
+import '/config/theme.dart';
+import '/screens/misspassword/misspassword.dart';
+import '/screens/otpscreen/otpscreen.dart';
+import '/screens/registerscreen/registerscreen.dart';
+import '/widgets/button_widget.dart';
+import '/config/fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _isObsure = true;
 
+  final controller = Get.put(LoginController());
+
   @override
   void dispose() {
     controllerAccount.dispose();
@@ -35,16 +41,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future ahihi() async {
     try {
-      if(controllerAccount.text != textMiss || controllerPass.text != textMissPass) {
+      if (controllerAccount.text != textMiss ||
+          controllerPass.text != textMissPass) {
         setState(() {
           errorMessage = 'Sai tài khoản hoặc mật khẩu';
         });
       } else {
-        Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const OtpScreen()));
-            }
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => OtpScreen()));
+      }
     } on FirebaseAuthException catch (e) {
       print(e);
     }
@@ -65,13 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset('assets/images/logodemo.png'),
-                    Text(
-                      errorMessage,
-                      style: FontStyle().errorFont,
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                  Text(
+                    errorMessage,
+                    style: FontStyle().errorFont,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   Container(
                     constraints: const BoxConstraints(minHeight: 52),
                     decoration: BoxDecoration(
@@ -223,7 +228,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: FontStyle().googleFont,
                     login: false,
                     otp: false,
-                    onPressed: ahihi,
+                    onPressed: () {
+                      controller.login();
+                    },
                   ),
                   const SizedBox(
                     height: 24,
