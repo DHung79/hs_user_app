@@ -92,9 +92,28 @@ class _PostTaskState extends State<PostTask> {
         // ),
         noteTasker(),
         contentSwitch(),
-        const SizedBox(
-          height: 71,
-        ),
+        isSwitched == false
+            ? const SizedBox(
+                height: 71,
+              )
+            : Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/17073.svg',
+                          width: 16,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text('Thêm mới', style: FontStyle().pickMap)
+                      ],
+                    ),
+                  ],
+                )),
         payButton(),
       ]),
     );
@@ -102,61 +121,72 @@ class _PostTaskState extends State<PostTask> {
 
   Container noteTasker() {
     return Container(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        child: Column(children: [
-          timeStart(),
-          const SizedBox(
-            height: 51,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ghi chú cho người làm',
-                style: FontStyle().titleStart,
-              ),
-              const SizedBox(
-                  height: 144,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    child: TextField(
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              width: 1, color: ColorApp.textColor6),
-                        ),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      child: Column(children: [
+        timeStart(),
+        const SizedBox(
+          height: 51,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Ghi chú cho người làm',
+              style: FontStyle().titleStart,
+            ),
+            SizedBox(
+              height: 144,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                child: TextField(
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: ColorApp.textColor6, width: 1.0),
                       ),
-                    ),
-                  ))
-            ],
-          )
-        ]),
-      );
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: ColorApp.textColor6, width: 1.0),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: ColorApp.textColor6, width: 1.0),
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: ColorApp.textColor6, width: 1.0))),
+                  cursorColor: ColorApp.textColor1,
+                  style: FontStyle().topNavNotActive,
+                ),
+              ),
+            )
+          ],
+        )
+      ]),
+    );
   }
 
   Container payButton() {
     return Container(
-        padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: ColorApp.bgPay,
-              padding: const EdgeInsets.all(16)),
-          onPressed: () {},
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '200.000 VNĐ/2h',
-                  style: FontStyle().registerFont,
-                ),
-                Text(
-                  'TIẾP THEO',
-                  style: FontStyle().registerFont,
-                )
-              ]),
-        ),
-      );
+        style: TextButton.styleFrom(
+            backgroundColor: ColorApp.bgPay, padding: const EdgeInsets.all(16)),
+        onPressed: () {},
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(
+            '200.000 VNĐ/2h',
+            style: FontStyle().registerFont,
+          ),
+          Text(
+            'TIẾP THEO',
+            style: FontStyle().registerFont,
+          )
+        ]),
+      ),
+    );
   }
 
   Container contentSwitch() {
