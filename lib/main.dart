@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '/screens/loginscreen/loginscreen.dart';
-import 'screens/loginscreen/login_controller.dart';
-import 'screens/otpscreen/otpscreen.dart';
+import 'core/controllers/login_controller.dart';
+import 'screens/login_screen/login_screen.dart';
+import 'screens/otp_screen/otp_screen.dart';
 
 void main() {
+  
   runApp(MyApp());
 }
 

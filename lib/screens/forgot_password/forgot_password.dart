@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:home_services/config/theme.dart';
-import 'package:home_services/screens/otpscreen/otpscreen.dart';
-import 'package:home_services/widgets/button_widget.dart';
-import 'package:home_services/widgets/input_widget.dart';
-import 'package:home_services/config/fonts.dart';
+import 'package:hs_user_app/config/theme.dart';
+import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
+import 'package:hs_user_app/widgets/button_widget.dart';
+import 'package:hs_user_app/config/fonts.dart';
 
-class MissPassWord extends StatefulWidget {
-  const MissPassWord({Key? key}) : super(key: key);
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  State<MissPassWord> createState() => _MissPassWordState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _MissPassWordState extends State<MissPassWord> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   final String textMiss = 'ahihi@gmail.com';
   TextEditingController controller = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -31,7 +30,6 @@ class _MissPassWordState extends State<MissPassWord> {
 
   @override
   Widget build(BuildContext context) {
-    print(1);
     return Scaffold(
       body: Container(
         alignment: Alignment.centerRight,
