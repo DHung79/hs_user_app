@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '/config/fonts.dart';
 import '/config/theme.dart';
 import '../../../config/theme.dart';
-import 'task_page.dart';
+import 'components/booking_task.dart';
 
-class BookingPage extends StatefulWidget {
-  const BookingPage({Key? key}) : super(key: key);
+class Booking extends StatefulWidget {
+  const Booking({Key? key}) : super(key: key);
 
   @override
-  State<BookingPage> createState() => _BookingPageState();
+  State<Booking> createState() => _BookingState();
 }
 
-class _BookingPageState extends State<BookingPage> {
+class _BookingState extends State<Booking> {
   int _selectIndex = 0;
   bool add = false;
   void _onItemTapped(int index) {

@@ -37,7 +37,9 @@ dependencies:
   pin_code_fields: ^7.4.0
   firebase_auth: ^3.3.15
   google_fonts: ^2.3.2
+  google_sign_in: ^5.3.0
   get: ^4.6.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
