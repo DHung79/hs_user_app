@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '/config/theme.dart';
-import '/screens/homecsreen/bookingpage/bookingpage.dart';
-import '/screens/homecsreen/homepage/homepage.dart';
+import 'booking/booking.dart';
+import 'components/home_content.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(),
-    const BookingPage(),
+    const HomeContent(),
+    const Booking(),
     const Text('Admin')
   ];
 

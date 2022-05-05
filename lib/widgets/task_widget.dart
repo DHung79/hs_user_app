@@ -4,7 +4,7 @@ import '/config/theme.dart';
 import '/models/task_model.dart';
 
 class TaskWidget extends StatelessWidget {
-  TaskModel? taskModel;
+  final TaskModel? taskModel;
   TaskWidget({Key? key, this.taskModel}) : super(key: key);
   final List<TaskModel> fakeTasks = [
     TaskModel(

@@ -5,8 +5,8 @@ import '/widgets/button_widget.dart';
 import '/widgets/input_widget.dart';
 import '/config/fonts.dart';
 
-class SetPassScreen extends StatelessWidget {
-  const SetPassScreen({Key? key, required this.rigesterAccount})
+class ChangePasswordScreen extends StatelessWidget {
+  const ChangePasswordScreen({Key? key, required this.rigesterAccount})
       : super(key: key);
   final bool? rigesterAccount;
 

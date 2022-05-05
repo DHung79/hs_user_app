@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../forgot_password/forgot_password.dart';
 import '/config/theme.dart';
-import '/screens/miss_password/miss_password.dart';
 import '/screens/register_screen/register_screen.dart';
 import '/widgets/button_widget.dart';
 import '/config/fonts.dart';
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const MissPassWord()),
+                        builder: (context) => const ForgotPassword()),
                   );
                 },
                 child: Text(

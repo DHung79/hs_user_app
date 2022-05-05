@@ -15,7 +15,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông báo'),
+        title: const Text('Thông báo'),
         centerTitle: true,
         actions: [
           SvgPicture.asset('assets/icons/17078.svg')
@@ -31,7 +31,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         // scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(left: 10, top: 16, bottom: 16),
+            padding: const EdgeInsets.only(left: 10, top: 16, bottom: 16),
             child: Row(
               children: [
                 const Padding(
@@ -55,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 10, top: 16, bottom: 16),
+            padding: const EdgeInsets.only(left: 10, top: 16, bottom: 16),
             child: Row(
               children: [
                 const Padding(
@@ -79,7 +79,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(left: 10, top: 16, bottom: 16),
+            padding: const EdgeInsets.only(left: 10, top: 16, bottom: 16),
             child: Row(
               children: [
                 const Padding(

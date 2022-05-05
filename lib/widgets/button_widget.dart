@@ -7,19 +7,17 @@ class ButtonLogin extends StatelessWidget {
   final TextStyle? style;
   final String? forward;
   final bool? otp;
-  void Function()? onPressed;
+  final Function()? onPressed;
 
-  String email = 'ahihi@gmail.com';
-
-  ButtonLogin(
-      {Key? key,
-      required this.text,
-      this.login = false,
-      this.style,
-      this.forward,
-      required this.otp,
-      this.onPressed})
-      : super(key: key);
+  const ButtonLogin({
+    Key? key,
+    required this.text,
+    this.login = false,
+    this.style,
+    this.forward,
+    required this.otp,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +25,15 @@ class ButtonLogin extends StatelessWidget {
       // width: 52,
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(4))),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4), side: BorderSide.none),
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
-        color: Colors.white,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+            side: BorderSide.none,
+          ),
+          padding: const EdgeInsets.only(top: 16, bottom: 16),
+          backgroundColor: Colors.white,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
