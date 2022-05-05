@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:home_services/screens/loginscreen/login_controller.dart';
+import '/screens/loginscreen/login_controller.dart';
 import '/config/theme.dart';
 import '/screens/misspassword/misspassword.dart';
 import '/screens/otpscreen/otpscreen.dart';
