@@ -83,6 +83,4 @@ class FontStyle {
       fontWeight: FontWeight.w400, color: ColorApp.textColor6, fontSize: 14);
   TextStyle createListTask = GoogleFonts.lexend(
       fontWeight: FontWeight.w400, color: ColorApp.textColor3, fontSize: 12);
-  TextStyle timeDeleteTask = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor6, fontSize: 14);
 }
