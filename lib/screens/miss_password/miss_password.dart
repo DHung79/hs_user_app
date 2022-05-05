@@ -5,26 +5,26 @@ import '/screens/otp_screen/otp_screen.dart';
 import '/widgets/button_widget.dart';
 import '/config/fonts.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+class MissPassWord extends StatefulWidget {
+  const MissPassWord({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+  State<MissPassWord> createState() => _MissPassWordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
+class _MissPassWordState extends State<MissPassWord> {
   final String textMiss = 'ahihi@gmail.com';
   TextEditingController controller = TextEditingController();
   final formKey = GlobalKey<FormState>();
   String errorMessage = '';
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
-  forgotPassword() {
+  ahihi() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const OtpScreen()));
     } else {
-      _autovalidateMode = AutovalidateMode.always;
+      // _autovalidateMode = AutovalidateMode.onUserInteraction;
     }
   }
 
@@ -137,7 +137,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       style: FontStyle().loginFont,
                       forward: '/otp',
                       otp: false,
-                      onPressed: forgotPassword,
+                      onPressed: ahihi,
                     )
                   ],
                 ),

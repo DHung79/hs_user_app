@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hs_user_app/screens/home_screen/home_screen.dart';
-import '../../core/controllers/login_controller.dart';
-import '../forgot_password/forgot_password.dart';
-import '../home_screen/components/home_navigation.dart';
-import '../register_screen/register_screen.dart';
 import '/config/theme.dart';
+import '/screens/miss_password/miss_password.dart';
+import '/screens/register_screen/register_screen.dart';
 import '/widgets/button_widget.dart';
 import '/config/fonts.dart';
+import '../main_page/main_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,8 +14,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final String email = 'admin@gmail.com';
-  final String emailPassword = 'admin@admin';
+  final String textMiss = 'admin@gmail.com';
+  final String textMissPass = 'admin@admin';
   TextEditingController controllerAccount = TextEditingController();
   TextEditingController controllerPass = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -27,31 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _isObsure = true;
 
-  final controller = Get.put(LoginController());
-
   @override
   void dispose() {
     controllerAccount.dispose();
     controllerPass.dispose();
-    super.dispose();
-  }
 
-  login() {
-    setState(() {
-      errorMessage = '';
-    });
-    if (formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } else {
-      setState(() {
-        _autovalidateMode = AutovalidateMode.always;
-      });
-    }
+    super.dispose();
   }
 
   @override
@@ -63,8 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
         alignment: Alignment.center,
         margin: const EdgeInsets.only(left: 16, right: 16),
         child: Form(
-          key: formKey,
           autovalidateMode: _autovalidateMode,
+          key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,18 +69,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   //     ));
                   //   }
                   // },
-                  validator: (value) {
-                    if (value != email) {
-                      setState(() {
-                        errorMessage = 'Sai tài khoản';
-                      });
-                    } else {
-                      setState(() {
-                        errorMessage = '';
-                      });
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value != textMiss) {
+                  //     setState(() {
+                  //       errorMessage = 'Sai tài khoản hoặc mật khẩu';
+                  //     });
+                  //   } else {
+                  //     setState(() {
+                  //       errorMessage = '';
+                  //     });
+                  //   }
+                  //   return null;
+                  // },
                   cursorColor: Colors.white,
                   autofocus: true,
                   cursorHeight: 20,
@@ -146,7 +124,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   //             builder: (context) => const OtpScreen()));
                   //   }
                   // },
-
+                  // validator: (value) {
+                  //   if (value != textMiss) {
+                  //     setState(() {
+                  //       errorMessagePass = 'email khong hop le';
+                  //     });
+                  //   } else {
+                  //     setState(() {
+                  //       errorMessagePass = '';
+                  //     });
+                  //   }
+                  //   return null;
+                  // },
                   obscureText: _isObsure,
                   cursorColor: Colors.white,
                   autofocus: true,
@@ -176,18 +165,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintStyle: FontStyle().mainFont,
                   ),
                   controller: controllerPass,
-                  validator: (value) {
-                    if (value != emailPassword) {
-                      setState(() {
-                        errorMessagePass = 'wrong password';
-                      });
-                    } else {
-                      setState(() {
-                        errorMessagePass = '';
-                      });
-                    }
-                    return null;
-                  },
                   // onSubmitted: (_email) {
                   //   _email = widget.email;
                   //   if(widget.vc!.text == _email) {
@@ -204,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ForgotPassword()),
+                        builder: (context) => const MissPassWord()),
                   );
                 },
                 child: Text(
@@ -230,9 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: FontStyle().googleFont,
                 login: false,
                 otp: false,
-                onPressed: () {
-                  controller.login();
-                },
+                onPressed: login,
               ),
               const SizedBox(
                 height: 24,
@@ -268,5 +243,19 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+// actions
+  login() {
+    if (controllerAccount.text != textMiss ||
+        controllerPass.text != textMissPass) {
+      setState(() {
+        _autovalidateMode = AutovalidateMode.always;
+        errorMessage = 'Sai tài khoản hoặc mật khẩu';
+      });
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const MainPage()));
+    }
   }
 }

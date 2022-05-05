@@ -62,8 +62,6 @@ class FontStyle {
     color: const Color.fromRGBO(128, 148, 159, 1),
     fontSize: 14,
   );
-  TextStyle timeDeleteTask = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor6, fontSize: 14);
   TextStyle statusFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w500,
       color: const Color.fromRGBO(102, 199, 25, 1),

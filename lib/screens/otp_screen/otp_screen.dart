@@ -51,10 +51,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return otpScreen(context);
-  }
-
-  Scaffold otpScreen(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorApp.purpleColor,
       key: scaffoldKey,

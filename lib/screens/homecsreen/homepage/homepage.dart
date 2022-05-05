@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../config/fonts.dart';
+import '../../../config/theme.dart';
 
-class HomeContent extends StatefulWidget {
-  const HomeContent({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomeContent> createState() => _HomeContentState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeContentState extends State<HomeContent> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,8 +28,7 @@ class _HomeContentState extends State<HomeContent> {
                 ],
                 borderRadius: BorderRadius.vertical(
                     top: Radius.zero, bottom: Radius.circular(10))),
-            padding:
-                const EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
+            padding: const EdgeInsets.all(16),
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [avatarHome(), helloContent(), notification()],
