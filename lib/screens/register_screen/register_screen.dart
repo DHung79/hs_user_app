@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/otp_screen/otp_register_screen.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/widgets/input_widget.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/screens/otp_screen/otp_register_screen.dart';
+import '/widgets/button_widget.dart';
+import '/config/fonts.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -42,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
+            SizedBox(
               height: 44,
               child: CircleAvatar(
                 child: IconButton(
@@ -65,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     'Đăng kí',
                     style: FontStyle().missPassFont,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 24,
                   ),
                   if (errorMessage.isNotEmpty)
