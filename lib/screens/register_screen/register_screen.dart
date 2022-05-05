@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
   String errorMessage = '';
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  late bool _isObsure;
 
   ahihi() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {

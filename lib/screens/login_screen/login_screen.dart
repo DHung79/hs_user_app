@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hs_user_app/screens/home_screen/home_screen.dart';
 import '../../core/controllers/login_controller.dart';
 import '../forgot_password/forgot_password.dart';
+import '../home_screen/components/home_navigation.dart';
 import '../register_screen/register_screen.dart';
 import '/config/theme.dart';
 import '/widgets/button_widget.dart';
