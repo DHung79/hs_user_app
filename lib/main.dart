@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '/screens/homecsreen/home_navigation.dart';
-import '/screens/notificationscreen/notifiscreen.dart';
-import 'screens/homecsreen/bookingpage/post_task/post_task_page.dart';
+import 'screens/home_screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const PostTask(),
+      home: const HomeScreen(),
     );
   }
 }
