@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hs_user_app/config/theme.dart';
-import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
-import 'package:hs_user_app/widgets/button_widget.dart';
-import 'package:hs_user_app/config/fonts.dart';
+import '/config/theme.dart';
+import '/screens/otp_screen/otp_screen.dart';
+import '/widgets/button_widget.dart';
+import '/config/fonts.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -19,12 +19,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   String errorMessage = '';
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
-  ahihi() {
+  forgotPassword() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const OtpScreen()));
     } else {
-      // _autovalidateMode = AutovalidateMode.onUserInteraction;
+      _autovalidateMode = AutovalidateMode.always;
     }
   }
 
@@ -77,10 +77,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                       child: TextFormField(
                         onFieldSubmitted: (value) {
-                          if(value == textMiss) {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => OtpScreen()
-                            ));
+                          if (value == textMiss) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OtpScreen()));
                           }
                         },
                         validator: (value) {
@@ -136,7 +137,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       style: FontStyle().loginFont,
                       forward: '/otp',
                       otp: false,
-                      onPressed: ahihi,
+                      onPressed: forgotPassword,
                     )
                   ],
                 ),
