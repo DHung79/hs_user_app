@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/config/theme.dart';
@@ -53,6 +55,8 @@ class FontStyle {
       fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 16);
   TextStyle serviceFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 16);
+  TextStyle priceFont = GoogleFonts.lexend(
+      fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 24);
   TextStyle textInPostTask = GoogleFonts.lexend(
       fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 14);
   TextStyle pickTimeStart = GoogleFonts.lexend(
@@ -62,8 +66,13 @@ class FontStyle {
     color: const Color.fromRGBO(128, 148, 159, 1),
     fontSize: 14,
   );
-  TextStyle timeDeleteTask = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor6, fontSize: 14);
+  TextStyle changeFont = GoogleFonts.lexend(
+      fontWeight: FontWeight.w400, color: ColorApp.textColor3, fontSize: 14);
+  TextStyle oldPrice = GoogleFonts.lexend(
+      fontWeight: FontWeight.w500,
+      color: ColorApp.textColor3,
+      fontSize: 16,
+      decoration: TextDecoration.lineThrough);
   TextStyle statusFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w500,
       color: const Color.fromRGBO(102, 199, 25, 1),
