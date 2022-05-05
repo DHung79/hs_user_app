@@ -81,7 +81,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OtpScreen()));
+                                    builder: (context) => const OtpScreen()));
                           }
                         },
                         validator: (value) {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '/models/yourProfile_model.dart';
+import '../../../../models/your_profile_model.dart';
 import '../../../../config/fonts.dart';
 import '../../../../config/theme.dart';
 
 class Confirm extends StatefulWidget {
-  Confirm({Key? key}) : super(key: key);
+  const Confirm({Key? key}) : super(key: key);
 
   @override
   State<Confirm> createState() => _ConfirmState();

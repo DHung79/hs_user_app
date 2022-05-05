@@ -27,11 +27,10 @@ class ButtonLogin extends StatelessWidget {
       // width: 52,
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(4))),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4), side: BorderSide.none),
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
-        color: Colors.white,
+      child: TextButton(
+        style: TextButton.styleFrom(
+            padding: const EdgeInsets.only(top: 16, bottom: 16),
+            backgroundColor: Colors.white),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

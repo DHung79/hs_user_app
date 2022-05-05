@@ -6,7 +6,7 @@ import '/models/task_model.dart';
 class TaskWidget extends StatelessWidget {
   TaskModel? taskModel;
   TaskWidget({Key? key, this.taskModel}) : super(key: key);
-  final List<TaskModel> fakeTasks = [
+  List<TaskModel> fakeTasks = [
     TaskModel(
       '0',
       'Don dep theo ngay',
