@@ -40,10 +40,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const BackButton(color: Colors.black),
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          'Cài đặt',
+          'Hồ sơ người dùng',
           style: FontStyle().serviceFont,
         ),
         shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
