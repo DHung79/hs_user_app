@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import '/config/theme.dart';
 import 'booking/booking.dart';
 import 'components/home_content.dart';
+import 'setting/setting.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomeContent(),
     const Booking(),
-    const Text('Admin')
+    SettingScreen(),
   ];
 
   void _onItemTapped(int index) {

@@ -18,45 +18,104 @@ class FontStyle {
     fontSize: 16,
   );
   TextStyle googleFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w700, color: ColorApp.orangeColor, fontSize: 16);
+    fontWeight: FontWeight.w700,
+    color: ColorApp.orangeColor,
+    fontSize: 16,
+  );
   TextStyle expService = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.orangeColor, fontSize: 16);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.orangeColor,
+    fontSize: 16,
+  );
   TextStyle postNow = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500, color: ColorApp.orangeColor, fontSize: 14);
+    fontWeight: FontWeight.w500,
+    color: ColorApp.orangeColor,
+    fontSize: 14,
+  );
+  TextStyle viewProfile = GoogleFonts.lexend(
+    fontWeight: FontWeight.w400,
+    color: ColorApp.orangeColor,
+    fontSize: 14,
+  );
   TextStyle noAccountFont = GoogleFonts.lexend(
       fontWeight: FontWeight.w700,
       color: ColorApp.secondaryColor3,
       fontSize: 16);
   TextStyle registerFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w700, color: ColorApp.textColor2, fontSize: 16);
+    fontWeight: FontWeight.w700,
+    color: ColorApp.textColor2,
+    fontSize: 16,
+  );
   TextStyle errorFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.errorColor, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.errorColor,
+    fontSize: 14,
+  );
   TextStyle missPassFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor2, fontSize: 24);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor2,
+    fontSize: 24,
+  );
   TextStyle errorFont2 = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.errorColor, fontSize: 16);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.errorColor,
+    fontSize: 16,
+  );
   TextStyle typeEmailFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor2, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor2,
+    fontSize: 14,
+  );
   TextStyle sendOTPFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor2, fontSize: 16);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor2,
+    fontSize: 16,
+  );
   TextStyle otpTextFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, fontSize: 24, color: ColorApp.textColor2);
+    fontWeight: FontWeight.w400,
+    fontSize: 24,
+    color: ColorApp.textColor2,
+  );
   TextStyle titleFontService = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500, color: ColorApp.purpleColor, fontSize: 16);
+    fontWeight: FontWeight.w500,
+    color: ColorApp.purpleColor,
+    fontSize: 16,
+  );
   TextStyle timeRoom = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.purpleColor, fontSize: 16);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.purpleColor,
+    fontSize: 16,
+  );
   TextStyle topNavActive = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.purpleColor, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.purpleColor,
+    fontSize: 14,
+  );
   TextStyle topNavNotActive = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor1,
+    fontSize: 14,
+  );
   TextStyle titleStart = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 16);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor1,
+    fontSize: 16,
+  );
   TextStyle serviceFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500, color: ColorApp.textColor1, fontSize: 16);
+    fontWeight: FontWeight.w500,
+    color: ColorApp.textColor1,
+    fontSize: 16,
+  );
   TextStyle textInPostTask = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor1,
+    fontSize: 14,
+  );
   TextStyle pickTimeStart = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor1, fontSize: 24);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor1,
+    fontSize: 24,
+  );
   TextStyle textHelloContent = GoogleFonts.lexend(
     fontWeight: FontWeight.w400,
     color: const Color.fromRGBO(128, 148, 159, 1),
@@ -67,9 +126,23 @@ class FontStyle {
       color: const Color.fromRGBO(102, 199, 25, 1),
       fontSize: 14);
   TextStyle pickMap = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor3, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor3,
+    fontSize: 14,
+  );
   TextStyle sizeRoom = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor6, fontSize: 14);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor6,
+    fontSize: 14,
+  );
   TextStyle createListTask = GoogleFonts.lexend(
-      fontWeight: FontWeight.w400, color: ColorApp.textColor3, fontSize: 12);
+    fontWeight: FontWeight.w400,
+    color: ColorApp.textColor3,
+    fontSize: 12,
+  );
+  TextStyle gmailText = GoogleFonts.lexend(
+    color: ColorApp.colorEmailProfile,
+    fontWeight: FontWeight.w500,
+    fontSize: 14,
+  );
 }

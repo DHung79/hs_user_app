@@ -19,4 +19,6 @@ class ColorApp {
   static const activeSwitch = Color.fromRGBO(255, 218, 167, 1);
   static const notactiveSwitch = Color.fromRGBO(33, 33, 33, 0.08);
   static const bgPay = Color.fromRGBO(102, 199, 25, 1);
+  static const colorIcons = Color.fromRGBO(33, 169, 159, 1);
+  static const colorEmailProfile = Color.fromRGBO(80, 80, 80, 1);
 }
