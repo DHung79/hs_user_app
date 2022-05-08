@@ -122,9 +122,15 @@ class FontStyle {
     fontSize: 14,
   );
   TextStyle statusFont = GoogleFonts.lexend(
-      fontWeight: FontWeight.w500,
-      color: const Color.fromRGBO(102, 199, 25, 1),
-      fontSize: 14);
+    fontWeight: FontWeight.w500,
+    color: ColorApp.bgPay,
+    fontSize: 14,
+  );
+  TextStyle addMoney = GoogleFonts.lexend(
+    fontWeight: FontWeight.w700,
+    color: ColorApp.bgPay,
+    fontSize: 16,
+  );
   TextStyle pickMap = GoogleFonts.lexend(
     fontWeight: FontWeight.w400,
     color: ColorApp.textColor3,
