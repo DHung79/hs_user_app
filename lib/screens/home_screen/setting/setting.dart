@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/config/fonts.dart';
 import '/config/theme.dart';
+import 'components/profile_page.dart';
 
 class SettingScreen extends StatelessWidget {
   List<Infor> fakeProfile = [
@@ -13,6 +14,8 @@ class SettingScreen extends StatelessWidget {
     const Icon(Icons.cabin_sharp, color: ColorApp.colorIcons, size: 24),
     const Icon(Icons.dark_mode_rounded, color: ColorApp.colorIcons, size: 24),
   ];
+
+  SettingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,14 @@ class SettingScreen extends StatelessWidget {
                     style: FontStyle().gmailText,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(),
+                        ),
+                      );
+                    },
                     child: Row(
                       children: [
                         Text(
