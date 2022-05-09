@@ -4,11 +4,11 @@ import '/config/theme.dart';
 import 'components/profile_page.dart';
 
 class SettingScreen extends StatelessWidget {
-  List<Infor> fakeProfile = [
+  final List<Infor> fakeProfile = [
     Infor('Payment', 'Đánh giá ứng dụng', 'Ngôn ngữ', 'Đăng xuất'),
   ];
 
-  List<Icon> icons = [
+  final List<Icon> icons = [
     const Icon(Icons.access_alarm, color: ColorApp.colorIcons, size: 24),
     const Icon(Icons.back_hand_rounded, color: ColorApp.colorIcons, size: 24),
     const Icon(Icons.cabin_sharp, color: ColorApp.colorIcons, size: 24),
@@ -60,7 +60,7 @@ class SettingScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(),
+                          builder: (context) => const ProfileScreen(),
                         ),
                       );
                     },
