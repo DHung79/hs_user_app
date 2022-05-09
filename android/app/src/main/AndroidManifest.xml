@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hs_user_app">
+    package="com.jt.homeservice">
    <application
-        android:label="hs_user_app"
+        android:label="Home Service"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

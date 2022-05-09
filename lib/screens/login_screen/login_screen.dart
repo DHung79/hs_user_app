@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
 import '../forgot_password/forgot_password.dart';
@@ -38,6 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else {
+        var authHeaderMap = await signin.authHeaders;
+        var token = authHeaderMap['Authorization']!.substring(7);
+        log(token);
+
         Navigator.push(
           context,
           MaterialPageRoute(
