@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
 import '../forgot_password/forgot_password.dart';
 import '/config/theme.dart';
 import '/screens/register_screen/register_screen.dart';
 import '/widgets/button_widget.dart';
 import '/config/fonts.dart';
 import '../main_page/main_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -23,6 +25,30 @@ class _LoginScreenState extends State<LoginScreen> {
   String errorMessagePass = '';
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _isObsure = true;
+
+  Future loginWithGoogle() async {
+    var signin = await GoogleSignIn().signIn();
+
+    try {
+      if (signin == null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpScreen(),
+          ),
+        );
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 
   @override
   void dispose() {
@@ -207,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: FontStyle().googleFont,
                 login: false,
                 otp: false,
-                onPressed: login,
+                onPressed: loginWithGoogle,
               ),
               const SizedBox(
                 height: 24,
