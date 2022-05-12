@@ -51,6 +51,23 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('../android/app/key_stores/debug.keystore')
+            storePassword 'hs@admin'
+            keyAlias 'hsdebugkey'
+            keyPassword 'hs@admin'
+        }
+        //47:C9:E8:47:1E:B4:96:B1:20:68:EB:81:AB:2E:F9:04:62:07:4A:F1
+        release {
+            storeFile file('../android/app/key_stores/release.keystore')
+            storePassword 'hs@admin'
+            keyAlias 'hsreleasekey'
+            keyPassword 'hs@admin'
+        }
+        //24:32:E5:5F:EF:F7:A8:AB:9D:C7:51:24:E2:6B:A4:09:A4:A5:9B:DE
+    }    
+
     buildTypes {
         release {
             signingConfig signingConfigs.debug
