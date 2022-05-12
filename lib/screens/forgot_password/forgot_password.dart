@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import '/config/theme.dart';
 import '/screens/otp_screen/otp_screen.dart';
 import '/widgets/button_widget.dart';
-import '/config/fonts.dart';
+import '../../config/app_text_theme.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
