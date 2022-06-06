@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
-import '../screens/change_password_screen/change_password_screen.dart';
-import '../screens/forgot_password/forgot_password.dart';
-import '../screens/home_screen/home_screen.dart';
+import 'package:hs_user_app/screens/home/booking_screen/booking_screen.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/choose_location/choose_location.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/confirm_page.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/edit_profile.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/edit_task_profile.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/post_fast.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/post_task.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/profile_tasker.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/promotion.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/view_detail.dart';
+import 'package:hs_user_app/screens/home/setting_screen/components/edit_profile.dart';
+import 'package:hs_user_app/screens/home/setting_screen/components/payment.dart';
+import 'package:hs_user_app/screens/home/setting_screen/components/profile_screen.dart';
+import 'package:hs_user_app/screens/home/setting_screen/components/setting_change_password.dart';
+import 'package:hs_user_app/screens/home/setting_screen/setting_screen.dart';
+import 'package:hs_user_app/screens/home_screen/home_screen.dart';
+import 'package:hs_user_app/screens/notification_screen/notification_screen.dart';
+import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
+import 'package:hs_user_app/screens/register_screen/register_screen.dart';
+import '../screens/home/booking_screen/components/gps_page.dart';
+import '/screens/forgot_password_screen/forgot_password_screen.dart';
 import '/screens/onboarding/authentication_screen.dart';
-import '../screens/not_found/page_not_found.dart';
+import '../screens/not_found/page_not_found_screen.dart';
 import 'no_animation_transition_delegate.dart';
 import 'route_names.dart';
 import 'route_path.dart';
@@ -47,23 +65,84 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
   }
 
   _screenFor(String route) {
-    if (route == initialRoute || route == homeRoute) {
-      return const HomeScreen();
+    if (route == initialRoute || route == authenticationRoute) {
+      return const AuthenticationScreen();
     }
     //authentication
-    if (route == authenticationRoute) {
-      return const AuthenticationScreen();
+    if (route == homeRoute) {
+      return const HomeScreen();
+    }
+
+    if (route == notificationRoute) {
+      return const NotificationScreen();
+    }
+
+    if (route == bookingRoute) {
+      return const Booking();
+    }
+    if (route == posttaskRoute) {
+      return const PostTask();
+    }
+    if (route == promotionRoute) {
+      return const Promotion();
+    }
+    if (route == editTaskProfileRoute) {
+      return const EditTaskProfile();
+    }
+    if (route == postFastRoute) {
+      return const PostFast();
+    }
+    if (route == paymentRoute) {
+      return const Payment();
+    }
+    if (route == profileTaskersRoute) {
+      return const ProfileTasker();
+    }
+    if (route == settingEditProfileRoute) {
+      return const SettingEditProfile();
+    }
+    if (route == settingRoute) {
+      return const SettingScreen();
+    }
+    if (route == settingChangePasswordRoute) {
+      return const SettingChangePassword();
+    }
+    if (route == settingProfileRoute) {
+      return const ProfileScreen();
+    }
+
+    if (route == gpsPageRoute) {
+      return GoogleSearchPlacesApi();
+    }
+
+    if (route == chooseLocationRoute) {
+      return const ChooseLocation();
+    }
+    if (route == confirmPageRoute) {
+      return const Confirm();
+    }
+    if (route == editProfileRoute) {
+      return const EditProfile();
+    }
+    if (route == viewDetailRoute) {
+      return const ViewDetail();
     }
 
     if (route == forgotPasswordRoute) {
-      return const ForgotPassword();
+      return const ForgotPasswordScreen();
     }
 
     if (route == resetPasswordRoute) {
-      return const ChangePasswordScreen();
+      return const ForgotPasswordScreen();
     }
 
-    // if (route == roleRoute) {
+    if (route == registerRoute) {
+      return const RegisterScreen();
+    }
+
+    if (route == otpRoute) {
+      return const OtpScreen();
+    } // if (route == roleRoute) {
     //   return const UserManagementScreen(tab: 1);
     // }
     // if (route == createRoleRoute) {

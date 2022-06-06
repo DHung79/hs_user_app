@@ -2,7 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 import '../../../../../main.dart';
-import '../../../tasker/tasker.dart';
+import '../../../user/bloc/user_bloc.dart';
+import '../../../user/model/user_model.dart';
 import '../../auth.dart';
 
 class AuthenticationBloc
@@ -55,41 +56,77 @@ class AuthenticationBloc
       }
     });
 
-    on<UserLogin>((event, emit) async {
-      final SharedPreferences sharedPreferences = await prefs;
-      emit(AuthenticationLoading());
-      try {
-        final data = await authenticationService.taskerLogin(
-          event.email,
-          event.password,
-        );
-        if (data["error_message"] == null) {
-          logDebug('data: $data');
-          final currentUser = Token.fromJson(data);
-          if (currentUser.id.isNotEmpty) {
-            final _now = DateTime.now().millisecondsSinceEpoch;
-            sharedPreferences.setString('authtoken', currentUser.token);
-            sharedPreferences.setString('last_username', event.email);
-            sharedPreferences.setString('last_userpassword', event.password);
-            sharedPreferences.setBool('keep_session', event.keepSession);
-            sharedPreferences.setInt('login_time', _now);
-            emit(AppAutheticated());
+    on<UserLogin>(
+      (event, emit) async {
+        final SharedPreferences sharedPreferences = await prefs;
+        emit(AuthenticationLoading());
+        try {
+          final data = await authenticationService.userLogin(
+            event.email,
+            event.password,
+          );
+          if (data["error_message"] == null) {
+            final currentUser = Token.fromJson(data);
+            if (currentUser.id.isNotEmpty) {
+              final _now = DateTime.now().millisecondsSinceEpoch;
+              sharedPreferences.setString('authtoken', currentUser.token);
+              sharedPreferences.setString('last_username', event.email);
+              sharedPreferences.setString('last_userpassword', event.password);
+              sharedPreferences.setBool('keep_session', event.keepSession);
+              sharedPreferences.setInt('login_time', _now);
+              emit(AppAutheticated());
+            } else {
+              emit(AuthenticationNotAuthenticated());
+            }
           } else {
-            emit(AuthenticationNotAuthenticated());
+            emit(AuthenticationFailure(
+              message: data["error_message"],
+              errorCode: data["error_code"].toString(),
+            ));
           }
-        } else {
+        } on Error catch (e) {
           emit(AuthenticationFailure(
-            message: data["error_message"],
-            errorCode: data["error_code"].toString(),
+            message: e.toString(),
+            errorCode: '',
           ));
         }
-      } on Error catch (e) {
-        emit(AuthenticationFailure(
-          message: e.toString(),
-          errorCode: '',
-        ));
-      }
-    });
+      },
+    );
+
+    on<UserLoginGoogle>(
+      (event, emit) async {
+        final SharedPreferences sharedPreferences = await prefs;
+
+        emit(AuthenticationLoading());
+        try {
+          final data =
+              await authenticationService.loginWithGoogle(event.accessToken);
+
+          if (data["error_message"] == null) {
+            final currentUser = Token.fromJson(data);
+            if (currentUser.id.isNotEmpty) {
+              final _now = DateTime.now().millisecondsSinceEpoch;
+              sharedPreferences.setString('authtoken', currentUser.token);
+              sharedPreferences.setBool('keep_session', event.keepSession);
+              sharedPreferences.setInt('login_time', _now);
+              emit(AppAutheticated());
+            } else {
+              emit(AuthenticationNotAuthenticated());
+            }
+          } else {
+            emit(AuthenticationFailure(
+              message: data["error_message"],
+              errorCode: data["error_code"].toString(),
+            ));
+          }
+        } on Error catch (e) {
+          emit(AuthenticationFailure(
+            message: e.toString(),
+            errorCode: '',
+          ));
+        }
+      },
+    );
 
     on<ResetPassword>((event, emit) async {
       final SharedPreferences sharedPreferences = await prefs;
@@ -199,7 +236,7 @@ class AuthenticationBloc
           if (userJson != null && userJson.isNotEmpty) {
             try {
               Map<String, dynamic> json = convert.jsonDecode(userJson);
-              final account = TaskerModel.fromJson(json);
+              final account = UserModel.fromJson(json);
               // account.password =
               //     sharedPreferences.getString('last_userpassword') ?? '';
 
@@ -212,7 +249,7 @@ class AuthenticationBloc
               ));
             }
           }
-          final account = await TaskerBloc().getProfile();
+          final account = await UserBloc().getProfile();
           // ignore: unnecessary_null_comparison
           if (account == null) {
             _cleanupCache();

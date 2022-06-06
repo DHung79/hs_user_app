@@ -25,16 +25,16 @@ class _ErrorMessageState extends State<ErrorMessage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.0),
                   border: Border.all(
-                    color: AppColor.testColor1,
+                    color: AppColor.test1,
                     width: 1,
                   ),
                 ),
                 child: Padding(
                   child: Text(
                     widget.errorMessage,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
-                      color: AppColor.textColor1,
+                      color: AppColor.text1,
                       fontStyle: FontStyle.italic,
                     ),
                   ),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import '/config/theme.dart';
-import '/screens/otp_screen/otp_register_screen.dart';
-import '/widgets/button_widget.dart';
-import '/config/fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hs_user_app/theme/svg_constants.dart';
+import '/routes/route_names.dart';
+import 'package:validators/validators.dart';
+import '../../core/authentication/auth.dart';
+import '../../main.dart';
+import '../../theme/validator_text.dart';
+import '../../widgets/jt_text_form_field.dart';
+import '../../widgets/jt_toast.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -13,129 +17,209 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final String textMiss = 'ahihi@gmail.com';
-  TextEditingController controller = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  String errorMessage = '';
-  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  // bool _passwordSecure = true;
+  String? _errorMessage = '';
+  AutovalidateMode _autovalidate = AutovalidateMode.disabled;
 
-  register() {
-    if (formKey.currentState!.validate() && errorMessage.isEmpty) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const OtpRegisterScreen()));
-    } else {
-      _autovalidateMode = AutovalidateMode.always;
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        color: ColorApp.purpleColor,
-        padding: const EdgeInsets.only(top: 65, left: 16, right: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: 44,
-              child: CircleAvatar(
-                child: IconButton(
-                  icon: SvgPicture.asset('assets/icons/17072.svg'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+      backgroundColor: AppColor.primary1,
+      body: BlocListener<AuthenticationBloc, AuthenticationState>(
+        bloc: AuthenticationBlocController().authenticationBloc,
+        listener: (context, state) async {
+          if (state is AuthenticationFailure) {
+            _showError(state.errorCode);
+          } else if (state is ResetPasswordState) {
+            JTToast.init(context);
+            navigateTo(resetPasswordRoute);
+            await Future.delayed(const Duration(milliseconds: 400));
+            JTToast.successToast(
+                width: 327,
+                height: 53,
+                message: ScreenUtil.t(I18nKey.checkYourEmail)!);
+          }
+        },
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, size) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                padding: size.maxWidth < 500
+                    ? EdgeInsets.zero
+                    : const EdgeInsets.all(30),
+                child: Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: size.maxWidth - 48),
+                    child: Form(
+                      autovalidateMode: _autovalidate,
+                      key: _key,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          _buildErrorMessage(),
+                          InkWell(
+                            onTap: () {
+                              navigateTo(authenticationRoute);
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: SvgIcon(SvgIcons.close),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12.0),
+                                child: Text(
+                                  ScreenUtil.t(I18nKey.signUp)!,
+                                  style: AppTextTheme.bigText(Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: Text(
+                                  'Email không tồn tại',
+                                  style: AppTextTheme.normalHeaderTitle(
+                                      AppColor.others1),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: JTTextFormField(
+                                  hintText: 'NHẬP EMAIL',
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: emailController,
+                                  onSaved: (value) {
+                                    emailController.text = value!.trim();
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (_errorMessage!.isNotEmpty) {
+                                        _errorMessage = '';
+                                      }
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value!.isEmpty ||
+                                        value.trim().isEmpty) {
+                                      return ValidatorText.empty(
+                                          fieldName:
+                                              ScreenUtil.t(I18nKey.email)!);
+                                    }
+                                    if (!isEmail(value.trim())) {
+                                      return ValidatorText.invalidFormat(
+                                          fieldName:
+                                              ScreenUtil.t(I18nKey.email)!);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    minimumSize: const Size.fromHeight(52),
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  child: Text(
+                                    'TIẾP TỤC',
+                                    style: AppTextTheme.headerTitle(
+                                        AppColor.primary1),
+                                  ),
+                                  onPressed: _forgotPassword,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                backgroundColor: Colors.white,
-              ),
-            ),
-            Expanded(
-              child: Form(
-                key: formKey,
-                autovalidateMode: _autovalidateMode,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Đăng kí',
-                      style: FontStyle().missPassFont,
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    if (errorMessage.isNotEmpty)
-                      Text(
-                        errorMessage,
-                        style: FontStyle().errorFont2,
-                      ),
-                    if (errorMessage.isNotEmpty)
-                      const SizedBox(
-                        height: 24,
-                      ),
-                    Container(
-                      constraints: const BoxConstraints(minHeight: 52),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value != textMiss) {
-                            setState(() {
-                              errorMessage = 'Email không tồn tại';
-                            });
-                          } else {
-                            setState(() {
-                              errorMessage = '';
-                            });
-                          }
-                          return null;
-                        },
-                        cursorColor: Colors.white,
-                        autofocus: true,
-                        cursorHeight: 10,
-                        style: FontStyle().mainFont,
-                        decoration: InputDecoration(
-                          hintText: 'NHẬP EMAI',
-                          filled: true,
-                          fillColor: ColorApp.secondaryColor3,
-                          focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3.0, color: ColorApp.secondaryColor3)),
-                          enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3.0, color: ColorApp.secondaryColor3)),
-                          hintStyle: FontStyle().mainFont,
-                        ),
-                        controller: controller,
-                        // onSubmitted: (_email) {
-                        //   _email = widget.email;
-                        //   if(widget.vc!.text == _email) {
-                        //     Navigator.pushNamed(context, '/otp');
-                        //   } else {
-                        //   }
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    ButtonLogin(
-                      text: 'TIẾP TỤC',
-                      login: true,
-                      style: FontStyle().loginFont,
-                      otp: true,
-                      forward: '/otpregister',
-                      onPressed: register,
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
+              );
+            },
+          ),
         ),
       ),
     );
+  }
+
+  _forgotPassword() {
+    setState(() {
+      _errorMessage = '';
+    });
+
+    if (_key.currentState!.validate()) {
+      _key.currentState!.save();
+      // AuthenticationBlocController().authenticationBloc.add(
+      //       ForgotPassword(email: emailController.text),
+      //     );
+      navigateTo(otpRoute);
+    } else {
+      setState(() {
+        _autovalidate = AutovalidateMode.onUserInteraction;
+      });
+    }
+  }
+
+  _buildErrorMessage() {
+    return _errorMessage != null && _errorMessage!.isNotEmpty
+        ? Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: double.infinity,
+                minHeight: 24,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
+                  border: Border.all(
+                    color: Theme.of(context).errorColor,
+                    width: 1,
+                  ),
+                ),
+                child: Padding(
+                  child: Text(
+                    _errorMessage!,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).errorColor),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+                ),
+              ),
+            ),
+          )
+        : const SizedBox();
+  }
+
+  _showError(String errorCode) async {
+    setState(() {
+      _errorMessage = showError(errorCode, context);
+    });
   }
 }

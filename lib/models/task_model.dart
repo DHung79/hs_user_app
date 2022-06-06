@@ -7,6 +7,7 @@ class TaskModel {
   String datePost;
   String cost;
   String userName;
+  bool isSuccess;
 
   TaskModel(
     this.id,
@@ -17,5 +18,6 @@ class TaskModel {
     this.datePost,
     this.cost,
     this.userName,
+    this.isSuccess,
   );
 }

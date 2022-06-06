@@ -3,7 +3,6 @@ class ApiConstants {
   static String apiVersion = '/api';
 
   static String users = '/users';
-  static String taskers = '/taskers';
   static String me = '/me';
   static String services = '/services';
   static String changePassword = '/changePassword';

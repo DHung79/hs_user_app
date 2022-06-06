@@ -8,8 +8,8 @@ class AuthenticationRepository {
       String? email, String? password) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final response = await provider
-        .signUpWithEmailAndPassword({'email': email, 'password': password});
+    final body = convert.jsonEncode({'email': email, 'password': password});
+    final response = await provider.signUpWithEmailAndPassword(body);
     return response;
   }
 
@@ -55,24 +55,25 @@ class AuthenticationRepository {
   Future<dynamic> loginWithFacebook(String? accessToken) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final response =
-        await provider.signInWithFacebook({'accessToken': accessToken});
+    final body = convert.jsonEncode({'accessToken': accessToken});
+
+    final response = await provider.signInWithFacebook(body);
     return response;
   }
 
   Future<dynamic> loginWithGoogle(String? accessToken) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final response =
-        await provider.signInWithGoogle({'accessToken': accessToken});
+    final body = convert.jsonEncode({'accessToken': accessToken});
+    final response = await provider.signInWithGoogle(body);
     return response;
   }
 
-  Future<dynamic> taskerLogin(String? email, String? password) async {
+  Future<dynamic> userLogin(String? email, String? password) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final response =
-        await provider.taskerLogin({'email': email, 'password': password});
+    final body = convert.jsonEncode({'email': email, 'password': password}); 
+    final response = await provider.userLogin(body);
     return response;
   }
 }

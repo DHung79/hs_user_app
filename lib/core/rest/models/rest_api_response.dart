@@ -1,9 +1,7 @@
-import 'package:hs_tasker_app/core/user/model/user_model.dart';
-
+import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
 import '../../service/service.dart';
-import '../../tasker/model/tasker_model.dart';
 
 class ApiError implements Exception {
   String _errorCode = '';
@@ -55,12 +53,6 @@ class BaseModel {
     }
     if (T == ListUserModel) {
       return ListUserModel.fromJson(json) as T;
-    }
-    if (T == TaskerModel) {
-      return TaskerModel.fromJson(json) as T;
-    }
-    if (T == ListTaskerModel) {
-      return ListTaskerModel.fromJson(json) as T;
     }
     if (T == ServiceModel) {
       return ServiceModel.fromJson(json) as T;
@@ -170,6 +162,13 @@ class EditBaseModel {
     return {};
   }
 
+  static Map<String, dynamic> toChangePasswordJson(EditBaseModel model) {
+    if (model is EditUserModel) {
+      return model.toChangePasswordJson();
+    }
+    return {};
+  }
+
   static Map<String, dynamic> toEditJson(EditBaseModel model) {
     if (model is EditServiceModel) {
       return model.toEditJson();
@@ -177,9 +176,7 @@ class EditBaseModel {
     if (model is EditUserModel) {
       return model.toEditJson();
     }
-    if (model is EditTaskerModel) {
-      return model.toEditJson();
-    }
+
     return {};
   }
 }

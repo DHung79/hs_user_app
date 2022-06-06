@@ -33,7 +33,7 @@ class JTToast {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: AppColor.textColor4.withOpacity(0.2),
+              color: AppColor.shadow.withOpacity(0.2),
               spreadRadius: 3,
               blurRadius: 8,
               offset: const Offset(0, 0),
@@ -44,18 +44,18 @@ class JTToast {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.check_circle_sharp,
-              color: AppColor.shapeColor3,
+              color: AppColor.shade5,
               size: 26,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 13),
               child: Text(
                 message,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColor.textColor1,
+                  color: AppColor.text1,
                 ),
               ),
             ),

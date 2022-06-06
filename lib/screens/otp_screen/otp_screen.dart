@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '/screens/login_screen/login_screen.dart';
+import 'package:hs_user_app/main.dart';
+import '../../theme/svg_constants.dart';
+import '../onboarding/authentication_screen.dart';
 import '/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import '/config/theme.dart';
-import '/config/fonts.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({Key? key}) : super(key: key);
@@ -18,8 +17,10 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   ahihi() {
     if (formKey.currentState!.validate() && errorMessage.isEmpty) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const AuthenticationScreen()));
     } else {
       // _autovalidateMode = AutovalidateMode.onUserInteraction;
     }
@@ -52,7 +53,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorApp.purpleColor,
+      backgroundColor: AppColor.primary1,
       key: scaffoldKey,
       body: Container(
         padding: const EdgeInsets.only(top: 65, left: 16, right: 16),
@@ -64,13 +65,20 @@ class _OtpScreenState extends State<OtpScreen> {
             Container(
               width: 145,
               decoration: BoxDecoration(
-                  color: ColorApp.secondaryColor1,
+                  color: AppColor.secondary1,
                   borderRadius: BorderRadius.circular(22)),
               child: Row(
                 children: [
                   CircleAvatar(
                     child: IconButton(
-                      icon: SvgPicture.asset('assets/icons/17073.svg'),
+                      icon: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: SvgIcon(
+                          SvgIcons.keyboardBackspace,
+                          color: AppColor.primary1,
+                          size: 24,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -82,7 +90,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                   Text(
                     'Nhập email',
-                    style: FontStyle().typeEmailFont,
+                    style: AppTextTheme.normalText(AppColor.text2),
                   )
                 ],
               ),
@@ -93,14 +101,14 @@ class _OtpScreenState extends State<OtpScreen> {
                 children: [
                   Text(
                     'Nhập mã OTP',
-                    style: FontStyle().missPassFont,
+                    style: AppTextTheme.bigText(AppColor.text2),
                   ),
                   const SizedBox(
                     height: 24,
                   ),
                   Text(
                     'Mã OTP không đúng',
-                    style: FontStyle().errorFont,
+                    style: AppTextTheme.normalHeaderTitle(AppColor.others1),
                   ),
                   const SizedBox(
                     height: 5,
@@ -111,8 +119,9 @@ class _OtpScreenState extends State<OtpScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 60),
                         child: PinCodeTextField(
-                          backgroundColor: ColorApp.purpleColor,
+                          backgroundColor: AppColor.primary1,
                           appContext: context,
+                          autoDismissKeyboard: false,
                           pastedTextStyle: const TextStyle(
                             // color: Colors.green.shade600,
                             color: Colors.white,
@@ -122,23 +131,21 @@ class _OtpScreenState extends State<OtpScreen> {
                           showCursor: true,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           length: 4,
-                          obscureText: false,
-                          obscuringCharacter: '*',
                           animationType: AnimationType.fade,
                           pinTheme: PinTheme(
                             fieldHeight: 40,
                             fieldWidth: 32,
-                            activeFillColor: ColorApp.purpleColor,
-                            selectedFillColor: ColorApp.purpleColor,
+                            activeFillColor: AppColor.primary1,
+                            selectedFillColor: AppColor.primary1,
                             // disabledColor: ColorApp.purpleColor,
                             activeColor: Colors.white,
                             selectedColor: Colors.white,
                             inactiveColor: Colors.white,
-                            inactiveFillColor: ColorApp.purpleColor,
+                            inactiveFillColor: AppColor.primary1,
                           ),
                           cursorColor: Colors.white,
                           animationDuration: const Duration(milliseconds: 300),
-                          textStyle: FontStyle().otpTextFont,
+                          textStyle: AppTextTheme.bigText(AppColor.text2),
                           enableActiveFill: true,
                           errorAnimationController: errorController,
                           controller: textEditingController,
@@ -149,7 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ButtonLogin(
                     text: 'TIẾP TỤC',
                     login: true,
-                    style: FontStyle().loginFont,
+                    style: AppTextTheme.headerTitle(AppColor.primary1),
                     otp: true,
                     forward: '/createpass',
                     onPressed: ahihi,
@@ -158,7 +165,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   TextButton(
                     child: Text(
                       'Gửi lại',
-                      style: FontStyle().sendOTPFont,
+                      style: AppTextTheme.normalHeaderTitle(AppColor.primary1),
                     ),
                     onPressed: () {},
                   )

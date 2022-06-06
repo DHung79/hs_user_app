@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/main.dart';
-import '../config/theme.dart';
-import '../config/svg_constants.dart';
+import '../theme/svg_constants.dart';
 
 class JTTextFormField extends StatefulWidget {
   final TextEditingController? controller;
@@ -48,30 +47,30 @@ class _JTTextFormFieldState extends State<JTTextFormField> {
                           color: Colors.white,
                         )
                       : SvgIcon(
-                          SvgIcons.password,
+                          SvgIcons.eyeOff1,
                           color: Colors.white,
                         ),
                   onPressed: widget.passwordIconOnPressed,
                 )
               : null,
           filled: true,
-          fillColor: AppColor.secondaryColor3,
+          fillColor: AppColor.secondary3,
           focusedBorder: UnderlineInputBorder(
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               width: 3.0,
-              color: AppColor.textColor7,
+              color: AppColor.text7,
             ),
             borderRadius: BorderRadius.circular(4),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               width: 3.0,
-              color: AppColor.textColor7,
+              color: AppColor.text7,
             ),
             borderRadius: BorderRadius.circular(4),
           ),
           hintText: widget.hintText,
-          hintStyle: AppTextTheme().mediumBodyText(AppColor.textColor2),
+          hintStyle: AppTextTheme.mediumBodyText(Colors.white),
         ),
         controller: widget.controller,
         onSaved: widget.onSaved,

@@ -83,7 +83,6 @@ class ServiceApiProvider {
         '/$id';
     final body = convert.jsonEncode(EditBaseModel.toEditJson(editModel!));
     final token = await ApiHelper.getUserToken();
-    logDebug('path: $path\nbody: $body');
     final response = await RestApiHandlerData.putData<T>(
       path: path,
       body: body,

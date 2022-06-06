@@ -41,6 +41,20 @@ class UserLogin extends AuthenticationEvent {
   List<Object> get props => [email, password, keepSession];
 }
 
+class UserLoginGoogle extends AuthenticationEvent {
+  final bool keepSession;
+  final String accessToken;
+  final bool isMobile;
+
+  const UserLoginGoogle(
+      {required this.keepSession,
+      required this.accessToken,
+      required this.isMobile});
+
+  @override
+  List<Object> get props => [accessToken, isMobile, keepSession];
+}
+
 class ForgotPassword extends AuthenticationEvent {
   final String email;
 

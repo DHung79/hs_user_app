@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:hs_tasker_app/core/logger/logger.dart';
+import '/core/logger/logger.dart';
 import 'package:http/http.dart' as http;
 import '../../authentication/auth.dart';
 import '../models/rest_api_response.dart';
@@ -153,8 +153,7 @@ class ApiBaseHelper {
           await http.post(Uri.parse(path), body: body, headers: headers);
       token = _returnLoginResponse(response);
     } on SocketException catch (ex) {
-      // ignore: avoid_print
-      print(ex);
+      logDebug(ex);
       return ApiResponse(
         null,
         ApiError.fromJson(
@@ -176,8 +175,7 @@ class ApiBaseHelper {
           await http.post(Uri.parse(path), body: body, headers: headers);
       responseJson = _returnLogoutResponse(response);
     } on SocketException catch (ex) {
-      // ignore: avoid_print
-      print(ex);
+      logDebug(ex);
       return ApiResponse(
         null,
         ApiError.fromJson(
@@ -293,7 +291,7 @@ class ApiBaseHelper {
     if (response.statusCode == 200) {
       var token = response.headers['x-auth-token'];
       var map = json.decode(response.body.toString());
-      var id = map['tasker']['_id'] ?? '';
+      var id = map['user']['_id'] ?? '';
       return {'token': token, 'id': id};
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
       return json.decode(response.body.toString());
@@ -310,7 +308,6 @@ class ApiBaseHelper {
   }
 
   _returnLogoutResponse(http.Response response) {
-    logDebug('response: ${response.toString()}');
     if (response.statusCode == 200) {
       var map = json.decode(response.body.toString());
       return map;

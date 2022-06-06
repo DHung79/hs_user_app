@@ -13,21 +13,21 @@ class UserRepository {
 
   Future<ApiResponse<T?>>
       getProfile<T extends BaseModel, K extends EditBaseModel>() =>
-          _provider.getProfile<T>();
+          _provider.fetchUserByToken<T>();
+
+  Future<ApiResponse<T?>>
+      editProfile<T extends BaseModel, K extends EditBaseModel>({
+    K? editModel,
+  }) =>
+          _provider.editProfile<T, K>(
+            editModel: editModel,
+          );
 
   Future<ApiResponse<T?>>
       fetchDataById<T extends BaseModel, K extends EditBaseModel>({
     String? id,
   }) =>
           _provider.fetchUserById<T>(
-            id: id,
-          );
-
-  Future<ApiResponse<T?>>
-      deleteObject<T extends BaseModel, K extends EditBaseModel>({
-    String? id,
-  }) =>
-          _provider.deleteUserById<T>(
             id: id,
           );
 
@@ -42,17 +42,10 @@ class UserRepository {
           );
 
   Future<ApiResponse<T?>>
-      editProfile<T extends BaseModel, K extends EditBaseModel>({
-    K? editModel,
+      deleteObject<T extends BaseModel, K extends EditBaseModel>({
+    String? id,
   }) =>
-          _provider.editProfile<T, K>(
-            editModel: editModel,
+          _provider.deleteUserById<T>(
+            id: id,
           );
-
-  // Future<ApiResponse<T?>>
-  //     userChangePassword<T extends BaseModel, K extends EditBaseModel>(
-  //             {Map<String, dynamic>? params}) =>
-  //         _provider.userChangePassword<T>(
-  //           params: params,
-  //         );
 }

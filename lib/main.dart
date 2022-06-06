@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '/core/logger/logger.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -10,19 +9,20 @@ import '../routes/app_router_delegate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'locales/i18n.dart';
 import 'scroll_behavior.dart';
-import './config/theme.dart';
+import 'theme/app_theme.dart';
 import 'utils/app_state_notifier.dart';
 
 export 'core/authentication/bloc/authentication_bloc_controller.dart';
 export '../core/rest/models/rest_api_response.dart';
 export '../core/logger/logger.dart';
-export './config/theme.dart';
-export './config/app_text_theme.dart';
+export 'theme/app_colors.dart';
+export 'theme/app_text_theme.dart';
 export 'locales/i18n.dart';
 export 'utils/screen_util.dart';
 export 'locales/i18n_key.dart';
 
 int notiBadges = 0;
+String dataLocation = '';
 
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 // Page index
@@ -77,6 +77,8 @@ class _AppState extends State<App> {
         return MaterialApp.router(
           title: 'Smart Building',
           debugShowCheckedModeBanner: false,
+          theme: ThemeConfig.lightTheme,
+          darkTheme: ThemeConfig.darkTheme,
           themeMode: appState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           routeInformationParser: _routeInfoParser,
           routerDelegate: locator<AppRouterDelegate>(),
@@ -98,9 +100,6 @@ class _AppState extends State<App> {
 
 Future<PackageInfo> loadVersion() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-  logDebug(
-      ' appName: ${packageInfo.appName}  \n version: ${packageInfo.version}');
 
   return packageInfo;
 }
