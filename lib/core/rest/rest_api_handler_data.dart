@@ -95,6 +95,33 @@ class RestApiHandlerData {
     return response;
   }
 
+  static signup({
+    required String path,
+    dynamic body,
+    Map<String, String>? headers,
+  }) async {
+    final response = await _apiBaseHelper.signup(
+      path: path,
+      body: body,
+      headers: headers,
+    );
+    return response;
+  }
+
+  static checkEmail({
+    required String path,
+    dynamic body,
+    Map<String, String>? headers,
+  }) async {
+    final response = await _apiBaseHelper.checkEmail(
+      path: path,
+      body: body,
+      headers: headers,
+    );
+
+    return response;
+  }
+
   static Future logout({
     required String path,
     dynamic body,

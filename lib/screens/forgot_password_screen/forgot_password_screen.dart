@@ -38,11 +38,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
+          logDebug(state);
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
-          } else if (state is ResetPasswordState) {
+          } else if (state is ForgotPasswordDoneState) {
             JTToast.init(context);
-            navigateTo(resetPasswordRoute);
+            navigateTo(otpForgotPassWordRoute);
             await Future.delayed(const Duration(milliseconds: 400));
             JTToast.successToast(
                 width: 327,
@@ -59,101 +60,95 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ? EdgeInsets.zero
                     : const EdgeInsets.all(30),
                 child: Center(
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: size.maxWidth - 48),
-                    child: Form(
-                      autovalidateMode: _autovalidate,
-                      key: _key,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _buildErrorMessage(),
-                          InkWell(
-                            onTap: () {
-                              navigateTo(authenticationRoute);
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: SvgIcon(SvgIcons.close),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: size.maxWidth - 32),
+                      child: Form(
+                        autovalidateMode: _autovalidate,
+                        key: _key,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                navigateTo(authenticationRoute);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: SvgIcon(SvgIcons.close),
+                                ),
                               ),
                             ),
-                          ),
-                          const Spacer(),
-                          Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12.0),
-                                child: Text(
-                                  ScreenUtil.t(I18nKey.forgotPassword)!,
-                                  style: AppTextTheme.bigText(Colors.white),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                child: Text(
-                                  'Email không tồn tại',
-                                  style: AppTextTheme.normalHeaderTitle(
-                                      AppColor.others1),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                child: JTTextFormField(
-                                  hintText: 'NHẬP EMAIL',
-                                  keyboardType: TextInputType.emailAddress,
-                                  controller: emailController,
-                                  onSaved: (value) {
-                                    emailController.text = value!.trim();
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (_errorMessage!.isNotEmpty) {
-                                        _errorMessage = '';
-                                      }
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value!.isEmpty ||
-                                        value.trim().isEmpty) {
-                                      return ValidatorText.empty(
-                                          fieldName:
-                                              ScreenUtil.t(I18nKey.email)!);
-                                    }
-                                    if (!isEmail(value.trim())) {
-                                      return ValidatorText.invalidFormat(
-                                          fieldName:
-                                              ScreenUtil.t(I18nKey.email)!);
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: const Size.fromHeight(52),
-                                    backgroundColor: Colors.white,
-                                  ),
+                            const Spacer(),
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0),
                                   child: Text(
-                                    'TIẾP TỤC',
-                                    style: AppTextTheme.headerTitle(
-                                        AppColor.primary1),
+                                    ScreenUtil.t(I18nKey.forgotPassword)!,
+                                    style: AppTextTheme.bigText(Colors.white),
                                   ),
-                                  onPressed: _forgotPassword,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                        ],
+                                _buildErrorMessage(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  child: JTTextFormField(
+                                    hintText: 'NHẬP EMAIL',
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: emailController,
+                                    onSaved: (value) {
+                                      emailController.text = value!.trim();
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (_errorMessage!.isNotEmpty) {
+                                          _errorMessage = '';
+                                        }
+                                      });
+                                    },
+                                    validator: (value) {
+                                      if (value!.isEmpty ||
+                                          value.trim().isEmpty) {
+                                        return ValidatorText.empty(
+                                            fieldName:
+                                                ScreenUtil.t(I18nKey.email)!);
+                                      }
+                                      if (!isEmail(value.trim())) {
+                                        return ValidatorText.invalidFormat(
+                                            fieldName:
+                                                ScreenUtil.t(I18nKey.email)!);
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      minimumSize: const Size.fromHeight(52),
+                                      backgroundColor: Colors.white,
+                                    ),
+                                    child: Text(
+                                      'TIẾP TỤC',
+                                      style: AppTextTheme.headerTitle(
+                                          AppColor.primary1),
+                                    ),
+                                    onPressed: _forgotPassword,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -167,17 +162,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   _forgotPassword() {
-
     setState(() {
       _errorMessage = '';
     });
-
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
-      // AuthenticationBlocController().authenticationBloc.add(
-      //       ForgotPassword(email: emailController.text),
-      //     );
-      navigateTo(otpRoute);
+      AuthenticationBlocController().authenticationBloc.add(
+            ForgotPassword(email: emailController.text),
+          );
     } else {
       setState(() {
         _autovalidate = AutovalidateMode.onUserInteraction;
@@ -188,31 +180,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   _buildErrorMessage() {
     return _errorMessage != null && _errorMessage!.isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: double.infinity,
-                minHeight: 24,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  border: Border.all(
-                    color: Theme.of(context).errorColor,
-                    width: 1,
-                  ),
-                ),
-                child: Padding(
-                  child: Text(
-                    _errorMessage!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).errorColor),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-                ),
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              'Email không tồn tại',
+              style: AppTextTheme.normalHeaderTitle(AppColor.others1),
             ),
           )
         : const SizedBox();

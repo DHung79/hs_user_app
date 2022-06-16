@@ -34,7 +34,6 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
-          logDebug('state: $state');
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is ResetPasswordDoneState) {
@@ -50,7 +49,7 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
                   : const EdgeInsets.all(30),
               child: Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: size.maxWidth),
+                  constraints: BoxConstraints(maxWidth: size.maxWidth - 32),
                   child: Column(
                     children: [
                       _buildErrorMessage(),
@@ -168,13 +167,10 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
     setState(() {
       _errorMessage = '';
     });
-    logDebug(email);
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(
-            UserSignUp(
-              password: setPasswordController.text,
-            ),
+            ResetPassword(password: setPasswordController.text),
           );
     } else {
       setState(() {
@@ -182,6 +178,7 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
       });
     }
   }
+
 
   _buildErrorMessage() {
     return _errorMessage != null && _errorMessage!.isNotEmpty

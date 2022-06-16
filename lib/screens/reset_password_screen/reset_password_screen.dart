@@ -3,18 +3,18 @@ import 'package:hs_user_app/core/authentication/bloc/authentication/authenticati
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 import '../../theme/svg_constants.dart';
-import 'create_password_form.dart';
+import 'reset_password_form.dart';
 
-class CreatePasswordScreen extends StatefulWidget {
-  const CreatePasswordScreen({
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CreatePasswordScreen> createState() => _ChangePasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
+class _ChangePasswordScreenState extends State<ResetPasswordScreen> {
   AuthenticationState? state;
 
   @override
@@ -66,7 +66,7 @@ class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Tạo mật khẩu mới',
+                'Đặt mật khẩu mới',
                 style: AppTextTheme.bigText(AppColor.text2),
               ),
               const SizedBox(

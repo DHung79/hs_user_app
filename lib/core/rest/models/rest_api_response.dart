@@ -1,7 +1,8 @@
+import 'package:hs_user_app/core/task/model/task_model.dart';
+
 import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
-import '../../service/service.dart';
 
 class ApiError implements Exception {
   String _errorCode = '';
@@ -54,26 +55,43 @@ class BaseModel {
     if (T == ListUserModel) {
       return ListUserModel.fromJson(json) as T;
     }
+    if (T == TaskModel) {
+      return TaskModel.fromJson(json) as T;
+    }
+    if (T == ListTaskModel) {
+      return ListTaskModel.fromJson(json) as T;
+    }
+
+    if (T == PostedUserModel) {
+      return PostedUserModel.fromJson(json) as T;
+    }
+    if (T == LocationGpsModel) {
+      return LocationGpsModel.fromJson(json) as T;
+    }
+    if (T == TaskerModel) {
+      return TaskerModel.fromJson(json) as T;
+    }
+
+    if (T == LocationGpsModel) {
+      return LocationGpsModel.fromJson(json) as T;
+    }
     if (T == ServiceModel) {
       return ServiceModel.fromJson(json) as T;
     }
-    if (T == ListServiceModel) {
-      return ListServiceModel.fromJson(json) as T;
-    }
 
-    if (T == CategoryModel) {
-      return CategoryModel.fromJson(json) as T;
-    }
     if (T == TranslationModel) {
       return TranslationModel.fromJson(json) as T;
     }
-    if (T == OptionsModel) {
-      return OptionsModel.fromJson(json) as T;
-    }
-    if (T == UnitModel) {
-      return UnitModel.fromJson(json) as T;
+    if (T == OptionModel) {
+      return OptionModel.fromJson(json) as T;
     }
 
+    if (T == AddServiceModel) {
+      return AddServiceModel.fromJson(json) as T;
+    }
+    if (T == OtpModel) {
+      return OtpModel.fromJson(json) as T;
+    }
     logError("Unknown BaseModel class: $T");
     throw Exception("Unknown BaseModel class: $T");
   }
@@ -126,9 +144,6 @@ class BaseModel {
 
 class EditBaseModel {
   static T fromModel<T extends EditBaseModel>(BaseModel model) {
-    if (T == EditServiceModel) {
-      return EditServiceModel.fromModel(model as ServiceModel) as T;
-    }
     // if (model is EditRoleModel) {
     //   return EditRoleModel.fromModel(model as RoleModel) as T;
     // }
@@ -143,15 +158,9 @@ class EditBaseModel {
   }
 
   static Map<String, dynamic> toCreateJson(EditBaseModel model) {
-    if (model is EditServiceModel) {
+    if (model is EditTaskModel) {
       return model.toCreateJson();
     }
-    // if (model is EditUserModel) {
-    //   return model.toCreateJson();
-    // }
-    // if (model is EditRoleModel) {
-    //   return model.toCreateJson();
-    // }
     return {};
   }
 
@@ -170,9 +179,6 @@ class EditBaseModel {
   }
 
   static Map<String, dynamic> toEditJson(EditBaseModel model) {
-    if (model is EditServiceModel) {
-      return model.toEditJson();
-    }
     if (model is EditUserModel) {
       return model.toEditJson();
     }

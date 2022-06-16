@@ -164,6 +164,28 @@ class ApiBaseHelper {
     return token;
   }
 
+  Future<dynamic> signup({
+    required String path,
+    dynamic body,
+    dynamic headers,
+  }) async {
+    dynamic token;
+    try {
+      final response =
+          await http.put(Uri.parse(path), body: body, headers: headers);
+      token = _returnRegisterResponse(response);
+    } on SocketException catch (ex) {
+      logDebug(ex);
+      return ApiResponse(
+        null,
+        ApiError.fromJson(
+          {'error_code': -999, 'error_message': 'No Internet Connection'},
+        ),
+      );
+    }
+    return token;
+  }
+
   Future<dynamic> logout({
     required String path,
     dynamic body,
@@ -173,6 +195,30 @@ class ApiBaseHelper {
     try {
       final response =
           await http.post(Uri.parse(path), body: body, headers: headers);
+      responseJson = _returnLogoutResponse(response);
+    } on SocketException catch (ex) {
+      logDebug(ex);
+      return ApiResponse(
+        null,
+        ApiError.fromJson(
+          {'error_code': -999, 'error_message': 'No Internet Connection'},
+        ),
+      );
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> checkEmail({
+    required String path,
+    dynamic body,
+    dynamic headers,
+  }) async {
+    dynamic responseJson;
+    try {
+      final response =
+          await http.post(Uri.parse(path), body: body, headers: headers);
+      logDebug(response);
+
       responseJson = _returnLogoutResponse(response);
     } on SocketException catch (ex) {
       logDebug(ex);
@@ -206,6 +252,8 @@ class ApiBaseHelper {
   }
 
   ApiResponse<T> _returnResponse<T extends BaseModel>(http.Response response) {
+    // logDebug(response.statusCode);
+    logDebug(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseJson = json.decode(response.body.toString());
       if (responseJson is Map<String, dynamic>) {
@@ -288,10 +336,32 @@ class ApiBaseHelper {
   }
 
   _returnLoginResponse(http.Response response) {
+    // logDebug(response.statusCode);
     if (response.statusCode == 200) {
       var token = response.headers['x-auth-token'];
       var map = json.decode(response.body.toString());
       var id = map['user']['_id'] ?? '';
+      return {'token': token, 'id': id};
+    } else if (response.statusCode >= 400 && response.statusCode < 500) {
+      return json.decode(response.body.toString());
+    }
+    return ApiResponse(
+      null,
+      ApiError.fromJson(
+        {
+          'error_code': response.statusCode,
+          'error_message': 'Error occured while Communication with Server'
+        },
+      ),
+    );
+  }
+
+  _returnRegisterResponse(http.Response response) {
+    // logDebug(response.statusCode);
+    if (response.statusCode == 200) {
+      var token = response.headers['x-auth-token'];
+      var map = json.decode(response.body.toString());
+      var id = map['_id'] ?? '';
       return {'token': token, 'id': id};
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
       return json.decode(response.body.toString());

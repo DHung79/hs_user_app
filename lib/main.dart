@@ -22,7 +22,12 @@ export 'utils/screen_util.dart';
 export 'locales/i18n_key.dart';
 
 int notiBadges = 0;
-String dataLocation = '';
+String locationAddress = '';
+bool loginGoogle = false;
+int homePageIndex = 0;
+int selectIndexBooking = 0;
+final List<dynamic> addressList = [];
+String email = '';
 
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 // Page index
@@ -30,6 +35,10 @@ GlobalKey globalKey = GlobalKey();
 
 navigateTo(String route) async {
   locator<AppRouterDelegate>().navigateTo(route);
+}
+
+String getCurrentRoute() {
+  return locator<AppRouterDelegate>().currentConfiguration.name!;
 }
 
 final List<Locale> supportedLocales = <Locale>[

@@ -48,4 +48,13 @@ class UserRepository {
           _provider.deleteUserById<T>(
             id: id,
           );
+
+
+  Future<ApiResponse<T?>>
+      editPassword<T extends BaseModel, K extends EditBaseModel>({
+    K? editModel,
+  }) =>
+          _provider.editPassword<T, K>(
+            editModel: editModel,
+          );
 }

@@ -11,7 +11,8 @@
    <application
         android:label="hs_user_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/logo"
+        android:usesCleartextTraffic="true">
          <meta-data 
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDwZsZf46N_Rs6ui_7kHZ52kOr5rq17Ibc"/>

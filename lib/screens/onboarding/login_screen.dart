@@ -48,6 +48,8 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       bloc: AuthenticationBlocController().authenticationBloc,
       listener: (context, state) {
+        logDebug(state);
+
         if (state is AuthenticationFailure) {
           _showError(state.errorCode);
         } else if (state is LoginLastUser) {
@@ -66,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
                 : const EdgeInsets.all(30),
             child: Center(
               child: Container(
-                constraints: BoxConstraints(maxWidth: size.maxWidth - 48),
+                constraints: BoxConstraints(maxWidth: size.maxWidth - 32),
                 child: Form(
                   autovalidateMode: _autovalidate,
                   key: _key,
@@ -236,6 +238,7 @@ class _LoginFormState extends State<LoginForm> {
     GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
     setState(() {
       _errorMessage = '';
+      loginGoogle = true;
     });
 
     AuthenticationBlocController().authenticationBloc.add(
@@ -250,6 +253,7 @@ class _LoginFormState extends State<LoginForm> {
   _login() {
     setState(() {
       _errorMessage = '';
+      loginGoogle = false;
     });
     if (widget.state is AuthenticationLoading) return;
 
@@ -270,33 +274,14 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  _buildErrorMessage() {
+  Widget _buildErrorMessage() {
     return _errorMessage != null && _errorMessage!.isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: double.infinity,
-                minHeight: 24,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  border: Border.all(
-                    color: Theme.of(context).errorColor,
-                    width: 1,
-                  ),
-                ),
-                child: Padding(
-                  child: Text(
-                    _errorMessage!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).errorColor),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-                ),
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Center(
+              child: Text(
+                _errorMessage!,
+                style: AppTextTheme.normalHeaderTitle(AppColor.others1),
               ),
             ),
           )

@@ -17,10 +17,10 @@ class UserModel extends BaseModel {
         _name = json['name'] ?? '',
         _email = json['email'] ?? '',
         _address = json['address'] ?? '',
-        _phoneNumber = json['phoneNumber'] ?? '',
+        _phoneNumber = json['phoneNumber']?.toString() ?? '',
         _gender = json['gender'] ?? '',
-        _createdTime = json['created_time'],
-        _updatedTime = json['updated_time'],
+        _createdTime = json['created_time'] ?? 0,
+        _updatedTime = json['updated_time'] ?? 0,
         _password = '';
 
   Map<String, dynamic> toJson() => {
@@ -80,7 +80,8 @@ class EditUserModel extends EditBaseModel {
   Map<String, dynamic> toEditProfileJson() {
     Map<String, dynamic> params = {
       'name': name,
-      'phone_number': phoneNumber,
+      'email': email,
+      'phoneNumber': phoneNumber,
       'gender': gender,
       'address': address,
     };
@@ -93,7 +94,7 @@ class EditUserModel extends EditBaseModel {
       'name': name,
       'email': email,
       'address': address,
-      'phone_number': phoneNumber,
+      'phoneNumber': phoneNumber,
       'gender': gender,
     };
 

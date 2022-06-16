@@ -17,7 +17,15 @@ class AuthenticationProvider {
   }
 
   signUpWithEmailAndPassword(dynamic body) async {
-    return null;
+    final url =
+        ApiConstants.apiDomain + ApiConstants.apiVersion + '/registers/user';
+    final response = await RestApiHandlerData.signup(
+      path: url,
+      body: body,
+      headers: ApiHelper.headers(null),
+    );
+    logDebug('body: $body, path: $url');
+    return response;
   }
 
   getUserData(String id) async {
@@ -52,7 +60,8 @@ class AuthenticationProvider {
     final url = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
         ApiConstants.forgotPassword +
-        '/reset-token';
+        ApiConstants.resetPassword +
+        ApiConstants.user;
     final response = await RestApiHandlerData.putData<Status>(
       path: url,
       body: body,
@@ -64,7 +73,8 @@ class AuthenticationProvider {
   forgotPassword(dynamic body) async {
     final url = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
-        ApiConstants.forgotPassword;
+        ApiConstants.forgotPassword +
+        ApiConstants.user;
     final response = await RestApiHandlerData.postData<Status>(
       path: url,
       body: body,
@@ -109,6 +119,51 @@ class AuthenticationProvider {
     final url =
         ApiConstants.apiDomain + ApiConstants.apiVersion + '/login/user';
     final response = await RestApiHandlerData.login(
+      path: url,
+      body: body,
+      headers: ApiHelper.headers(null),
+    );
+    return response;
+  }
+
+  checkEmail(dynamic body) async {
+    final url = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        '/registers/user/email';
+
+    final response = await RestApiHandlerData.checkEmail(
+      path: url,
+      body: body,
+      headers: ApiHelper.headers(null),
+    );
+    logDebug('path: $url, body: $body');
+
+    return response;
+  }
+
+  checkOTPForgot(dynamic body) async {
+    final url = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.forgotPassword +
+        ApiConstants.otp +
+        ApiConstants.user;
+    logDebug('path: $url\nbody: $body');
+    final response = await RestApiHandlerData.postData<OtpModel>(
+      path: url,
+      body: body,
+      headers: ApiHelper.headers(null),
+    );
+    return response;
+  }
+
+  checkOTPRegister(dynamic body) async {
+    final url = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.registers +
+        ApiConstants.user +
+        ApiConstants.otp;
+    logDebug('path: $url\nbody: $body');
+    final response = await RestApiHandlerData.postData<OtpModel>(
       path: url,
       body: body,
       headers: ApiHelper.headers(null),

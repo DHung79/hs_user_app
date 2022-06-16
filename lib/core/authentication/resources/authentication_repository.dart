@@ -1,14 +1,17 @@
 import 'dart:convert' as convert;
+import 'package:hs_user_app/main.dart';
+
 import '../../authentication/resources/authentication_provider.dart';
 
 class AuthenticationRepository {
   final provider = AuthenticationProvider();
 
   Future<dynamic> signUpWithEmailAndPassword(
-      String? email, String? password) async {
+      String id, String? password) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final body = convert.jsonEncode({'email': email, 'password': password});
+    final body =
+        convert.jsonEncode({'id': id, 'password': password});
     final response = await provider.signUpWithEmailAndPassword(body);
     return response;
   }
@@ -22,13 +25,14 @@ class AuthenticationRepository {
   }
 
   Future<dynamic> resetPassword(
-      String email, String password, String token) async {
+    String id,
+    String password,
+  ) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
     final body = convert.jsonEncode({
-      'email': email,
+      'id': id,
       'password': password,
-      'token': token,
     });
     final response = await provider.resetPassword(body);
     return response;
@@ -72,8 +76,36 @@ class AuthenticationRepository {
   Future<dynamic> userLogin(String? email, String? password) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final body = convert.jsonEncode({'email': email, 'password': password}); 
+    final body = convert.jsonEncode({'email': email, 'password': password});
     final response = await provider.userLogin(body);
+
+    return response;
+  }
+
+  Future<dynamic> checkEmail(String? email) async {
+    await Future.delayed(
+        const Duration(seconds: 1)); // simulate a network delay
+    final body = convert.jsonEncode({'email': email});
+    final response = await provider.checkEmail(body);
+    logDebug(body);
+    return response;
+  }
+
+  Future<dynamic> checkOTPForgot(String otp) async {
+    await Future.delayed(
+      const Duration(seconds: 1),
+    );
+    final body = convert.jsonEncode({'otp': otp});
+    final response = await provider.checkOTPForgot(body);
+    return response;
+  }
+
+  Future<dynamic> checkOTPRegister(String otp) async {
+    await Future.delayed(
+      const Duration(seconds: 1),
+    );
+    final body = convert.jsonEncode({'otp': otp});
+    final response = await provider.checkOTPRegister(body);
     return response;
   }
 }

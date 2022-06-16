@@ -15,13 +15,12 @@ class UserLogOut extends AuthenticationEvent {}
 class GetUserData extends AuthenticationEvent {}
 
 class UserSignUp extends AuthenticationEvent {
-  final String email;
   final String password;
 
-  const UserSignUp({required this.email, required this.password});
+  const UserSignUp({required this.password});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [password];
 }
 
 class UserLogin extends AuthenticationEvent {
@@ -65,18 +64,26 @@ class ForgotPassword extends AuthenticationEvent {
 }
 
 class ResetPassword extends AuthenticationEvent {
-  final String email;
   final String password;
-  final String resetToken;
 
   const ResetPassword({
-    required this.email,
     required this.password,
-    required this.resetToken,
+ 
   });
 
   @override
-  List<Object> get props => [email, password, resetToken];
+  List<Object> get props => [password];
+}
+
+class CheckEmail extends AuthenticationEvent {
+  final String email;
+
+  const CheckEmail({
+    required this.email,
+  });
+
+  @override
+  List<Object> get props => [email];
 }
 
 class UserLanguage extends AuthenticationEvent {
@@ -93,3 +100,27 @@ class UserLanguage extends AuthenticationEvent {
 class TokenExpired extends AuthenticationEvent {}
 
 class GetLastUser extends AuthenticationEvent {}
+
+class CheckOTPForgot extends AuthenticationEvent {
+  final String otp;
+
+  const CheckOTPForgot({
+    required this.otp,
+  });
+
+  @override
+  List<Object> get props => [otp];
+}
+
+class CheckOTPRegister extends AuthenticationEvent {
+  final String otp;
+
+  const CheckOTPRegister({
+    required this.otp,
+  });
+
+  @override
+  List<Object> get props => [otp];
+}
+
+class ResendOTP extends AuthenticationEvent {}

@@ -57,6 +57,26 @@ class UserBloc {
     }
   }
 
+  Future<UserModel> changePassword({
+    EditUserModel? editModel,
+  }) async {
+    try {
+      // Await response from server.
+      final data = await _repository.editPassword<UserModel, EditUserModel>(
+        editModel: editModel,
+      );
+      if (data.error != null) {
+        // Error exist
+        return Future.error(data.error!);
+      } else {
+        // Adding response data.
+        return Future.value(data.model);
+      }
+    } on AppException catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<UserModel> fetchDataById(String id) async {
     try {
       // Await response from server.
@@ -112,17 +132,20 @@ class UserBloc {
       return Future.error(e);
     }
   }
-  
+
   Future<UserModel> editProfile({EditUserModel? editModel}) async {
     try {
       // Await response from server.
       final data = await _repository.editProfile<UserModel, EditUserModel>(
-          editModel: editModel);
+        editModel: editModel,
+      );
       if (data.error != null) {
         // Error exist
+        logDebug(data);
         return Future.error(data.error!);
       } else {
         // Adding response data.
+        logDebug('data:  ${data.model!.gender}');
         return Future.value(data.model);
       }
     } on AppException catch (e) {
