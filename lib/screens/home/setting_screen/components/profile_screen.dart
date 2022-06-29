@@ -121,40 +121,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           padding: const EdgeInsets.only(top: 8, bottom: 24),
           child: Row(children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.black26,
+              backgroundColor: AppColor.primary1,
+              backgroundImage: NetworkImage(user.avatar),
             ),
             const SizedBox(
               width: 16,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Text(
-                    user.name,
-                    style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      user.name,
+                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: Text(
-                    user.email,
-                    style: AppTextTheme.mediumBodyText(AppColor.nameText),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Text(
+                      user.email,
+                      style: AppTextTheme.mediumBodyText(AppColor.nameText),
+                    ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    navigateTo(settingChangePasswordRoute);
-                  },
-                  child: Text(
-                    'Đổi mật khẩu',
-                    style: AppTextTheme.normalText(AppColor.primary2),
-                  ),
-                ),
-              ],
+                  loginGoogle == true
+                      ? const SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            navigateTo(settingChangePasswordRoute);
+                          },
+                          child: Text(
+                            'Đổi mật khẩu',
+                            style: AppTextTheme.normalText(AppColor.primary2),
+                          ),
+                        ),
+                ],
+              ),
             )
           ]),
         ),

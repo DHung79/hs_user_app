@@ -15,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool backHome = true;
   final PageState _pageState = PageState();
-  int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const HomeContent(),
     const Booking(),
@@ -25,31 +25,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      homePageIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return PageTemplate(
-      pageState: _pageState,
-      onUserFetched: (user) => setState(() {}),
-      onFetch: () {
-        _fetchDataOnPage();
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          backHome = !backHome;
+        });
+        return backHome;
       },
-      appBarHeight: 0,
-      child: FutureBuilder(
-        future: _pageState.currentUser,
-        builder: (context, AsyncSnapshot<UserModel> snapshot) {
-          return PageContent(
-            child: content(), // child: content(context),
-            pageState: _pageState,
-            onFetch: () {
-              _fetchDataOnPage();
-            },
-          );
+      child: PageTemplate(
+        pageState: _pageState,
+        onUserFetched: (user) => setState(() {}),
+        onFetch: () {
+          _fetchDataOnPage();
         },
+        appBarHeight: 0,
+        child: FutureBuilder(
+          future: _pageState.currentUser,
+          builder: (context, AsyncSnapshot<UserModel> snapshot) {
+            return PageContent(
+              child: content(), // child: content(context),
+              pageState: _pageState,
+              onFetch: () {
+                _fetchDataOnPage();
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -57,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Scaffold content() {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions.elementAt(homePageIndex),
       bottomNavigationBar: Container(
         // color: Colors.white,
         padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
@@ -160,10 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: const EdgeInsets.only(bottom: 8),
                     )),
               ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: _selectedIndex == 0
+              currentIndex: homePageIndex,
+              selectedItemColor: homePageIndex == 0
                   ? AppColor.primary1
-                  : _selectedIndex == 1
+                  : homePageIndex == 1
                       ? AppColor.primary2
                       : const Color.fromRGBO(0, 139, 203, 1),
               onTap: _onItemTapped,
