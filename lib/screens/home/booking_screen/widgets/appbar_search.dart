@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import '../../../../main.dart';
 import '../../../../theme/svg_constants.dart';
 
+// ignore: must_be_immutable
 class AppbarSearch extends StatefulWidget {
-  TextEditingController controller = TextEditingController();
-  bool haveData;
-  void Function()? onPressed;
-  List<Widget>? actions;
-  Widget? suffixIcon;
-  Widget? prefixIcon;
+  final TextEditingController controller;
+  bool? haveData;
+  final void Function()? onPressed;
+  final List<Widget>? actions;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   AppbarSearch({
     Key? key,
-    required this.haveData,
+    this.haveData,
     required this.onPressed,
     required this.controller,
     this.actions,
@@ -88,7 +89,7 @@ class _AppbarSearchState extends State<AppbarSearch> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
-                color: widget.haveData ? AppColor.primary1 : AppColor.text7,
+                color: widget.haveData! ? AppColor.primary1 : AppColor.text7,
                 width: 1,
               ),
             ),

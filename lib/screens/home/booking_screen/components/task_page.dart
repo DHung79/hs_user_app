@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/core/task/model/task_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
+import '../../../../core/task/bloc/task_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../../widgets/task_widget.dart';
 import '../../../layout_template/content_screen.dart';
+
+final taskPageKey = GlobalKey<_TaskPageState>();
 
 class TaskPage extends StatefulWidget {
   const TaskPage({Key? key}) : super(key: key);
@@ -15,6 +19,8 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   final PageState _pageState = PageState();
+  final _taskBloc = TaskBloc();
+  TaskModel? task;
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -29,7 +35,7 @@ class _TaskPageState extends State<TaskPage> {
         future: _pageState.currentUser,
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
-            child: content(context), // child: content(context),
+            child: content(),
             pageState: _pageState,
             onFetch: () {
               _fetchDataOnPage();
@@ -40,7 +46,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Scaffold content(BuildContext context) {
+  Widget content() {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SizedBox(
@@ -59,8 +65,7 @@ class _TaskPageState extends State<TaskPage> {
                       height: 52,
                       child: TextButton(
                         style: TextButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromRGBO(255, 158, 24, 1),
+                            backgroundColor: AppColor.primary2,
                             padding:
                                 const EdgeInsets.only(top: 16, bottom: 16)),
                         onPressed: () {
@@ -95,10 +100,47 @@ class _TaskPageState extends State<TaskPage> {
                 ),
               ),
               Expanded(
-                child: TaskWidget(
-                  nameButton: 'Đăng lại',
-                  onPressed: () {
-                    navigateTo(postFastRoute);
+                child: StreamBuilder(
+                  stream: _taskBloc.allData,
+                  builder: (context,
+                      AsyncSnapshot<ApiResponse<ListTaskModel?>> snapshot) {
+                    if (snapshot.hasData) {
+                      final tasks = snapshot.data!.model!.records;
+                      idTask = tasks.first.id;
+                      logDebug(idTask);
+                      return ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            return TasksWidget(
+                              nameButton: 'Đăng lại',
+                              task: tasks[index],
+                              name: tasks[index].postedUser.name,
+                              url: tasks[index].postedUser.avatar,
+                              onPressed: (callBackTask) {
+                                setState(() {
+                                  task = callBackTask;
+                                  callBackTask?.startTime;
+                                  callBackTask?.endTime;
+                                  callBackTask?.date;
+                                  callBackTask?.address;
+                                  int.parse(callBackTask!.estimateTime);
+                                  callBackTask.service.options.isNotEmpty
+                                      ? callBackTask.service.options.first.note
+                                      : '';
+                                  callBackTask.service.options.isNotEmpty
+                                      ? callBackTask
+                                          .service.options.first.quantity
+                                      : 0;
+                                });
+                                navigateTo(postFastRoute);
+                              },
+                            );
+                          });
+                    }
+                    return Center(
+                        child: CircularProgressIndicator(
+                      color: AppColor.primary2,
+                    ));
                   },
                 ),
               )
@@ -106,6 +148,14 @@ class _TaskPageState extends State<TaskPage> {
       ),
     );
   }
-}
 
-void _fetchDataOnPage() {}
+  String intToTimeLeft(int value) {
+    DateTime date2 = DateTime.fromMillisecondsSinceEpoch(value * 1000);
+
+    return date2.toString();
+  }
+
+  void _fetchDataOnPage() {
+    _taskBloc.fetchAllData(params: {});
+  }
+}

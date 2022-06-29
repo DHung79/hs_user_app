@@ -99,6 +99,7 @@ class _PageTemplateState extends State<PageTemplate> {
         future: _currentUser,
         builder: (context, snapshot) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             key: _key,
             backgroundColor: Colors.white,
             appBar: widget.showAppBar
@@ -131,6 +132,7 @@ class _PageTemplateState extends State<PageTemplate> {
                       //   supportedLocales.firstWhere(
                       //       (e) => e.languageCode == state.currentLang),
                       // );
+                    
                       widget.onUserFetched(state.currentUser);
                     }
                   },

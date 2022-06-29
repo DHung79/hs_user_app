@@ -78,14 +78,16 @@ class _HomeContentState extends State<HomeContent> {
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
-                Row(
-                  children: [
-                    avatarHome(),
-                    const SizedBox(
-                      width: 24,
-                    ),
-                    helloContent(user!),
-                  ],
+                Expanded(
+                  child: Row(
+                    children: [
+                      avatarHome(user!),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      helloContent(user),
+                    ],
+                  ),
                 ),
                 notification()
               ],
@@ -185,52 +187,57 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
-  ClipRRect avatarHome() {
+  ClipRRect avatarHome(UserModel? user) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10), // Image border
       child: SizedBox.fromSize(
         size: const Size.fromRadius(20),
         // size: Size.fromRadius(40), // Image radius
-        child: Image.asset('assets/images/logodemo.png', fit: BoxFit.cover),
+        child: Image.network(
+          user!.avatar,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
 
-  Column helloContent(UserModel user) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Xin chào ${user.name}',
-          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        Text(
-          'Đã 5 ngày tồi bạn chưa dọn dẹp',
-          style: AppTextTheme.normalText(AppColor.text8),
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        SizedBox(
-          height: 16,
-          child: TextButton(
-            style: ButtonStyle(
-              // backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.all(0)),
-            ),
-            onPressed: () {},
-            child: Text(
-              'ĐĂNG NGAY',
-              style: AppTextTheme.mediumBodyText(AppColor.primary2),
-            ),
+  Widget helloContent(UserModel user) {
+    return Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Xin chào ${user.name}',
+            style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
           ),
-        )
-      ],
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            'Đã 5 ngày tồi bạn chưa dọn dẹp',
+            style: AppTextTheme.normalText(AppColor.text8),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          SizedBox(
+            height: 16,
+            child: TextButton(
+              style: ButtonStyle(
+                // backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.all(0)),
+              ),
+              onPressed: () {},
+              child: Text(
+                'ĐĂNG NGAY',
+                style: AppTextTheme.mediumBodyText(AppColor.primary2),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

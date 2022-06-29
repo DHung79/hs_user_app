@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/task_history.dart';
 import 'package:hs_user_app/theme/svg_constants.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
+import '../../../../core/task/bloc/task_bloc.dart';
+import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../layout_template/content_screen.dart';
@@ -18,6 +22,9 @@ class ViewDetail extends StatefulWidget {
 class _ViewDetailState extends State<ViewDetail> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
+  final _taskBloc = TaskBloc();
+  bool _mainPage = true;
+  TaskModel? _editModel;
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -35,9 +42,16 @@ class _ViewDetailState extends State<ViewDetail> {
   bool isChecked1 = false;
   bool isChecked2 = false;
   bool isChecked3 = false;
-
+  List rates = [
+    SvgIcon(SvgIcons.star1, size: 24),
+    SvgIcon(SvgIcons.star1, size: 24),
+    SvgIcon(SvgIcons.star1, size: 24),
+    SvgIcon(SvgIcons.star1, size: 24),
+    SvgIcon(SvgIcons.star1, size: 24),
+  ];
   @override
   void initState() {
+    _editModel = taskHistoryKey.currentState?.task;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -83,13 +97,15 @@ class _ViewDetailState extends State<ViewDetail> {
         shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
         elevation: 16,
         title: Text(
-          'Chi tiết công việc',
+          _mainPage ? 'Chi tiết công việc' : 'Thông tin người làm',
           style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
         ),
         centerTitle: true,
         leading: TextButton(
           onPressed: () {
-            navigateTo(bookingRoute);
+            setState(() {
+              _mainPage ? navigateTo(bookingRoute) : _mainPage = !_mainPage;
+            });
           },
           child: SvgIcon(
             SvgIcons.arrowBack,
@@ -98,24 +114,417 @@ class _ViewDetailState extends State<ViewDetail> {
           ),
         ),
       ),
-      body: Column(children: [
-        profile(user!),
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              yourprofile(user),
-              detailtask(context),
-              payment(context),
-              buttonreview()
-            ],
-          ),
-        )
-      ]),
+      body: _mainPage
+          ? Column(
+              children: [
+                profile(),
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      yourProfile(user!),
+                      detailTask(),
+                      payment(context),
+                      buttonReview()
+                    ],
+                  ),
+                )
+              ],
+            )
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: CircleAvatar(
+                        backgroundColor: AppColor.primary1,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Text(
+                      'Nguyễn Đức Hoàng Phi',
+                      style: AppTextTheme.mediumBigText(AppColor.text1),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 183,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SvgIcon(
+                              SvgIcons.star,
+                              color: AppColor.primary2,
+                              size: 24,
+                            ),
+                            SvgIcon(
+                              SvgIcons.star,
+                              color: AppColor.primary2,
+                              size: 24,
+                            ),
+                            SvgIcon(
+                              SvgIcons.star,
+                              color: AppColor.primary2,
+                              size: 24,
+                            ),
+                            SvgIcon(
+                              SvgIcons.star,
+                              color: AppColor.primary2,
+                              size: 24,
+                            ),
+                            SvgIcon(
+                              SvgIcons.starHalf,
+                              color: AppColor.primary2,
+                              size: 24,
+                            ),
+                            Text(
+                              '4.5',
+                              style: AppTextTheme.normalHeaderTitle(
+                                  AppColor.text1),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                        child: Text(
+                          '(643 đánh giá)',
+                          style: AppTextTheme.normalText(AppColor.text1),
+                        ),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        profileTasker(title: 'Tham gia từ', profile: '3/2019'),
+                        linevertical(context),
+                        profileTasker(title: 'Công việc', profile: '320'),
+                        linevertical(context),
+                        profileTasker(
+                            title: 'Đánh giá tích cực', profile: '90%'),
+                      ],
+                    ),
+                  ),
+                  titleMedal(),
+                  listmedal(),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                          child: Text(
+                            'Đánh giá tiêu biểu',
+                            style:
+                                AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            constraints: const BoxConstraints(
+                                minHeight: 400, maxHeight: 600),
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              children: [
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                ),
+                                review(
+                                  comment:
+                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                                  user: 'Ngo Anh Duong',
+                                  rate: '4.5',
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
-  Widget buttonreview() {
+  Scaffold content1(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColor.text2,
+      appBar: AppBar(
+        elevation: 16,
+        shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
+        backgroundColor: AppColor.text2,
+        centerTitle: true,
+        title: Text(
+          'Thông tin người làm',
+          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+        ),
+        leading: TextButton(
+          onPressed: () {
+            navigateTo(viewDetailRoute);
+          },
+          child: SvgIcon(
+            SvgIcons.arrowBack,
+            size: 24,
+            color: AppColor.text1,
+          ),
+        ),
+      ),
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: CircleAvatar(
+                  backgroundColor: AppColor.primary1,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                'Nguyễn Đức Hoàng Phi',
+                style: AppTextTheme.mediumBigText(AppColor.text1),
+              ),
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  width: 183,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SvgIcon(
+                        SvgIcons.star,
+                        color: AppColor.primary2,
+                        size: 24,
+                      ),
+                      SvgIcon(
+                        SvgIcons.star,
+                        color: AppColor.primary2,
+                        size: 24,
+                      ),
+                      SvgIcon(
+                        SvgIcons.star,
+                        color: AppColor.primary2,
+                        size: 24,
+                      ),
+                      SvgIcon(
+                        SvgIcons.star,
+                        color: AppColor.primary2,
+                        size: 24,
+                      ),
+                      SvgIcon(
+                        SvgIcons.starHalf,
+                        color: AppColor.primary2,
+                        size: 24,
+                      ),
+                      Text(
+                        '4.5',
+                        style: AppTextTheme.normalHeaderTitle(AppColor.text1),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                  child: Text(
+                    '(643 đánh giá)',
+                    style: AppTextTheme.normalText(AppColor.text1),
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  profileTasker(title: 'Tham gia từ', profile: '3/2019'),
+                  linevertical(context),
+                  profileTasker(title: 'Công việc', profile: '320'),
+                  linevertical(context),
+                  profileTasker(title: 'Đánh giá tích cực', profile: '90%'),
+                ],
+              ),
+            ),
+            titleMedal(),
+            listmedal(),
+            const SizedBox(
+              height: 28,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 16),
+                    child: Text(
+                      'Đánh giá tiêu biểu',
+                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      constraints:
+                          const BoxConstraints(minHeight: 400, maxHeight: 600),
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          ),
+                          review(
+                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
+                            user: 'Ngo Anh Duong',
+                            rate: '4.5',
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buttonReview() {
     return Container(
       margin: const EdgeInsets.all(16),
       height: 52,
@@ -125,7 +534,7 @@ class _ViewDetailState extends State<ViewDetail> {
               backgroundColor: AppColor.primary2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4))),
-          onPressed: () {},
+          onPressed: _showMaterialDialog,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -146,7 +555,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Padding payment(BuildContext context) {
+  Widget payment(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -204,7 +613,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Padding detailtask(BuildContext context) {
+  Widget detailTask() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -214,9 +623,10 @@ class _ViewDetailState extends State<ViewDetail> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(
-                blurStyle: BlurStyle.outer,
-                color: Color.fromRGBO(79, 117, 140, 0.16),
-                blurRadius: 16.0)
+              blurStyle: BlurStyle.outer,
+              color: Color.fromRGBO(79, 117, 140, 0.16),
+              blurRadius: 16.0,
+            )
           ],
         ),
         child: Column(
@@ -226,7 +636,7 @@ class _ViewDetailState extends State<ViewDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Chi tiet cong viec',
+                  'Chi tiết công việc',
                   style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
                 ),
                 Container(
@@ -250,15 +660,20 @@ class _ViewDetailState extends State<ViewDetail> {
               margin: const EdgeInsets.symmetric(vertical: 12),
             ),
             icontitle(
-                icon: SvgIcons.accessTime, text: '3 tiếng, 4:30 pm - 7:30 pm '),
+                icon: SvgIcons.accessTime,
+                text:
+                    '${_editModel?.estimateTime} tiếng, ${readTimestamp(_editModel?.startTime)} - ${readTimestampEnd(_editModel?.startTime)} '),
             const SizedBox(
               height: 10,
             ),
-            icontitle(icon: SvgIcons.calenderToday, text: 'thứ 3, 24/6/2022'),
+            icontitle(
+                icon: SvgIcons.calenderToday,
+                text: readTimestamp2(_editModel?.date)),
             const SizedBox(
               height: 10,
             ),
-            icontitle(icon: SvgIcons.dollar1, text: '210,000 VND'),
+            icontitle(
+                icon: SvgIcons.dollar1, text: '${_editModel?.totalPrice}'),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width,
@@ -280,7 +695,7 @@ class _ViewDetailState extends State<ViewDetail> {
               ),
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                '“Đừng quên khóa cửa trước khi ra về”',
+                _editModel?.note ?? '',
                 style: AppTextTheme.normalText(AppColor.text1),
               ),
             ),
@@ -301,7 +716,7 @@ class _ViewDetailState extends State<ViewDetail> {
                 Row(
                   children: [
                     Text(
-                      count.toString() + '/ 4',
+                      count.toString() + ' / ${_editModel?.checkList.length}',
                       style: AppTextTheme.normalText(AppColor.text3),
                     ),
                     TextButton(
@@ -331,51 +746,16 @@ class _ViewDetailState extends State<ViewDetail> {
                       borderRadius: BorderRadius.circular(4),
                       color: AppColor.shade1,
                     ),
-                    child: Column(
-                      children: [
-                        checkbox(
-                            isCheck: isChecked1,
-                            onChanged: (value) {
-                              setState(() {
-                                isChecked1 = value!;
-                                if (isChecked1) {
-                                  count++;
-                                } else {
-                                  count--;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        checkbox(
-                            isCheck: isChecked2,
-                            onChanged: (value) {
-                              setState(() {
-                                isChecked2 = value!;
-                                if (isChecked2) {
-                                  count++;
-                                } else {
-                                  count--;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        checkbox(
-                            isCheck: isChecked3,
-                            onChanged: (value) {
-                              setState(() {
-                                isChecked3 = value!;
-                                if (isChecked3) {
-                                  count++;
-                                } else {
-                                  count--;
-                                }
-                              });
-                            }),
-                      ],
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return checkbox(
+                          isCheck: _editModel!.checkList[index].status,
+                          name: _editModel!.checkList[index].name,
+                        );
+                      },
+                      itemCount: _editModel?.checkList.length,
                     ),
                   )
                 : const SizedBox(),
@@ -403,7 +783,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Column listimage({required String name}) {
+  Widget listimage({required String name}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -416,83 +796,86 @@ class _ViewDetailState extends State<ViewDetail> {
         ),
         SizedBox(
           height: 100,
-          child: ListView(scrollDirection: Axis.horizontal, children: [
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+          child: ListView(
+            physics: const ScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+              Container(
+                margin: const EdgeInsets.only(right: 16),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+              Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+              Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+              Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              width: 100,
-              height: 100,
-              child: Image.asset(
-                'assets/images/logo.png',
+              Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Padding checkbox(
-      {required bool isCheck, required void Function(bool?)? onChanged}) {
+  Widget checkbox({required bool isCheck, required String name}) {
+    if (isCheck) {
+      count++;
+    }
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: Row(
         children: [
-          SizedBox(
-            width: 16,
-            height: 16,
-            child: Checkbox(
-              activeColor: AppColor.shade9,
-              fillColor: MaterialStateProperty.resolveWith(getColor),
-              value: isCheck,
-              onChanged: onChanged,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ),
+          isCheck
+              ? SvgIcon(
+                  SvgIcons.checkBox,
+                  size: 24,
+                  color: AppColor.shade9,
+                )
+              : SvgIcon(SvgIcons.checkBoxOutlinedBlank,
+                  size: 24, color: AppColor.others1),
           const SizedBox(
             width: 15,
           ),
           Text(
-            'Cho cun an',
+            name,
             style: AppTextTheme.normalText(AppColor.text1),
           )
         ],
@@ -500,7 +883,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Padding yourprofile(UserModel user) {
+  Widget yourProfile(UserModel user) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -559,7 +942,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Row icontitle({required SvgIconData? icon, required String text}) {
+  Widget icontitle({required SvgIconData? icon, required String text}) {
     return Row(
       children: [
         SvgIcon(
@@ -578,7 +961,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Padding profile(UserModel user) {
+  Widget profile() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -589,11 +972,12 @@ class _ViewDetailState extends State<ViewDetail> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 80,
                 height: 80,
                 child: CircleAvatar(
-                  backgroundColor: Colors.red,
+                  backgroundImage:
+                      NetworkImage(_editModel?.tasker.avatar ?? ''),
                 ),
               ),
               const SizedBox(
@@ -604,7 +988,7 @@ class _ViewDetailState extends State<ViewDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user.name,
+                    _editModel?.tasker.name ?? '',
                     style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                   ),
                   TextButton(
@@ -613,7 +997,9 @@ class _ViewDetailState extends State<ViewDetail> {
                       minimumSize: const Size(0, 0),
                     ),
                     onPressed: () {
-                      navigateTo(profileTaskersRoute);
+                      setState(() {
+                        _mainPage = !_mainPage;
+                      });
                     },
                     child: Row(
                       children: [
@@ -646,10 +1032,10 @@ class _ViewDetailState extends State<ViewDetail> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Colors.white,
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
                   blurStyle: BlurStyle.outer,
-                  color: Color.fromRGBO(79, 117, 140, 0.16),
+                  color: AppColor.shadow.withOpacity(0.16),
                   blurRadius: 16,
                 ),
               ],
@@ -658,7 +1044,6 @@ class _ViewDetailState extends State<ViewDetail> {
               children: [
                 SvgIcon(
                   SvgIcons.star1,
-                  color: AppColor.primary2,
                   size: 24,
                 ),
                 const SizedBox(
@@ -676,7 +1061,261 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
+  String readTimestamp2(int? timestamp) {
+    var format = DateFormat('E, dd/MM/yyyy');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var time = '';
+    time = format.format(date);
+
+    return time;
+  }
+
+  String readTimestamp(int? timestamp) {
+    var format = DateFormat('HH:mm');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var time = '';
+    time = format.format(date);
+
+    return time;
+  }
+
+  String readTimestampEnd(int? timestamp) {
+    var format = DateFormat('HH:mm');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var time = '';
+    time = format.format(
+        date.add(Duration(hours: int.parse(_editModel?.estimateTime ?? '0'))));
+
+    return time;
+  }
+
+  Widget profileTasker({required String title, required String profile}) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(
+            title,
+            style: AppTextTheme.normalText(AppColor.text7),
+          ),
+        ),
+        Text(
+          profile,
+          style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+        )
+      ],
+    );
+  }
+
+  Container linevertical(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 42),
+      width: 1,
+      height: MediaQuery.of(context).size.height,
+      color: AppColor.shade1,
+    );
+  }
+
+  Padding titleMedal() {
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 16.0, right: 16.0, bottom: 8.0, left: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Huy hiệu',
+            style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+          ),
+          Text(
+            '7 huy hiệu',
+            style: AppTextTheme.normalText(AppColor.primary2),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget listmedal() {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 50, maxHeight: 120),
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: [
+          medal(),
+          medal(),
+          medal(),
+          medal(),
+          medal(),
+          medal(),
+        ],
+      ),
+    );
+  }
+
+  Padding medal() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              const SizedBox(
+                width: 60,
+                height: 60,
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 15,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppColor.primary1,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                    child: Text(
+                      '10',
+                      style: AppTextTheme.subText(AppColor.text2),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              'Nhanh nhẹn',
+              style: AppTextTheme.subText(AppColor.text1),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget review(
+      {required String comment, required String user, required String rate}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 19.5, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  comment,
+                  style: AppTextTheme.normalText(AppColor.text1),
+                ),
+              ),
+              Text(
+                user,
+                style: AppTextTheme.subText(AppColor.text7),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              SvgIcon(
+                SvgIcons.star,
+                color: AppColor.primary2,
+                size: 24,
+              ),
+              const SizedBox(
+                width: 9,
+              ),
+              Text(
+                rate,
+                style: AppTextTheme.normalText(AppColor.text1),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: SizedBox(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: CircleAvatar(
+                        backgroundColor: AppColor.inactive2,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return rates[index];
+                        },
+                        itemCount: rates.length,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 130,
+                      child: TextField(
+                        maxLines: 5,
+                        style: AppTextTheme.mediumBodyText(AppColor.text3),
+                        cursorColor: AppColor.text3,
+                        decoration: InputDecoration(
+                          fillColor: AppColor.shade1,
+                          filled: true,
+                          disabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 8,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                  ]),
+            ),
+          );
+        });
+  }
+
   _fetchDataOnPage() {
     _userBloc.getProfile();
+    _taskBloc.fetchAllData(params: {});
   }
 }

@@ -68,13 +68,13 @@ class _ProfileTaskerState extends State<ProfileTasker> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: SizedBox(
                 width: 100,
                 height: 100,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(''),
+                  backgroundColor: AppColor.primary1,
                 ),
               ),
             ),
