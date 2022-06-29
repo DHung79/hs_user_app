@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 
+import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
+import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
+import '../../../../theme/svg_constants.dart';
+import '../../../../theme/validator_text.dart';
+import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
 
 class EditProfile extends StatefulWidget {
@@ -14,8 +19,12 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   final PageState _pageState = PageState();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
+  final _userBloc = UserBloc();
+  String _errorMessage = '';
+  late EditUserModel _editModel;
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  AutovalidateMode _autovalidate = AutovalidateMode.disabled;
+  final currentRoute = getCurrentRoute();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +40,9 @@ class _EditProfileState extends State<EditProfile> {
         future: _pageState.currentUser,
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
-            child: content(context), // child: content(context),
+            child: snapshot.hasData
+                ? content(snapshot.data)
+                : const SizedBox(), // child: content(context),
             pageState: _pageState,
             onFetch: () {
               _fetchDataOnPage();
@@ -42,7 +53,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Scaffold content(BuildContext context) {
+  Widget content(UserModel? user) {
+    _editModel = EditUserModel.fromModel(user);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,30 +66,106 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
         centerTitle: true,
-        leading: BackButton(
-          color: AppColor.text1,
+        leading: TextButton(
+          child: SvgIcon(SvgIcons.arrowBack),
           onPressed: () {
-            navigateTo(confirmPageRoute);
+            if (currentRoute == editPostFastRoute) {
+              navigateTo(postFastRoute);
+            } else {
+              navigateTo(confirmRoute);
+            }
           },
         ),
       ),
-      body: Column(children: [
-        inputProfile(
-          title: 'Tên',
-          controller: nameController,
-          color: AppColor.primary1,
-        ),
-        inputProfile(
-          title: 'Địa chỉ',
-          controller: addressController,
-          color: AppColor.text7,
-        ),
-        saveButton(
-          context,
-          name: 'Lưu',
-          onPressed: () {},
-        ),
-      ]),
+      body: Form(
+        key: _key,
+        autovalidateMode: _autovalidate,
+        child: Column(children: [
+          inputProfile(
+            title: 'Tên',
+            initialValue: _editModel.name,
+            onSaved: (value) {
+              _editModel.name = value!.trim();
+            },
+            onChanged: (value) {
+              setState(() {
+                if (_errorMessage.isNotEmpty) {
+                  _errorMessage = '';
+                }
+              });
+            },
+            validator: (value) {
+              if (value!.isEmpty || value.trim().isEmpty) {
+                return ValidatorText.empty(
+                    fieldName: ScreenUtil.t(I18nKey.name)!);
+              }
+              return null;
+            },
+          ),
+          inputProfile(
+            title: 'Số điện thoại',
+            keyboardType: TextInputType.number,
+            initialValue: _editModel.phoneNumber,
+            onSaved: (value) {
+              _editModel.phoneNumber = value!.trim();
+            },
+            onChanged: (value) {
+              setState(() {
+                if (_errorMessage.isNotEmpty) {
+                  _errorMessage = '';
+                }
+              });
+            },
+            validator: (value) {
+              if (value!.isEmpty || value.trim().isEmpty) {
+                return ValidatorText.empty(
+                    fieldName: ScreenUtil.t(I18nKey.phoneNumber)!);
+              }
+              return null;
+            },
+          ),
+          saveButton(
+            context,
+            name: 'Lưu',
+            onPressed: () {
+              if (_key.currentState!.validate()) {
+                _key.currentState!.save();
+                logDebug('confirmbutton');
+                _editUserInfo();
+              } else {
+                setState(() {
+                  _autovalidate = AutovalidateMode.onUserInteraction;
+                });
+              }
+            },
+          ),
+        ]),
+      ),
+    );
+  }
+
+  _editUserInfo() {
+    logDebug(_editModel.address);
+    _userBloc.editProfile(editModel: _editModel).then(
+      (value) async {
+        AuthenticationBlocController().authenticationBloc.add(GetUserData());
+        if (currentRoute == editPostFastRoute) {
+          navigateTo(postFastRoute);
+        } else {
+          navigateTo(confirmRoute);
+        }
+        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+      },
+    ).onError((ApiError error, stackTrace) {
+      setState(() {
+        _errorMessage = showError(error.errorCode, context);
+      });
+    }).catchError(
+      (error, stackTrace) {
+        setState(() {
+          _errorMessage = error.toString();
+        });
+      },
     );
   }
 
@@ -108,8 +196,11 @@ class _EditProfileState extends State<EditProfile> {
 
   Padding inputProfile(
       {required String title,
-      TextEditingController? controller,
-      required Color color}) {
+      String? initialValue,
+      void Function(String)? onChanged,
+      void Function(String?)? onSaved,
+      TextInputType? keyboardType,
+      String? Function(String?)? validator}) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -122,22 +213,26 @@ class _EditProfileState extends State<EditProfile> {
           const SizedBox(
             height: 8,
           ),
-          TextField(
-            controller: controller,
-            cursorColor: color,
+          TextFormField(
+            keyboardType: keyboardType,
+            onChanged: onChanged,
+            onSaved: onSaved,
+            validator: validator,
+            initialValue: initialValue,
+            cursorColor: AppColor.text3,
             style: AppTextTheme.normalText(AppColor.text1),
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: color, width: 1),
+                borderSide: BorderSide(color: AppColor.text7, width: 1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: color, width: 1),
+                borderSide: BorderSide(color: AppColor.text7, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: BorderSide(color: color, width: 1),
+                borderSide: BorderSide(color: AppColor.primary1, width: 1),
               ),
             ),
           ),
@@ -145,6 +240,8 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-}
 
-void _fetchDataOnPage() {}
+  void _fetchDataOnPage() {
+    _userBloc.getProfile();
+  }
+}

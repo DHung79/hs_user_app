@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/core/service/model/service_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/task_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/authentication/auth.dart';
+import '../../../../core/service/bloc/service_bloc.dart';
+
+import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
+
+final editTaskProfileKey = GlobalKey<_EditTaskProfileState>();
 
 class EditTaskProfile extends StatefulWidget {
   const EditTaskProfile({Key? key}) : super(key: key);
@@ -14,9 +23,21 @@ class EditTaskProfile extends StatefulWidget {
 
 class _EditTaskProfileState extends State<EditTaskProfile> {
   final PageState _pageState = PageState();
+  final _serviceBloc = ServiceBloc();
   int valueWeek = 0;
   int value = 0;
   bool isSwitched = false;
+  DateTime? timePick;
+  int price = 0;
+  DateTime? selectedDate = DateTime.now();
+  List<ServiceModel>? listOptions;
+  late EditTaskModel? editModel;
+  final currentRoute = getCurrentRoute();
+  TextEditingController noteForTasker = TextEditingController();
+  List listTask = [];
+  final TextEditingController _addTask = TextEditingController();
+
+  DateTime today = DateTime.now();
 
   void toggleSwitch(bool value) {
     if (isSwitched == false) {
@@ -28,6 +49,51 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         isSwitched = false;
       });
     }
+  }
+
+  TimeOfDay _time =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().day);
+  void _selectTime() async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: _time,
+    );
+    if (newTime != null) {
+      setState(() {
+        _time = newTime;
+        timePick = DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+          _time.hour,
+          _time.minute,
+        );
+      });
+    }
+  }
+
+  _saveList(list) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setStringList("key", list);
+
+    return true;
+  }
+
+  _getSavedList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList("key") != null) {
+      listTask = prefs.getStringList("key")!;
+    }
+  }
+
+  @override
+  void initState() {
+    editModel = EditTaskModel.fromModel(taskPageKey.currentState?.task);
+    AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
+    AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
+    super.initState();
+    _getSavedList();
   }
 
   @override
@@ -44,18 +110,18 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         future: _pageState.currentUser,
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
-            child: content(), // child: content(context),
             pageState: _pageState,
             onFetch: () {
               _fetchDataOnPage();
             },
+            child: content(),
           );
         },
       ),
     );
   }
 
-  Scaffold content() {
+  Widget content() {
     return Scaffold(
       backgroundColor: AppColor.text2,
       appBar: AppBar(
@@ -65,7 +131,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         leading: BackButton(
             color: AppColor.text1,
             onPressed: () {
-              navigateTo(homeRoute);
+              navigateTo(postFastRoute);
             }),
         title: Text(
           'Chỉnh sửa thông tin công việc',
@@ -73,122 +139,391 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         ),
         centerTitle: true,
       ),
-      body: ListView(children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Thời lượng',
-                style: AppTextTheme.mediumHeaderTitle(AppColor.text1)),
-            const SizedBox(
-              height: 24,
-            ),
-            room(3, 100, 3, 0),
-            const SizedBox(
-              height: 24,
-            ),
-            room(4, 150, 4, 1),
-            const SizedBox(
-              height: 24,
-            ),
-            room(3, 109, 2, 2),
-            const SizedBox(
-              height: 32,
-            ),
-            timeWork(),
-          ]),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 24, bottom: 24, left: 16),
-            child: Row(
-              children: [
-                pickTimeWork('24', 'MON', 0),
-                pickTimeWork('25', 'TUE', 1),
-                pickTimeWork('26', 'WED', 2),
-                pickTimeWork('27', 'THU', 3),
-                pickTimeWork('28', 'FRI', 4),
-                pickTimeWork('29', 'SAT', 5),
-                pickTimeWork('30', 'SUN', 6),
-              ],
-            ),
-          ),
-        ),
-        // const SizedBox(
-        //   height: 12,
-        // ),
-        noteUser(),
-        contentSwitch(),
-        isSwitched == false
-            ? const SizedBox(
-                height: 71,
-              )
-            : Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: StreamBuilder(
+          stream: _serviceBloc.allData,
+          builder: (context,
+              AsyncSnapshot<ApiResponse<ListServiceModel?>> snapshot) {
+            listOptions = snapshot.data?.model!.records;
+            if (snapshot.hasData) {
+              return ListView(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              SvgIcon(
-                                SvgIcons.add,
-                                color: AppColor.text1,
-                                size: 24,
-                              ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              Text(
-                                'Thêm mới',
-                                style: AppTextTheme.normalText(AppColor.text3),
-                              ),
+                          Text('Thời lượng',
+                              style: AppTextTheme.mediumHeaderTitle(
+                                  AppColor.text1)),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          Column(
+                            children: <Widget>[
+                              for (int i = 0;
+                                  i < listOptions![0].options.length;
+                                  i++)
+                                room(
+                                  listOptions![0].options[i].name,
+                                  listOptions![0].options[i].note,
+                                  listOptions![0].options[i].quantity,
+                                  i,
+                                )
                             ],
                           ),
-                          SvgIcon(
-                            SvgIcons.bxTrashAlt,
-                            size: 24,
-                            color: AppColor.text1,
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          timeWork(),
+                        ]),
+                  ),
+                  listWeek(),
+                  // const SizedBox(
+                  //   height: 12,
+                  // ),
+                  noteUser(),
+                  contentSwitch(),
+                  isSwitched == false
+                      ? const SizedBox(
+                          height: 71,
+                        )
+                      : Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
                             children: [
-                              SvgIcon(
-                                SvgIcons.add,
-                                color: AppColor.text1,
-                                size: 24,
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                constraints: const BoxConstraints(
+                                  minHeight: 0,
+                                ),
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgIcon(
+                                                SvgIcons.broom1,
+                                                size: 24,
+                                                color: AppColor.text1,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8),
+                                                child: Text(
+                                                  editModel!
+                                                      .checkList[index].name,
+                                                  style:
+                                                      AppTextTheme.normalText(
+                                                          AppColor.text1),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              minimumSize: const Size(0, 0),
+                                              padding: EdgeInsets.zero,
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                listTask
+                                                    .remove(listTask[index]);
+                                              });
+                                            },
+                                            child: SvgIcon(
+                                              SvgIcons.bxTrashAlt,
+                                              size: 24,
+                                              color: AppColor.text1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  itemCount: editModel!.checkList.length,
+                                ),
                               ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              Text(
-                                'Thêm mới',
-                                style: AppTextTheme.normalText(AppColor.text3),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.all(0),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: _showMaterialDialog,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SvgIcon(
+                                            SvgIcons.add,
+                                            color: AppColor.text1,
+                                            size: 24,
+                                          ),
+                                          const SizedBox(
+                                            width: 12,
+                                          ),
+                                          Text(
+                                            'Thêm mới',
+                                            style: AppTextTheme.normalText(
+                                                AppColor.text3),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-        payButton(),
-      ]),
+                          )),
+
+                  payButton(
+                    listOptions![0].options[price].price.toString(),
+                    listOptions![0].options[0].name,
+                    onPressed: () {
+                      if (timePick == null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Material Dialog'),
+                                content: const Text('Hey! I am Coflutter!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: const Text('Close')),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: const Text('HelloWorld!'),
+                                  )
+                                ],
+                              );
+                            });
+                      } else {
+                        navigateTo(postFastRoute);
+                        startTime = timePick!.microsecondsSinceEpoch;
+                        quantity = listOptions![0].options[0].quantity;
+                        name = listOptions![0].options[0].name;
+                        note = listOptions![0].options[0].note;
+                        date = selectedDate!.millisecondsSinceEpoch;
+                        startTime = timePick!.millisecondsSinceEpoch;
+                        noteTasker = noteForTasker.text;
+                        listTaskForTasker = listTask;
+                      }
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: AppColor.primary2,
+              ));
+            }
+          }),
     );
   }
 
-  Container noteUser() {
+  void _showMaterialDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: SizedBox(
+              width: 334,
+              height: 316,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Thêm công việc',
+                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                    ),
+                    Container(
+                      height: 1,
+                      width: MediaQuery.of(context).size.width,
+                      color: AppColor.shade1,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 52,
+                      child: TextField(
+                        controller: _addTask,
+                        style: AppTextTheme.mediumBodyText(AppColor.text3),
+                        cursorColor: AppColor.text3,
+                        decoration: InputDecoration(
+                          fillColor: AppColor.shade1,
+                          filled: true,
+                          disabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppColor.text7, width: 2),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 8,
+                      margin: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    _buttonDialog(
+                      AppColor.primary2,
+                      () {
+                        setState(() {
+                          listTask.insert(0, _addTask.text);
+                          _saveList(listTask);
+                        });
+                        _addTask.text = '';
+
+                        Navigator.pop(context);
+                      },
+                      SvgIcon(
+                        SvgIcons.add,
+                        size: 24,
+                        color: AppColor.text2,
+                      ),
+                      'Thêm',
+                      AppColor.text2,
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    _buttonDialog(
+                      AppColor.shade1,
+                      () {
+                        Navigator.pop(context);
+                      },
+                      SvgIcon(
+                        SvgIcons.close,
+                        size: 24,
+                        color: AppColor.text3,
+                      ),
+                      'Hủy bỏ',
+                      AppColor.text3,
+                    ),
+                  ]),
+            ),
+          );
+        });
+  }
+
+  Widget _buttonDialog(Color? backgroundColor, void Function()? onPressed,
+      SvgIcon icon, String text, Color color) {
+    return SizedBox(
+      height: 52,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: backgroundColor,
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                text,
+                style: AppTextTheme.headerTitle(color),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView listWeek() {
+    final List<Widget> dates = [];
+    List weeks = [
+      'MON',
+      'TUE',
+      'WED',
+      'THU',
+      'FRI',
+      'SAT',
+      'SUN',
+    ];
+
+    for (int i = 0; i <= 6; i++) {
+      int day = today.add(Duration(days: i)).day;
+      int dayOfWeek = today.add(Duration(days: i)).weekday;
+      switch (dayOfWeek) {
+        case 1:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[0], i));
+          }
+          break;
+        case 2:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[1], i));
+          }
+          break;
+        case 3:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[2], i));
+          }
+          break;
+        case 4:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[3], i));
+          }
+          break;
+        case 5:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[4], i));
+          }
+          break;
+        case 6:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[5], i));
+          }
+          break;
+        case 7:
+          {
+            dates.add(pickTimeWork(day.toString(), weeks[6], i));
+          }
+          break;
+        default:
+          {}
+          break;
+      }
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 24, bottom: 24, left: 16),
+        child: Row(children: dates),
+      ),
+    );
+  }
+
+  Widget noteUser() {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: Column(children: [
@@ -208,6 +543,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 16),
                 child: TextField(
+                  controller: noteForTasker,
                   style: AppTextTheme.normalText(AppColor.text1),
                   maxLines: 5,
                   decoration: InputDecoration(
@@ -236,7 +572,11 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
     );
   }
 
-  Container payButton() {
+  Widget payButton(
+    String price,
+    int name, {
+    required void Function()? onPressed,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       child: TextButton(
@@ -244,13 +584,11 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
           backgroundColor: AppColor.shade9,
           padding: const EdgeInsets.all(16),
         ),
-        onPressed: () {
-          navigateTo(confirmPageRoute);
-        },
+        onPressed: onPressed,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
-            '200.000 VNĐ/2h',
+            '$price VNĐ/ $name tiếng',
             style: AppTextTheme.headerTitle(AppColor.text2),
           ),
           Text(
@@ -324,16 +662,19 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: AppColor.shade1,
-            ),
+          TextButton(
+            style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(0),
+                backgroundColor: AppColor.shade1,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )),
+            onPressed: _selectTime,
             child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 10, bottom: 10, left: 38, right: 38),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 38),
               child: Text(
-                '8:30 AM',
+                '${_time.hour} : ${_time.minute}',
                 style: AppTextTheme.bigText(AppColor.text1),
               ),
             ),
@@ -350,6 +691,10 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         onPressed: () {
           setState(() {
             valueWeek = index;
+            if (valueWeek == index) {
+              selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
+                  DateTime.now().day + index);
+            }
           });
         },
         style: TextButton.styleFrom(
@@ -376,7 +721,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
               height: 8,
             ),
             Text(
-              content,
+              content.toString(),
               style: valueWeek == index
                   ? AppTextTheme.mediumHeaderTitle(AppColor.text2)
                   : AppTextTheme.mediumHeaderTitle(AppColor.text1),
@@ -396,14 +741,14 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
           style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
         ),
         Text(
-          'tháng 3, 2022',
+          'tháng ${DateTime.now().month}, ${DateTime.now().year}',
           style: AppTextTheme.normalHeaderTitle(AppColor.primary1),
         )
       ],
     );
   }
 
-  Widget room(int time, int sizeRoom, int room, int index) {
+  Widget room(int time, String note, int quantity, int index) {
     return InkWell(
         splashColor: Colors.transparent,
         onTap: () {
@@ -442,7 +787,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
                   height: 10,
                 ),
                 Text(
-                  '$sizeRoom m2 / $room phòng',
+                  '$note / $quantity phòng',
                   style: AppTextTheme.normalText(AppColor.text7),
                 )
               ],
@@ -474,23 +819,54 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         ),
         child: Padding(
           padding:
-              const EdgeInsets.only(top: 19, bottom: 19, right: 16, left: 20.5),
+              const EdgeInsets.only(top: 19, bottom: 19, right: 16, left: 16),
           child: Row(children: [
             SvgIcon(
-              SvgIcons.map1,
+              SvgIcons.epLocation,
               color: AppColor.primary1,
               size: 24,
             ),
             const SizedBox(
-              width: 14.5,
+              width: 10,
             ),
-            Text('Chọn địa chỉ',
-                style: AppTextTheme.normalText(AppColor.text3)),
+            if (locationAddress.isEmpty)
+              Text('Chọn địa chỉ',
+                  style: AppTextTheme.normalText(AppColor.text3)),
+            if (locationAddress.isNotEmpty)
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        locationAddress,
+                        style: AppTextTheme.normalText(AppColor.primary1),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Transform(
+                      alignment: FractionalOffset.center,
+                      transform: Matrix4.identity()
+                        ..rotateZ(180 * 3.1415927 / 180),
+                      child: SvgIcon(
+                        SvgIcons.arrowBackIos,
+                        size: 24,
+                        color: AppColor.text1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ]),
         ),
       ),
     );
   }
-}
 
-void _fetchDataOnPage() {}
+  void _fetchDataOnPage() {
+    _serviceBloc.fetchAllData(params: {});
+  }
+}

@@ -16,20 +16,20 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   final PageState _pageState = PageState();
-  int _selectIndex = 0;
   bool add = false;
   void _onItemTapped(int index) {
     setState(() {
-      _selectIndex = index;
+      selectIndexBooking = index;
     });
   }
 
   List booking = [
-    const TaskPage(),
+    TaskPage(
+      key: taskPageKey,
+    ),
     const TaskNow(),
     TaskHistory(
-      onPressed: () {},
-      nameButton: 'Xem chi tiết',
+      key: taskHistoryKey,
     ),
   ];
 
@@ -77,7 +77,7 @@ class _BookingState extends State<Booking> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                    color: _selectIndex == 0
+                    color: selectIndexBooking == 0
                         ? AppColor.primary1
                         : Colors.transparent,
                     width: 4),
@@ -90,7 +90,7 @@ class _BookingState extends State<Booking> {
                 },
                 child: Text(
                   'Đăng việc',
-                  style: _selectIndex == 0
+                  style: selectIndexBooking == 0
                       ? AppTextTheme.normalText(AppColor.primary1)
                       : AppTextTheme.normalText(AppColor.text3),
                 )),
@@ -100,7 +100,7 @@ class _BookingState extends State<Booking> {
             decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
-                        color: _selectIndex == 1
+                        color: selectIndexBooking == 1
                             ? AppColor.primary1
                             : Colors.transparent,
                         width: 4))),
@@ -111,7 +111,7 @@ class _BookingState extends State<Booking> {
                 },
                 child: Text(
                   'Hiện tại',
-                  style: _selectIndex == 1
+                  style: selectIndexBooking == 1
                       ? AppTextTheme.normalText(AppColor.primary1)
                       : AppTextTheme.normalText(AppColor.text3),
                 )),
@@ -121,7 +121,7 @@ class _BookingState extends State<Booking> {
             decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
-                        color: _selectIndex == 2
+                        color: selectIndexBooking == 2
                             ? AppColor.primary1
                             : Colors.transparent,
                         width: 4))),
@@ -134,14 +134,14 @@ class _BookingState extends State<Booking> {
                 },
                 child: Text(
                   'Lịch sử',
-                  style: _selectIndex == 2
+                  style: selectIndexBooking == 2
                       ? AppTextTheme.normalText(AppColor.primary1)
                       : AppTextTheme.normalText(AppColor.text3),
                 )),
           ),
         ],
       ),
-      body: booking.elementAt(_selectIndex),
+      body: booking.elementAt(selectIndexBooking),
     );
   }
 
