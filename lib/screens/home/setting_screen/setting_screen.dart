@@ -89,7 +89,13 @@ class _SettingScreenState extends State<SettingScreen> {
             onFetch: () {
               _fetchDataOnPage();
             },
-            child: snapshot.hasData ? content(snapshot) : const SizedBox(),
+            child: snapshot.hasData
+                ? content(snapshot)
+                : Center(
+                    child: CircularProgressIndicator(
+                      color: AppColor.primary2,
+                    ),
+                  ),
           );
         },
       ),
@@ -119,65 +125,67 @@ class _SettingScreenState extends State<SettingScreen> {
             Container(
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               child: Row(children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 40,
-                  backgroundColor: Colors.black26,
+                  backgroundImage: NetworkImage(user!.avatar),
                 ),
                 const SizedBox(
                   width: 16,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        user!.name,
-                        style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        user.email,
-                        style: AppTextTheme.mediumBodyText(AppColor.nameText),
-                      ),
-                    ),
-                    SizedBox(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          minimumSize: const Size(24, 24),
-                          padding: EdgeInsets.zero,
-                        ),
-                        onPressed: () {
-                          navigateTo(settingProfileRoute);
-                        },
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Text(
-                                'Xem hồ sơ',
-                                style:
-                                    AppTextTheme.normalText(AppColor.primary2),
-                              ),
-                            ),
-                            Transform(
-                              alignment: FractionalOffset.center,
-                              transform: Matrix4.identity()
-                                ..rotateZ(180 * 3.1415927 / 180),
-                              child: SvgIcon(
-                                SvgIcons.arrowBack,
-                                color: AppColor.primary2,
-                                size: 24,
-                              ),
-                            ),
-                          ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          user.name,
+                          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          user.email,
+                          style: AppTextTheme.mediumBodyText(AppColor.nameText),
+                        ),
+                      ),
+                      SizedBox(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minimumSize: const Size(24, 24),
+                            padding: EdgeInsets.zero,
+                          ),
+                          onPressed: () {
+                            navigateTo(settingProfileRoute);
+                          },
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Text(
+                                  'Xem hồ sơ',
+                                  style: AppTextTheme.normalText(
+                                      AppColor.primary2),
+                                ),
+                              ),
+                              Transform(
+                                alignment: FractionalOffset.center,
+                                transform: Matrix4.identity()
+                                  ..rotateZ(180 * 3.1415927 / 180),
+                                child: SvgIcon(
+                                  SvgIcons.arrowBack,
+                                  color: AppColor.primary2,
+                                  size: 24,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ]),
             ),
@@ -236,7 +244,9 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
             border: Border(
-          bottom: BorderSide(width: 1, color: AppColor.shade1),
+          bottom: i != 3
+              ? BorderSide(width: 1, color: AppColor.shade1)
+              : BorderSide.none,
         )),
         child: Row(
           children: [
@@ -482,10 +492,12 @@ class _SettingScreenState extends State<SettingScreen> {
     await _googleSignIn.signOut();
     AuthenticationBlocController().authenticationBloc.add(UserLogOut());
     navigateTo(authenticationRoute);
+    homePageIndex = 0;
+    selectIndexBooking = 0;
   }
-}
 
-void _fetchDataOnPage() {}
+  _fetchDataOnPage() {}
+}
 
 class Infor {
   String payment;
