@@ -218,6 +218,12 @@ class SvgIcons {
   static SvgIconData wallet1 = SvgIconData(
     path: 'assets/svg/wallet1.svg',
   );
+  static SvgIconData checkboxTask = SvgIconData(
+    path: 'assets/svg/Check_box_task.svg',
+  );
+  static SvgIconData checkboxOutlineTask = SvgIconData(
+    path: 'assets/svg/Check_box_outline_blank.svg',
+  );
 }
 
 class SvgIcon extends StatelessWidget {

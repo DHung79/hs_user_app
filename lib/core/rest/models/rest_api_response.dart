@@ -1,3 +1,4 @@
+import 'package:hs_user_app/core/service/service.dart';
 import 'package:hs_user_app/core/task/model/task_model.dart';
 
 import '../../../core/user/model/user_model.dart';
@@ -78,12 +79,23 @@ class BaseModel {
     if (T == ServiceModel) {
       return ServiceModel.fromJson(json) as T;
     }
+    if (T == ListServiceModel) {
+      return ListServiceModel.fromJson(json) as T;
+    }
+
 
     if (T == TranslationModel) {
       return TranslationModel.fromJson(json) as T;
     }
-    if (T == OptionModel) {
-      return OptionModel.fromJson(json) as T;
+    if (T == OptionsModel) {
+      return OptionsModel.fromJson(json) as T;
+    }
+    if (T == PaymentsModel) {
+      return PaymentsModel.fromJson(json) as T;
+    }
+
+    if (T == CheckListModel) {
+      return CheckListModel.fromJson(json) as T;
     }
 
     if (T == AddServiceModel) {
@@ -167,6 +179,13 @@ class EditBaseModel {
   static Map<String, dynamic> toEditProfileJson(EditBaseModel model) {
     if (model is EditUserModel) {
       return model.toEditProfileJson();
+    }
+    return {};
+  }
+
+  static Map<String, dynamic> toEditTaskJson(EditBaseModel model) {
+    if (model is EditTaskModel) {
+      return model.toEditTaskJson();
     }
     return {};
   }

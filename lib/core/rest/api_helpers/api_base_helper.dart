@@ -217,7 +217,6 @@ class ApiBaseHelper {
     try {
       final response =
           await http.post(Uri.parse(path), body: body, headers: headers);
-      logDebug(response);
 
       responseJson = _returnLogoutResponse(response);
     } on SocketException catch (ex) {
@@ -252,8 +251,7 @@ class ApiBaseHelper {
   }
 
   ApiResponse<T> _returnResponse<T extends BaseModel>(http.Response response) {
-    // logDebug(response.statusCode);
-    logDebug(response.body.toString());
+    logDebug(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseJson = json.decode(response.body.toString());
       if (responseJson is Map<String, dynamic>) {
@@ -336,7 +334,6 @@ class ApiBaseHelper {
   }
 
   _returnLoginResponse(http.Response response) {
-    // logDebug(response.statusCode);
     if (response.statusCode == 200) {
       var token = response.headers['x-auth-token'];
       var map = json.decode(response.body.toString());
@@ -357,7 +354,6 @@ class ApiBaseHelper {
   }
 
   _returnRegisterResponse(http.Response response) {
-    // logDebug(response.statusCode);
     if (response.statusCode == 200) {
       var token = response.headers['x-auth-token'];
       var map = json.decode(response.body.toString());

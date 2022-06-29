@@ -10,6 +10,7 @@ class UserModel extends BaseModel {
   final String _gender;
   final int _createdTime;
   final int _updatedTime;
+  final String _avatar;
   String _password;
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -21,6 +22,7 @@ class UserModel extends BaseModel {
         _gender = json['gender'] ?? '',
         _createdTime = json['created_time'] ?? 0,
         _updatedTime = json['updated_time'] ?? 0,
+        _avatar = json['avatar'] ?? '',
         _password = '';
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +34,7 @@ class UserModel extends BaseModel {
         "gender": _gender,
         "created_time": _createdTime,
         "updated_time": _updatedTime,
+        "avatar": _avatar,
       };
 
   String get id => __id;
@@ -43,6 +46,7 @@ class UserModel extends BaseModel {
   int get createdTime => _createdTime;
   int get updatedTime => _updatedTime;
   String get password => _password;
+  String get avatar => _avatar;
   set password(value) {
     _password = value;
   }
@@ -57,6 +61,7 @@ class EditUserModel extends EditBaseModel {
   String gender = '';
   String password = '';
   String newPassword = '';
+  String avatar = '';
 
   EditUserModel.fromModel(UserModel? model) {
     id = model?.id ?? '';
@@ -67,6 +72,7 @@ class EditUserModel extends EditBaseModel {
     gender = model?.gender ?? 'Male';
     password = model?.password ?? '';
     newPassword = '';
+    avatar = model?.avatar ?? '';
   }
 
   Map<String, dynamic> toChangePasswordJson() {
@@ -84,6 +90,7 @@ class EditUserModel extends EditBaseModel {
       'phoneNumber': phoneNumber,
       'gender': gender,
       'address': address,
+      'avatar': avatar,
     };
     return params;
   }
@@ -96,6 +103,7 @@ class EditUserModel extends EditBaseModel {
       'address': address,
       'phoneNumber': phoneNumber,
       'gender': gender,
+      'avatar': avatar,
     };
 
     return params;

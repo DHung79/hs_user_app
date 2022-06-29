@@ -23,6 +23,16 @@ class ValidatorText {
     }
   }
 
+  static String invalid({required String fieldName}) {
+    var invalidFormat = ScreenUtil.t(I18nKey.invalidFormat)!;
+    var invalid = ScreenUtil.t(I18nKey.invalid)!;
+    if (invalidFormat.startsWith(ScreenUtil.t(I18nKey.invalid)!)) {
+      return invalid + ' ' + fieldName.toLowerCase();
+    } else {
+      return fieldName.toUpperCase() + ' ' + invalid.toLowerCase();
+    }
+  }
+
   static String atLeast({required String fieldName, required double atLeast}) {
     return fieldName +
         ' ' +
@@ -41,12 +51,34 @@ class ValidatorText {
   }
 }
 
-String showError(String errorCode, BuildContext context) {
+String showError(String errorCode, BuildContext context, {String? fieldName}) {
   ScreenUtil.init(context);
   String message = '';
   switch (errorCode) {
     case '100':
       message = ScreenUtil.t(I18nKey.notHavePermissionToControlDoor)!;
+      break;
+    case '400':
+      if (fieldName != null) {
+        if (fieldName == 'Email') {
+          message = ScreenUtil.t(I18nKey.emailDoesNotExist)!;
+        } else {
+          message = fieldName + ' ' + ScreenUtil.t(I18nKey.isExpired)!;
+        }
+      } else {
+        message = ScreenUtil.t(I18nKey.invalidEmailOrPassword)!;
+      }
+      break;
+    case '404':
+      if (fieldName != null) {
+        if (fieldName == 'Email') {
+          message = ScreenUtil.t(I18nKey.emailDoesNotExist)!;
+        } else {
+          message = ScreenUtil.t(I18nKey.incorrectOTP)!;
+        }
+      } else {
+        message = ScreenUtil.t(I18nKey.invalidEmailOrPassword)!;
+      }
       break;
     case '900':
       message = ScreenUtil.t(I18nKey.unauthorized)!;
@@ -57,25 +89,6 @@ String showError(String errorCode, BuildContext context) {
     case '902':
       message = ScreenUtil.t(I18nKey.invalidToken)!;
       break;
-    case '903':
-      if (ScreenUtil.t(I18nKey.device)!.toLowerCase() == 'device') {
-        message = ScreenUtil.t(I18nKey.accountLoggedOutOfDevice)! +
-            ' ' +
-            // deviceOS +
-            ' ' +
-            ScreenUtil.t(I18nKey.device)!.toLowerCase() +
-            ' ' +
-            ScreenUtil.t(I18nKey.allowed)!.toLowerCase();
-      } else {
-        message = ScreenUtil.t(I18nKey.accountLoggedOutOfDevice)! +
-            ' ' +
-            ScreenUtil.t(I18nKey.device)!.toLowerCase() +
-            ' ' +
-            // deviceOS +
-            ' ' +
-            ScreenUtil.t(I18nKey.allowed)!.toLowerCase();
-      }
-      break;
     case '1000':
       message = ScreenUtil.t(I18nKey.invalidEmailOrPassword)!;
       break;
@@ -83,34 +96,52 @@ String showError(String errorCode, BuildContext context) {
       message = ScreenUtil.t(I18nKey.userNotFound)!;
       break;
     case '1002':
-      message = ScreenUtil.t(I18nKey.notificationNotFound)!;
+      message = 'Email và số điện thoại đã tồn tại!';
       break;
     case '1003':
-      message = ScreenUtil.t(I18nKey.emailAlreadyExists)!;
+      message = 'Email đã tồn tại';
       break;
     case '1004':
       message = ScreenUtil.t(I18nKey.phoneNumberAlreadyExists)!;
       break;
     case '1005':
-      message = ScreenUtil.t(I18nKey.invalidPassword)!;
+      message = 'Bạn đã nhập sai mật khẩu';
       break;
     case '1006':
-      message = ScreenUtil.t(I18nKey.roleNotFound)!;
+      message = 'Không tìm thấy người giúp việc!';
       break;
     case '1007':
-      message = ScreenUtil.t(I18nKey.roleNameAlreadyExists)!;
+      message = 'Không tìm thấy dịch vụ!';
       break;
     case '1008':
-      message = ScreenUtil.t(I18nKey.moduleNotFound)!;
+      message = 'Không tìm thấy đơn hàng!';
       break;
     case '1009':
-      message = ScreenUtil.t(I18nKey.moduleAlreadyExists)!;
+      message = 'Không tìm thấy bình luận và đánh giá!';
       break;
     case '1010':
-      message = ScreenUtil.t(I18nKey.permissionAlreadyExists)!;
+      message = 'Không thể cập nhật vì người giúp việc đã huỷ đơn';
       break;
     case '1011':
       message = ScreenUtil.t(I18nKey.invalidResetId)!;
+      break;
+    case '1012':
+      message = 'Công việc đã được người khác nhận';
+      break;
+    case '1013':
+      message = 'Công việc đã bị huỷ';
+      break;
+    case '1014':
+      message = 'Không tìm thấy Admin!';
+      break;
+    case '1015':
+      message = 'Mã OTP đã hết hạn';
+      break;
+    case '1016':
+      message = 'Không tìm thấy thông tin liên lạc!';
+      break;
+    case '1017':
+      message = 'Email không tồn tại';
       break;
     case '1100':
       message = ScreenUtil.t(I18nKey.pageAndLimitShouldBeNumberic)!;

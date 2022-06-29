@@ -21,14 +21,26 @@ export 'locales/i18n.dart';
 export 'utils/screen_util.dart';
 export 'locales/i18n_key.dart';
 
+String serviceId = '';
 int notiBadges = 0;
 String locationAddress = '';
 bool loginGoogle = false;
 int homePageIndex = 0;
 int selectIndexBooking = 0;
-final List<dynamic> addressList = [];
 String email = '';
-
+Map<String, dynamic> positionTask = {};
+int startTime = 0;
+int endTime = 0;
+String address = '';
+int date = 0;
+String note = '';
+int name = 0;
+int quantity = 0;
+String noteTasker = '';
+int dateActive = 0;
+List listTaskForTasker = [];
+String idTask = '';
+int estimateTime = 0;
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 // Page index
 GlobalKey globalKey = GlobalKey();
@@ -37,8 +49,8 @@ navigateTo(String route) async {
   locator<AppRouterDelegate>().navigateTo(route);
 }
 
-String getCurrentRoute() {
-  return locator<AppRouterDelegate>().currentConfiguration.name!;
+String? getCurrentRoute() {
+  return locator<AppRouterDelegate>().currentConfiguration.name;
 }
 
 final List<Locale> supportedLocales = <Locale>[

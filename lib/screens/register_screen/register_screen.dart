@@ -89,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 12.0),
                                   child: Text(
-                                    ScreenUtil.t(I18nKey.signUp)!,
+                                    'Đăng kí',
                                     style: AppTextTheme.bigText(Colors.white),
                                   ),
                                 ),
@@ -141,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           AppColor.primary1),
                                     ),
                                     onPressed: () {
-                                      _forgotPassword();
+                                      _register();
                                     },
                                     // onPressed: () {},
                                   ),
@@ -161,12 +161,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ));
   }
 
-  _forgotPassword() {
+  _register() {
     setState(() {
       _errorMessage = '';
       loginGoogle = false;
-      email = emailController.text;
     });
+
+    
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(
@@ -181,13 +182,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  _buildErrorMessage() {
+Widget _buildErrorMessage() {
     return _errorMessage != null && _errorMessage!.isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(
-              'Email không tồn tại',
-              style: AppTextTheme.normalHeaderTitle(AppColor.others1),
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Center(
+              child: Text(
+                _errorMessage!,
+                style: AppTextTheme.normalHeaderTitle(AppColor.others1),
+              ),
             ),
           )
         : const SizedBox();
@@ -195,9 +198,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _showError(String errorCode) async {
     setState(() {
-      if (errorCode == '400') {
-        _errorMessage = 'Email đã tồn tại';
-      }
+      _errorMessage = showError(errorCode, context);
+      logDebug(_errorMessage);
     });
   }
 }

@@ -4,14 +4,14 @@ import '../../rest/models/rest_api_response.dart';
 class ServiceModel extends BaseModel {
   final String __id;
   final String _name;
-  final String _code;
+  final List<TranslationModel> _translations = [];
   final String _image;
   final bool _isValid;
-  final CategoryModel _categoryModel;
+  final List<OptionsModel> _options = [];
+  final List<PaymentsModel> _payments = [];
   final int _createdTime;
   final int _updatedTime;
-  final List<TranslationModel> _translations = [];
-  final List<OptionsModel> _options = [];
+  final String _code;
 
   ServiceModel.fromJson(Map<String, dynamic> json)
       : __id = json['_id'] ?? '',
@@ -19,19 +19,19 @@ class ServiceModel extends BaseModel {
         _code = json['code'] ?? '',
         _image = json['image'] ?? '',
         _isValid = json['isValid'] ?? false,
-        _categoryModel = BaseModel.map<CategoryModel>(
-          json: json,
-          key: 'category',
-        ),
-        _createdTime = json['created_time'],
-        _updatedTime = json['updated_time'] {
+        _createdTime = json['created_time'] ?? 0,
+        _updatedTime = json['updated_time'] ?? 0 {
     _translations.addAll(BaseModel.mapList<TranslationModel>(
       json: json,
       key: 'translation',
     ));
+    _payments.addAll(BaseModel.mapList<PaymentsModel>(
+      json: json,
+      key: 'payments',
+    ));
     _options.addAll(BaseModel.mapList<OptionsModel>(
       json: json,
-      key: 'options',
+      key: 'option',
     ));
   }
 
@@ -41,11 +41,11 @@ class ServiceModel extends BaseModel {
         'code': _code,
         'image': _image,
         'isValid': _isValid,
-        'category': _categoryModel.toJson(),
         'created_time': _createdTime,
         'updated_time': _updatedTime,
         'translation': _translations.map((e) => e.toJson()).toList(),
         'options': _options.map((e) => e.toJson()).toList(),
+        'payments': _payments.map((e) => e.toJson()).toList(),
       };
 
   String get id => __id;
@@ -53,11 +53,12 @@ class ServiceModel extends BaseModel {
   String get code => _code;
   String get image => _image;
   bool get isValid => _isValid;
-  CategoryModel get categoryModel => _categoryModel;
   int get createdTime => _createdTime;
   int get updatedTime => _updatedTime;
   List<TranslationModel> get translations => _translations;
   List<OptionsModel> get options => _options;
+  List<PaymentsModel> get payments => _payments;
+
 }
 
 class EditServiceModel extends EditBaseModel {
@@ -71,6 +72,7 @@ class EditServiceModel extends EditBaseModel {
   int updatedTime = 0;
   List<TranslationModel> translations = [];
   List<OptionsModel> options = [];
+  List<OptionsModel> payments = [];
 
   EditServiceModel.fromModel(ServiceModel? model) {
     id = model?.id ?? '';
@@ -78,7 +80,6 @@ class EditServiceModel extends EditBaseModel {
     code = model?.code ?? '';
     image = model?.image ?? '';
     isValid = model?.isValid ?? false;
-    categoryModel = model?.categoryModel;
     createdTime = model?.createdTime ?? 0;
     updatedTime = model?.updatedTime ?? 0;
     translations = model?.translations ?? [];
@@ -94,6 +95,7 @@ class EditServiceModel extends EditBaseModel {
       'categoryModel': categoryModel,
       'translations': translations,
       'options': options,
+      'payments': payments,
     };
 
     return params;
@@ -109,6 +111,7 @@ class EditServiceModel extends EditBaseModel {
       'categoryModel': categoryModel,
       'translations': translations,
       'options': options,
+      'payments': payments,
     };
     return params;
   }
@@ -171,22 +174,17 @@ class TranslationModel extends BaseModel {
 }
 
 class OptionsModel extends BaseModel {
-  final String _name;
+  final int _name;
   final int _price;
   final int _quantity;
   final String _note;
-  final UnitModel _unit;
   final String __id;
 
   OptionsModel.fromJson(Map<String, dynamic> json)
-      : _name = json['name'] ?? '',
+      : _name = json['name'] ?? 0,
         _price = json['price'] ?? 0,
         _quantity = json['quantity'] ?? 0,
         _note = json['note'] ?? '',
-        _unit = BaseModel.map<UnitModel>(
-          json: json,
-          key: 'unit',
-        ),
         __id = json['_id'] ?? '';
 
   Map<String, dynamic> toJson() => {
@@ -194,14 +192,32 @@ class OptionsModel extends BaseModel {
         'price': _price,
         'quantity': _quantity,
         'note': _note,
-        'unit': _unit.toJson(),
         '_id': __id,
       };
-  String get name => _name;
+  int get name => _name;
   int get price => _price;
   int get quantity => _quantity;
   String get note => _note;
-  UnitModel get unit => _unit;
+  String get id => __id;
+}
+
+class PaymentsModel extends BaseModel {
+  final String _name;
+  final bool _isActive;
+  final String __id;
+
+  PaymentsModel.fromJson(Map<String, dynamic> json)
+      : _name = json['name'] ?? '',
+        _isActive = json['is_active'],
+        __id = json['_id'] ?? '';
+
+  Map<String, dynamic> toJson() => {
+        'name': _name,
+        'is_active': _isActive,
+        '_id': __id,
+      };
+  String get name => _name;
+  bool get isActive => _isActive;
   String get id => __id;
 }
 

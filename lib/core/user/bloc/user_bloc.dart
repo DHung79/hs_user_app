@@ -141,11 +141,9 @@ class UserBloc {
       );
       if (data.error != null) {
         // Error exist
-        logDebug(data);
         return Future.error(data.error!);
       } else {
         // Adding response data.
-        logDebug('data:  ${data.model!.gender}');
         return Future.value(data.model);
       }
     } on AppException catch (e) {

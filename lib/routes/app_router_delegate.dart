@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/screens/home/booking_screen/booking_screen.dart';
+import 'package:hs_user_app/screens/create_password_screen/create_password_screen.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/choose_location/choose_location.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/confirm_page.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/edit_profile.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/edit_task_profile.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/pick_type_home.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/post_fast.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/post_task.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/profile_tasker.dart';
@@ -13,11 +14,11 @@ import 'package:hs_user_app/screens/home/setting_screen/components/edit_profile.
 import 'package:hs_user_app/screens/home/setting_screen/components/payment.dart';
 import 'package:hs_user_app/screens/home/setting_screen/components/profile_screen.dart';
 import 'package:hs_user_app/screens/home/setting_screen/components/setting_change_password.dart';
-import 'package:hs_user_app/screens/home/setting_screen/setting_screen.dart';
 import 'package:hs_user_app/screens/home_screen/home_screen.dart';
 import 'package:hs_user_app/screens/notification_screen/notification_screen.dart';
 import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
 import 'package:hs_user_app/screens/register_screen/register_screen.dart';
+import 'package:hs_user_app/screens/reset_password_screen/reset_password_screen.dart';
 import '../screens/home/booking_screen/components/gps_page.dart';
 import '/screens/forgot_password_screen/forgot_password_screen.dart';
 import '/screens/onboarding/authentication_screen.dart';
@@ -78,10 +79,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     }
 
     if (route == bookingRoute) {
-      return const Booking();
+      return const HomeScreen();
     }
     if (route == posttaskRoute) {
-      return const PostTask();
+      return PostTask(key: postTaskKey);
     }
     if (route == promotionRoute) {
       return const Promotion();
@@ -90,7 +91,9 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const EditTaskProfile();
     }
     if (route == postFastRoute) {
-      return const PostFast();
+      return PostFast(
+        key: postFastKey,
+      );
     }
     if (route == paymentRoute) {
       return const Payment();
@@ -102,7 +105,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const SettingEditProfile();
     }
     if (route == settingRoute) {
-      return const SettingScreen();
+      return const HomeScreen();
     }
     if (route == settingChangePasswordRoute) {
       return const SettingChangePassword();
@@ -112,16 +115,27 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     }
 
     if (route == gpsPageRoute) {
-      return GoogleSearchPlacesApi();
+      return GoogleSearchPlacesApi(
+        key: googleSearchPlacesApiKey,
+      );
+    }
+
+    if (route == profileUserRoute) {
+      return const ProfileScreen();
     }
 
     if (route == chooseLocationRoute) {
-      return const ChooseLocation();
+      return ChooseLocation(
+        key: chooseLocationKey,
+      );
     }
-    if (route == confirmPageRoute) {
-      return const Confirm();
+    if (route == confirmRoute) {
+      return const ConfirmPage();
     }
-    if (route == editProfileRoute) {
+    if (route == editConfirmRoute) {
+      return const EditProfile();
+    }
+    if (route == editPostFastRoute) {
       return const EditProfile();
     }
     if (route == viewDetailRoute) {
@@ -133,16 +147,30 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     }
 
     if (route == resetPasswordRoute) {
-      return const ForgotPasswordScreen();
+      return const ResetPasswordScreen();
+    }
+
+    if (route == createPasswordRoute) {
+      return const CreatePasswordScreen();
     }
 
     if (route == registerRoute) {
       return const RegisterScreen();
     }
 
-    if (route == otpRoute) {
+    if (route == otpForgotPassWordRoute) {
       return const OtpScreen();
-    } // if (route == roleRoute) {
+    }
+    if (route == otpRegisterRoute) {
+      return const OtpScreen();
+    }
+
+    if (route == pickTypeHomeRoute) {
+      return PickTypeHome(
+        key: pickTypeHomeKey,
+      );
+    }
+    // if (route == roleRoute) {
     //   return const UserManagementScreen(tab: 1);
     // }
     // if (route == createRoleRoute) {

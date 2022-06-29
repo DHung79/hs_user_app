@@ -50,12 +50,12 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
 
-  AppRoutePath.confirmPage()
-      : name = confirmPageRoute,
+  AppRoutePath.confirm()
+      : name = confirmRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.editProfile()
-      : name = confirmPageRoute,
+      : name = editProfileRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.viewDetail()
@@ -70,18 +70,45 @@ class AppRoutePath {
       : name = settingProfileRoute,
         routeId = '',
         isUnknown = false;
+  AppRoutePath.otpRegister()
+      : name = otpRegisterRoute,
+        routeId = '',
+        isUnknown = false;
   AppRoutePath.setting()
       : name = settingRoute,
         routeId = '',
         isUnknown = false;
+  AppRoutePath.otpForgotPassword()
+      : name = otpForgotPassWordRoute,
+        routeId = '',
+        isUnknown = false;
+  AppRoutePath.editPostFast()
+      : name = editPostFastRoute,
+        routeId = '',
+        isUnknown = false;
+
+  AppRoutePath.editConfirm()
+      : name = editConfirmRoute,
+        routeId = '',
+        isUnknown = false;
+
   AppRoutePath.settingChangePassword()
       : name = settingChangePasswordRoute,
+        routeId = '',
+        isUnknown = false;
+  AppRoutePath.createPassword()
+      : name = createPasswordRoute,
+        routeId = '',
+        isUnknown = false;
+  AppRoutePath.resetPassword()
+      : name = resetPasswordRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.payment()
       : name = paymentRoute,
         routeId = '',
         isUnknown = false;
+      
 
   AppRoutePath.forgotPassword()
       : name = forgotPasswordRoute,
@@ -99,6 +126,10 @@ class AppRoutePath {
       : name = editTaskProfileRoute,
         routeId = '',
         isUnknown = false;
+  AppRoutePath.profileUser()
+      : name = profileUserRoute,
+        routeId = '',
+        isUnknown = false;
 
   AppRoutePath.register()
       : name = registerRoute,
@@ -106,6 +137,10 @@ class AppRoutePath {
         isUnknown = false;
   AppRoutePath.otp()
       : name = otpRoute,
+        routeId = '',
+        isUnknown = false;
+          AppRoutePath.pickTypeHome()
+      : name = pickTypeHomeRoute,
         routeId = '',
         isUnknown = false;
   // AppRoutePath.roles()
@@ -143,11 +178,34 @@ class AppRoutePath {
     if (name == settingProfileRoute) {
       return AppRoutePath.settingProfile();
     }
+
+    if (name == createPasswordRoute) {
+      return AppRoutePath.createPassword();
+    }
+    if (name == resetPasswordRoute) {
+      return AppRoutePath.resetPassword();
+    }
+
+    if (name == profileUserRoute) {
+      return AppRoutePath.profileUser();
+    }
     if (name == postFastRoute) {
       return AppRoutePath.postFast();
     }
     if (name == paymentRoute) {
       return AppRoutePath.payment();
+    }
+    if (name == otpForgotPassWordRoute) {
+      return AppRoutePath.otpForgotPassword();
+    }
+    if (name == otpRegisterRoute) {
+      return AppRoutePath.otpRegister();
+    }
+    if (name == editPostFastRoute) {
+      return AppRoutePath.editPostFast();
+    }
+    if (name == editConfirmRoute) {
+      return AppRoutePath.editConfirm();
     }
     if (name == settingRoute) {
       return AppRoutePath.setting();
@@ -185,8 +243,8 @@ class AppRoutePath {
     if (name == posttaskRoute) {
       return AppRoutePath.posttask();
     }
-    if (name == confirmPageRoute) {
-      return AppRoutePath.confirmPage();
+    if (name == confirmRoute) {
+      return AppRoutePath.confirm();
     }
     if (name == editProfileRoute) {
       return AppRoutePath.editProfile();
@@ -206,6 +264,9 @@ class AppRoutePath {
 
     if (name == otpRoute) {
       return AppRoutePath.otp();
+    }
+    if (name == pickTypeHomeRoute) {
+      return AppRoutePath.pickTypeHome();
     }
     // if (name == roleRoute) {
     //   return AppRoutePath.roles();

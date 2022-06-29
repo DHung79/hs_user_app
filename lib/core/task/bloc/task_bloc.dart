@@ -1,17 +1,19 @@
+import 'package:hs_user_app/core/task/model/task_model.dart';
+import 'package:hs_user_app/core/task/resources/task_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../main.dart';
 import '../../base/blocs/block_state.dart';
 import '../../rest/api_helpers/api_exception.dart';
-import '../service.dart';
+import '../../service/model/service_model.dart';
 
-class ServiceBloc {
-  final _repository = ServiceRepository();
-  final BehaviorSubject<ApiResponse<ListServiceModel?>> _allDataFetcher =
-      BehaviorSubject<ApiResponse<ListServiceModel>>();
+class TaskBloc {
+  final _repository = TaskRepository();
+  final BehaviorSubject<ApiResponse<ListTaskModel?>> _allDataFetcher =
+      BehaviorSubject<ApiResponse<ListTaskModel>>();
   final _allDataState = BehaviorSubject<BlocState>();
 
-  Stream<ApiResponse<ListServiceModel?>> get allData => _allDataFetcher.stream;
+  Stream<ApiResponse<ListTaskModel?>> get allData => _allDataFetcher.stream;
   Stream<BlocState> get allDataState => _allDataState.stream;
   bool _isFetching = false;
 
@@ -21,13 +23,10 @@ class ServiceBloc {
     // Start fetching data.
     _allDataState.sink.add(BlocState.fetching);
     try {
-      final SharedPreferences sharedPreferences = await prefs;
-
       // Await response from server.
       final data =
-          await _repository.fetchAllData<ListServiceModel>(params: params!);
-      sharedPreferences.setString('id', data.model!.records.first.id);
-      
+          await _repository.fetchAllData<ListTaskModel>(params: params!);
+
       if (_allDataFetcher.isClosed) return;
       if (data.error != null) {
         // Error exist
@@ -44,10 +43,10 @@ class ServiceBloc {
     _isFetching = false;
   }
 
-  Future<ServiceModel> fetchDataById(String id) async {
+  Future<TaskModel> fetchDataById(String id) async {
     try {
       // Await response from server.
-      final data = await _repository.fetchDataById<ServiceModel>(id: id);
+      final data = await _repository.fetchDataById<TaskModel>(id: id);
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);
@@ -60,10 +59,10 @@ class ServiceBloc {
     }
   }
 
-  Future<ServiceModel> deleteObject({String? id}) async {
+  Future<TaskModel> deleteObject({String? id}) async {
     try {
       // Await response from server.
-      final data = await _repository.deleteObject<ServiceModel>(id: id);
+      final data = await _repository.deleteObject<TaskModel>(id: id);
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);
@@ -75,8 +74,6 @@ class ServiceBloc {
       return Future.error(e);
     }
   }
-
-  
 
   // Future<ServiceModel> editProfile({
   //   EditServiceModel? editModel,
@@ -154,6 +151,51 @@ class ServiceBloc {
   //     return Future.error(e);
   //   }
   // }
+
+  Future<TaskModel> createTask({EditTaskModel? editModel}) async {
+    try {
+      // Await response from server.
+      final SharedPreferences sharedPreferences = await prefs;
+      serviceId = sharedPreferences.getString('id') ?? '';
+      editModel?.service = ServiceModel.fromJson({'_id': serviceId});
+      final data = await _repository.createTask<TaskModel, EditTaskModel>(
+        editModel: editModel,
+      );
+      if (data.error != null) {
+        // Error exist
+        return Future.error(data.error!);
+      } else {
+        // Adding response data.
+        return Future.value(data.model);
+      }
+    } on AppException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<TaskModel> editTask({
+    EditTaskModel? editModel,
+    String? id,
+  }) async {
+    try {
+      // Await response from server.
+
+      final data = await _repository.editTask<TaskModel, EditTaskModel>(
+        editModel: editModel,
+        id: idTask,
+      );
+      if (data.error != null) {
+        // Error exist
+        return Future.error(data.error!);
+      } else {
+        // Adding response data.
+        return Future.value(data.model);
+      }
+    } on AppException catch (e) {
+
+      return Future.error(e);
+    }
+  }
 
   dispose() {
     _allDataFetcher.close();

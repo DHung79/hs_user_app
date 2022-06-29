@@ -1,46 +1,45 @@
 import 'dart:async';
+import 'package:hs_user_app/core/task/resources/task_api_provider.dart';
 import '../../../main.dart';
 import '../../rest/models/rest_api_response.dart';
-import 'service_api_provider.dart';
 
-class ServiceRepository {
-  final _provider = ServiceApiProvider();
+class TaskRepository {
+  final _provider = TaskApiProvider();
 
   Future<ApiResponse<T?>> deleteObject<T extends BaseModel>({
     String? id,
   }) =>
-      _provider.deleteService<T>(
+      _provider.deleteTask<T>(
         id: id,
       );
 
   Future<ApiResponse<T?>> fetchAllData<T extends BaseModel>({
     required Map<String, dynamic> params,
   }) =>
-      _provider.fetchAllServices<T>(params: params);
+      _provider.fetchAllTask<T>(params: params);
 
   Future<ApiResponse<T?>> fetchDataById<T extends BaseModel>({
     String? id,
   }) =>
-      _provider.fetchServiceById<T>(
+      _provider.fetchTaskById<T>(
         id: id,
       );
 
   Future<ApiResponse<T?>>
-      editObject<T extends BaseModel, K extends EditBaseModel>({
+      editTask<T extends BaseModel, K extends EditBaseModel>({
     K? editModel,
     String? id,
   }) =>
-          _provider.editService<T, K>(
+          _provider.editTask<T, K>(
             editModel: editModel,
             id: id,
           );
 
   Future<ApiResponse<T?>>
-      createObject<T extends BaseModel, K extends EditBaseModel>({
+      createTask<T extends BaseModel, K extends EditBaseModel>({
     K? editModel,
-    String? id,
   }) =>
-          _provider.createService<T, K>(
+          _provider.createTask<T, K>(
             editModel: editModel,
           );
 }

@@ -84,8 +84,10 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                         onPressed: () {
                           if (currentRoute == otpForgotPassWordRoute) {
+                            logDebug(currentRoute);
                             navigateTo(forgotPasswordRoute);
                           } else {
+                            logDebug(currentRoute);
                             navigateTo(registerRoute);
                           }
                         },

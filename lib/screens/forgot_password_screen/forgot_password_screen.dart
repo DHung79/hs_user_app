@@ -38,7 +38,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
-          logDebug(state);
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is ForgotPasswordDoneState) {
@@ -177,13 +176,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  _buildErrorMessage() {
+  Widget _buildErrorMessage() {
     return _errorMessage != null && _errorMessage!.isNotEmpty
         ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(
-              'Email không tồn tại',
-              style: AppTextTheme.normalHeaderTitle(AppColor.others1),
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Center(
+              child: Text(
+                _errorMessage!,
+                style: AppTextTheme.normalHeaderTitle(AppColor.others1),
+              ),
             ),
           )
         : const SizedBox();

@@ -48,8 +48,6 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       bloc: AuthenticationBlocController().authenticationBloc,
       listener: (context, state) {
-        logDebug(state);
-
         if (state is AuthenticationFailure) {
           _showError(state.errorCode);
         } else if (state is LoginLastUser) {
@@ -196,7 +194,7 @@ class _LoginFormState extends State<LoginForm> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Bạn chưa có tài khoản?',
+                              'Chưa có tài khoản?',
                               style:
                                   AppTextTheme.headerTitle(AppColor.secondary3),
                             ),
@@ -208,7 +206,7 @@ class _LoginFormState extends State<LoginForm> {
                                 navigateTo(registerRoute);
                               },
                               child: Text(
-                                'Đăng Kí',
+                                'Đăng Kí'.toUpperCase(),
                                 style: AppTextTheme.headerTitle(AppColor.text2),
                               ),
                             )
