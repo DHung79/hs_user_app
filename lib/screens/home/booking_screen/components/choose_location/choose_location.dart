@@ -5,11 +5,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/gps_page.dart';
+import 'package:hs_user_app/widgets/debouncer.dart';
 import '../../../../../core/authentication/bloc/authentication/authentication_event.dart';
+import '../../../../../core/task/model/task_model.dart';
 import '../../../../../core/user/model/user_model.dart';
 import '../../../../../theme/svg_constants.dart';
 import '../../../../../widgets/jt_indicator.dart';
 import '../../../../layout_template/content_screen.dart';
+
+final chooseLocationKey = GlobalKey<_ChooseLocationState>();
 
 class ChooseLocation extends StatefulWidget {
   const ChooseLocation({Key? key}) : super(key: key);
@@ -19,53 +24,76 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
-  LatLng? selectedPosition;
-  Position? position;
-  String address = 'search';
-  List locations = [];
-  late String _output;
-  late LatLng newLocation;
   final PageState _pageState = PageState();
-  bool haveData = false;
-  TextEditingController controller = TextEditingController();
   late GoogleMapController _mapController;
-
-  Set<Marker> markers = {};
+  late TaskModel task;
+  String? nameAddressChoose = '';
   final LocationSettings locationSettings = const LocationSettings(
       accuracy: LocationAccuracy.best, distanceFilter: 0);
 
-  final CameraPosition _location = const CameraPosition(
+  CameraPosition _location = const CameraPosition(
     target: LatLng(12.27873, 109.1998974),
     zoom: 12.0,
   );
-  final String _searchString = '';
-  Marker _selectedPlate = const Marker(
-    markerId: MarkerId('selectedPlate'),
-    position: LatLng(12.252915199999999, 12.252915199999999),
-  );
+  late Marker _selectedPlate;
+  late Debouncer _debounce;
+
   @override
   void initState() {
+    _debounce = Debouncer(delayTime: const Duration(milliseconds: 500));
+    _debounce.debounce(
+      afterDuration: () async {
+        await placemarkFromCoordinates(
+          _selectedPlate.position.latitude,
+          _selectedPlate.position.longitude,
+        ).then(
+          (placemarks) {
+            if (placemarks.isNotEmpty) {
+              final dataLocation = '${placemarks[0].street}'
+                  ', ${placemarks[0].locality}'
+                  ', ${placemarks[0].administrativeArea}';
+              setState(() {
+                nameAddressChoose = dataLocation;
+              });
+            }
+          },
+        );
+      },
+    );
+    logDebug(googleSearchPlacesApiKey.currentState);
+    if (googleSearchPlacesApiKey.currentState != null) {
+      nameAddressChoose = googleSearchPlacesApiKey.currentState?.nameAddress;
+    }
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
-    locationFromAddress(dataLocation).then(
+
+    _selectedPlate = Marker(
+      markerId: const MarkerId('selectedPlate'),
+      position: _location.target,
+    );
+
+    locationFromAddress(nameAddressChoose!).then(
       (locations) {
-        var output = 'No results found';
         if (locations.isNotEmpty) {
-          newLocation = LatLng(locations[0].latitude, locations[0].longitude);
-        }
-        setState(() {
+          final newLocation =
+              LatLng(locations[0].latitude, locations[0].longitude);
           _selectedPlate = Marker(
             markerId: const MarkerId('selectedPlate'),
             position: newLocation,
           );
-        });
+          _location = CameraPosition(target: newLocation, zoom: 20);
+        } else {}
       },
     );
+   
+    logDebug('nameAddressChoose: $nameAddressChoose');
     super.initState();
   }
 
   @override
   void dispose() {
     _mapController.dispose();
+    _debounce.dispose();
+
     super.dispose();
   }
 
@@ -106,83 +134,91 @@ class _ChooseLocationState extends State<ChooseLocation> {
       body: Column(
         children: [
           Expanded(
-            child: Stack(children: [
-              GoogleMap(
-                onCameraMove: (value) {
-                  setState(
-                    () {
-                      _selectedPlate = Marker(
-                        markerId: const MarkerId('selectedPlate'),
-                        position: LatLng(
-                          value.target.latitude,
-                          value.target.longitude,
+            child: Stack(
+              children: [
+                GoogleMap(
+                  onCameraMove: (value) {
+                    setState(
+                      () {
+                        _selectedPlate = Marker(
+                          markerId: const MarkerId('selectedPlate'),
+                          position: LatLng(
+                            value.target.latitude,
+                            value.target.longitude,
+                          ),
+                        );
+                      },
+                    );
+                    _debounce.debounce(
+                      afterDuration: () async {
+                        await placemarkFromCoordinates(
+                          _selectedPlate.position.latitude,
+                          _selectedPlate.position.longitude,
+                        ).then(
+                          (placemarks) {
+                            if (placemarks.isNotEmpty) {
+                              final dataLocation = '${placemarks[0].street}'
+                                  ', ${placemarks[0].locality}'
+                                  ', ${placemarks[0].administrativeArea}';
+                              setState(() {
+                                nameAddressChoose = dataLocation;
+                              });
+                            }
+                          },
+                        );
+                      },
+                    );
+                  },
+                  onMapCreated: _onMapCreated,
+                  minMaxZoomPreference: const MinMaxZoomPreference(12, 18),
+                  initialCameraPosition: _location,
+                  scrollGesturesEnabled: true,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  indoorViewEnabled: true,
+                  zoomControlsEnabled: false,
+                  zoomGesturesEnabled: true,
+                  trafficEnabled: true,
+                ),
+                Positioned(
+                  right: 16,
+                  bottom: 16,
+                  child: FloatingActionButton(
+                    backgroundColor: AppColor.text2,
+                    child: SvgIcon(
+                      SvgIcons.myLocation,
+                      color: AppColor.primary2,
+                      size: 24,
+                    ),
+                    onPressed: () async {
+                      await _gpsService();
+                      Position position = await _determinePosition();
+
+                      _mapController.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                              target:
+                                  LatLng(position.latitude, position.longitude),
+                              zoom: 14),
                         ),
                       );
-                      placemarkFromCoordinates(
-                        _selectedPlate.position.latitude,
-                        _selectedPlate.position.longitude,
-                      ).then(
-                        (placemarks) {
-                          dataLocation = 'No results found';
-                          if (placemarks.isNotEmpty) {
-                            dataLocation = '${placemarks[0].street}'
-                                ', ${placemarks[0].locality}'
-                                ', ${placemarks[0].administrativeArea}';
-                          }
-                        },
-                      );
+
+                      setState(() async {});
                     },
-                  );
-                },
-                onMapCreated: _onMapCreated,
-                minMaxZoomPreference: const MinMaxZoomPreference(12, 18),
-                initialCameraPosition: _location,
-                scrollGesturesEnabled: true,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                indoorViewEnabled: true,
-                zoomControlsEnabled: false,
-                zoomGesturesEnabled: true,
-                trafficEnabled: true,
-                markers: {
-                  _selectedPlate,
-                },
-              ),
-              Positioned(
-                right: 16,
-                bottom: 16,
-                child: FloatingActionButton(
-                  backgroundColor: AppColor.text2,
-                  child: SvgIcon(
-                    SvgIcons.myLocation,
-                    color: AppColor.primary2,
-                    size: 24,
                   ),
-                  onPressed: () async {
-                    await _gpsService();
-                    Position position = await _determinePosition();
-
-                    _mapController.animateCamera(
-                      CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                            target:
-                                LatLng(position.latitude, position.longitude),
-                            zoom: 14),
-                      ),
-                    );
-
-                    markers.clear();
-                    markers.add(
-                      Marker(
-                        markerId: const MarkerId('currentLocation'),
-                        position: LatLng(position.latitude, position.longitude),
-                      ),
-                    );
-                    setState(() async {});
-                  },
                 ),
-              ),
-            ]),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 60),
+                    child: Icon(
+                      Icons.location_on,
+                      color: AppColor.others1,
+                      size: 60,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           _actions(),
         ],
@@ -202,13 +238,14 @@ class _ChooseLocationState extends State<ChooseLocation> {
               backgroundColor: AppColor.primary2,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () {
-              Map<String, String> latLngPosition = <String, String>{
-                'lat:': '${_selectedPlate.position.latitude}',
-                'lng:': '${_selectedPlate.position.longitude}',
-              };
-
-              logDebug(latLngPosition);
+            onPressed: () async {
+              setState(() {
+                positionTask = {
+                  'lat': _selectedPlate.position.latitude.toString(),
+                  'long': _selectedPlate.position.longitude.toString(),
+                };
+              });
+              navigateTo(pickTypeHomeRoute);
             },
             child: Text(
               'Chọn vị trí này',
@@ -292,7 +329,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                         ),
                         Expanded(
                           child: Text(
-                            dataLocation,
+                            nameAddressChoose!,
                             style: AppTextTheme.normalText(AppColor.text1),
                             overflow: TextOverflow.ellipsis,
                           ),

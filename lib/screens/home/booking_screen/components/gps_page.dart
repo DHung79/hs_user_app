@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
 
+final googleSearchPlacesApiKey = GlobalKey<_GoogleSearchPlacesApiState>();
+
 class GoogleSearchPlacesApi extends StatefulWidget {
+  const GoogleSearchPlacesApi({Key? key}) : super(key: key);
+
   @override
   _GoogleSearchPlacesApiState createState() => _GoogleSearchPlacesApiState();
 }
@@ -19,8 +24,10 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
   final _controller = TextEditingController();
   final PageState _pageState = PageState();
   Timer? _debounce;
-
   List<dynamic> _placeList = [];
+  List<String> todoList = [];
+  String nameAddress = '';
+
   bool _haveData = false;
 
   void getSuggestion(String input) async {
@@ -31,9 +38,7 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
           'https://maps.googleapis.com/maps/api/place/autocomplete/json';
       String request = '$baseURL?input=$input&key=$kPLACESAPIKEY';
       var response = await http.get(Uri.parse(request));
-      var data = json.decode(response.body);
-      print('mydata');
-      print(data);
+
       if (response.statusCode == 200) {
         setState(() {
           _placeList = json.decode(response.body)['predictions'];
@@ -50,6 +55,28 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
   void dispose() {
     _debounce?.cancel();
     super.dispose();
+  }
+
+  _saveList(list) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setStringList("key", list);
+
+    return true;
+  }
+
+  _getSavedList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList("key") != null) {
+      todoList = prefs.getStringList("key")!;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getSavedList();
   }
 
   @override
@@ -86,7 +113,10 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Expanded(
+          Container(
+            constraints: const BoxConstraints(
+              minHeight: 0,
+            ),
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -94,11 +124,13 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    navigateTo(chooseLocationRoute);
                     setState(() {
-                      dataLocation = _placeList[index]["description"];
-                      logDebug(dataLocation);
+                      nameAddress = _placeList[index]["description"];
+                      todoList.insert(0, nameAddress);
+                      _saveList(todoList);
                     });
+                    navigateTo(chooseLocationRoute);
+
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -126,13 +158,94 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
                             ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Lịch sử tìm kiếm',
+                  style: AppTextTheme.mediumHeaderTitle(AppColor.text3),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      todoList.clear();
+                    });
+                  },
+                  child: Text(
+                    'Xóa tất cả',
+                    style: AppTextTheme.normalText(AppColor.text3),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount:
+                  todoList.length > 5 ? todoList.length = 5 : todoList.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      nameAddress = todoList[index];
+                      // logDebug(nameAddress);
+                    });
+                    navigateTo(chooseLocationRoute);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              SvgIcon(
+                                SvgIcons.epLocation,
+                                size: 24,
+                                color: AppColor.shade5,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Text(
+                                    todoList[index],
+                                    style:
+                                        AppTextTheme.normalText(AppColor.text1),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         TextButton(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,
                               minimumSize: const Size(0, 0),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                todoList.removeAt(index);
+                                _saveList(todoList);
+                              });
+                            },
                             child: SvgIcon(
                               SvgIcons.close,
                               size: 24,
