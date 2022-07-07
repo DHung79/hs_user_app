@@ -26,6 +26,9 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
   final _serviceBloc = ServiceBloc();
   int valueWeek = 0;
   int value = 0;
+  String note = '';
+  int quantity = 0;
+  String name = '';
   bool isSwitched = false;
   DateTime? timePick;
   int price = 0;
@@ -294,7 +297,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
 
                   payButton(
                     listOptions![0].options[price].price.toString(),
-                    listOptions![0].options[0].name,
+                    listOptions![0].options[0].name.toString(),
                     onPressed: () {
                       if (timePick == null) {
                         showDialog(
@@ -316,7 +319,6 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
                             });
                       } else {
                         navigateTo(postFastRoute);
-                        startTime = timePick!.microsecondsSinceEpoch;
                         quantity = listOptions![0].options[0].quantity;
                         name = listOptions![0].options[0].name;
                         note = listOptions![0].options[0].note;
@@ -574,7 +576,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
 
   Widget payButton(
     String price,
-    int name, {
+    String name, {
     required void Function()? onPressed,
   }) {
     return Container(
@@ -748,7 +750,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
     );
   }
 
-  Widget room(int time, String note, int quantity, int index) {
+  Widget room(String time, String note, int quantity, int index) {
     return InkWell(
         splashColor: Colors.transparent,
         onTap: () {

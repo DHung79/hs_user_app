@@ -1,3 +1,4 @@
+import 'package:hs_user_app/core/authentication/auth.dart';
 import 'package:hs_user_app/core/task/model/task_model.dart';
 import 'package:hs_user_app/core/task/resources/task_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,14 +19,19 @@ class TaskBloc {
   bool _isFetching = false;
 
   fetchAllData({Map<String, dynamic>? params}) async {
+    final SharedPreferences sharedPreferences = await prefs;
     if (_isFetching) return;
     _isFetching = true;
     // Start fetching data.
     _allDataState.sink.add(BlocState.fetching);
     try {
       // Await response from server.
+
       final data =
           await _repository.fetchAllData<ListTaskModel>(params: params!);
+      final currentTask = Token.fromJson(params);
+
+      sharedPreferences.setString('authtokenTask', currentTask.token);
 
       if (_allDataFetcher.isClosed) return;
       if (data.error != null) {
@@ -59,10 +65,11 @@ class TaskBloc {
     }
   }
 
-  Future<TaskModel> deleteObject({String? id}) async {
+  Future<TaskModel> deleteTask({String? id}) async {
     try {
       // Await response from server.
-      final data = await _repository.deleteObject<TaskModel>(id: id);
+
+      final data = await _repository.deleteTask<TaskModel>(id: id);
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);

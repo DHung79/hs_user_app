@@ -1,5 +1,6 @@
 import 'dart:async';
 import '../../../main.dart';
+import '../../base/models/upload_image.dart';
 import 'user_api_provider.dart';
 
 class UserRepository {
@@ -57,4 +58,9 @@ class UserRepository {
           _provider.editPassword<T, K>(
             editModel: editModel,
           );
+  
+  uploadImage<T extends BaseModel>({required UploadImage image}) =>
+      _provider.uploadImage<T>(
+        image: image,
+      );
 }

@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hs_user_app/core/rate/model/rate_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/task_history.dart';
+import 'package:hs_user_app/screens/home/booking_screen/components/task_now.dart';
 import 'package:hs_user_app/theme/svg_constants.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
+import '../../../../core/rate/bloc/rate_bloc.dart';
 import '../../../../core/task/bloc/task_bloc.dart';
 import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
+import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
 
 class ViewDetail extends StatefulWidget {
@@ -23,8 +28,16 @@ class _ViewDetailState extends State<ViewDetail> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
+  final _rateBloc = RateBloc();
   bool _mainPage = true;
   TaskModel? _editModel;
+  List<TaskModel>? editModel;
+  List<RateModel>? _listRateModel;
+  final EditRateModel _editRateModel = EditRateModel.fromModel(null);
+  int? value;
+  String rate = '';
+  final TextEditingController _controller = TextEditingController();
+
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -42,16 +55,12 @@ class _ViewDetailState extends State<ViewDetail> {
   bool isChecked1 = false;
   bool isChecked2 = false;
   bool isChecked3 = false;
-  List rates = [
-    SvgIcon(SvgIcons.star1, size: 24),
-    SvgIcon(SvgIcons.star1, size: 24),
-    SvgIcon(SvgIcons.star1, size: 24),
-    SvgIcon(SvgIcons.star1, size: 24),
-    SvgIcon(SvgIcons.star1, size: 24),
-  ];
   @override
   void initState() {
     _editModel = taskHistoryKey.currentState?.task;
+    logDebug('_editModel: $_editModel');
+    editModel = taskNowKey.currentState?.statuses;
+    value = taskNowKey.currentState?.value;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -117,7 +126,7 @@ class _ViewDetailState extends State<ViewDetail> {
       body: _mainPage
           ? Column(
               children: [
-                profile(),
+                _editModel?.tasker.avatar == '' ? profile() : const SizedBox(),
                 Expanded(
                   child: ListView(
                     shrinkWrap: true,
@@ -131,396 +140,159 @@ class _ViewDetailState extends State<ViewDetail> {
                 )
               ],
             )
-          : SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: CircleAvatar(
-                        backgroundColor: AppColor.primary1,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Text(
-                      'Nguyễn Đức Hoàng Phi',
-                      style: AppTextTheme.mediumBigText(AppColor.text1),
-                    ),
-                  ),
-                  Column(
+          : StreamBuilder(
+              stream: _rateBloc.allData,
+              builder: (context,
+                  AsyncSnapshot<ApiResponse<ListRateModel?>> snapshot) {
+                _listRateModel = snapshot.data?.model!.records;
+
+                return SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 183,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            SvgIcon(
-                              SvgIcons.star,
-                              color: AppColor.primary2,
-                              size: 24,
-                            ),
-                            SvgIcon(
-                              SvgIcons.star,
-                              color: AppColor.primary2,
-                              size: 24,
-                            ),
-                            SvgIcon(
-                              SvgIcons.star,
-                              color: AppColor.primary2,
-                              size: 24,
-                            ),
-                            SvgIcon(
-                              SvgIcons.star,
-                              color: AppColor.primary2,
-                              size: 24,
-                            ),
-                            SvgIcon(
-                              SvgIcons.starHalf,
-                              color: AppColor.primary2,
-                              size: 24,
-                            ),
-                            Text(
-                              '4.5',
-                              style: AppTextTheme.normalHeaderTitle(
-                                  AppColor.text1),
-                            )
-                          ],
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(_editModel?.tasker.avatar ?? ''),
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                        padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
-                          '(643 đánh giá)',
-                          style: AppTextTheme.normalText(AppColor.text1),
+                          _editModel?.tasker.name ?? '',
+                          style: AppTextTheme.mediumBigText(AppColor.text3),
                         ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 25.0, vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        profileTasker(title: 'Tham gia từ', profile: '3/2019'),
-                        linevertical(context),
-                        profileTasker(title: 'Công việc', profile: '320'),
-                        linevertical(context),
-                        profileTasker(
-                            title: 'Đánh giá tích cực', profile: '90%'),
-                      ],
-                    ),
-                  ),
-                  titleMedal(),
-                  listmedal(),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 16),
-                          child: Text(
-                            'Đánh giá tiêu biểu',
-                            style:
-                                AppTextTheme.mediumHeaderTitle(AppColor.text1),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            constraints: const BoxConstraints(
-                                minHeight: 400, maxHeight: 600),
-                            width: MediaQuery.of(context).size.width,
-                            child: ListView(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: 183,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                SvgIcon(
+                                  SvgIcons.star,
+                                  color: AppColor.primary2,
+                                  size: 24,
                                 ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                SvgIcon(
+                                  SvgIcons.star,
+                                  color: AppColor.primary2,
+                                  size: 24,
                                 ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                SvgIcon(
+                                  SvgIcons.star,
+                                  color: AppColor.primary2,
+                                  size: 24,
                                 ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                SvgIcon(
+                                  SvgIcons.star,
+                                  color: AppColor.primary2,
+                                  size: 24,
                                 ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                SvgIcon(
+                                  SvgIcons.starHalf,
+                                  color: AppColor.primary2,
+                                  size: 24,
                                 ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
-                                ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
-                                ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
-                                ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
-                                ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
-                                ),
-                                review(
-                                  comment:
-                                      '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                                  user: 'Ngo Anh Duong',
-                                  rate: '4.5',
+                                Text(
+                                  '4.5',
+                                  style: AppTextTheme.normalHeaderTitle(
+                                      AppColor.text1),
                                 )
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-    );
-  }
-
-  Scaffold content1(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.text2,
-      appBar: AppBar(
-        elevation: 16,
-        shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
-        backgroundColor: AppColor.text2,
-        centerTitle: true,
-        title: Text(
-          'Thông tin người làm',
-          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-        ),
-        leading: TextButton(
-          onPressed: () {
-            navigateTo(viewDetailRoute);
-          },
-          child: SvgIcon(
-            SvgIcons.arrowBack,
-            size: 24,
-            color: AppColor.text1,
-          ),
-        ),
-      ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: CircleAvatar(
-                  backgroundColor: AppColor.primary1,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Text(
-                'Nguyễn Đức Hoàng Phi',
-                style: AppTextTheme.mediumBigText(AppColor.text1),
-              ),
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  width: 183,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SvgIcon(
-                        SvgIcons.star,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      SvgIcon(
-                        SvgIcons.star,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      SvgIcon(
-                        SvgIcons.star,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      SvgIcon(
-                        SvgIcons.star,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      SvgIcon(
-                        SvgIcons.starHalf,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      Text(
-                        '4.5',
-                        style: AppTextTheme.normalHeaderTitle(AppColor.text1),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-                  child: Text(
-                    '(643 đánh giá)',
-                    style: AppTextTheme.normalText(AppColor.text1),
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  profileTasker(title: 'Tham gia từ', profile: '3/2019'),
-                  linevertical(context),
-                  profileTasker(title: 'Công việc', profile: '320'),
-                  linevertical(context),
-                  profileTasker(title: 'Đánh giá tích cực', profile: '90%'),
-                ],
-              ),
-            ),
-            titleMedal(),
-            listmedal(),
-            const SizedBox(
-              height: 28,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 16),
-                    child: Text(
-                      'Đánh giá tiêu biểu',
-                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      constraints:
-                          const BoxConstraints(minHeight: 400, maxHeight: 600),
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
-                          ),
-                          review(
-                            comment: '“Bạn làm rất tốt! Xứng đáng tăng lương”',
-                            user: 'Ngo Anh Duong',
-                            rate: '4.5',
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 4.0, bottom: 16),
+                            child: Text(
+                              '(643 đánh giá)',
+                              style: AppTextTheme.normalText(AppColor.text1),
+                            ),
                           )
                         ],
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            profileTasker(
+                                title: 'Tham gia từ', profile: '3/2019'),
+                            linevertical(context),
+                            profileTasker(title: 'Công việc', profile: '320'),
+                            linevertical(context),
+                            profileTasker(
+                                title: 'Đánh giá tích cực', profile: '90%'),
+                          ],
+                        ),
+                      ),
+                      titleMedal(),
+                      listmedal(),
+                      const SizedBox(
+                        height: 28,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 16),
+                              child: Text(
+                                'Đánh giá tiêu biểu',
+                                style: AppTextTheme.mediumHeaderTitle(
+                                    AppColor.text1),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                    minHeight: 400, maxHeight: 600),
+                                width: MediaQuery.of(context).size.width,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _listRateModel?.length,
+                                  itemBuilder: (context, index) {
+                                    return review(
+                                      comment: _listRateModel?[index]
+                                              .comments
+                                              .first
+                                              .description ??
+                                          '',
+                                      user: _listRateModel?[index]
+                                              .comments
+                                              .first
+                                              
+                                              .description ??
+                                          '',
+                                      rate: _listRateModel?[index]
+                                              .comments
+                                              .first
+                                              .rating
+                                              .toString() ??
+                                          '',
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+                );
+              }),
     );
   }
 
@@ -528,30 +300,67 @@ class _ViewDetailState extends State<ViewDetail> {
     return Container(
       margin: const EdgeInsets.all(16),
       height: 52,
-      child: TextButton(
-          style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-              backgroundColor: AppColor.primary2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4))),
-          onPressed: _showMaterialDialog,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgIcon(
-                SvgIcons.starOutline,
-                color: AppColor.text2,
-                size: 24,
+      child: _editModel != null
+          ? TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                backgroundColor: AppColor.primary2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
-              const SizedBox(
-                width: 12,
-              ),
-              Text(
-                'Đánh giá',
-                style: AppTextTheme.headerTitle(AppColor.text2),
-              )
-            ],
-          )),
+              onPressed: () {
+                setState(() {
+                  rate = 0.toString();
+                  _controller.text = '';
+                });
+                _showMaterialDialog();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgIcon(
+                    SvgIcons.starOutline,
+                    color: AppColor.text2,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Text(
+                    'Đánh giá',
+                    style: AppTextTheme.headerTitle(AppColor.text2),
+                  )
+                ],
+              ))
+          : TextButton(
+              style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                  backgroundColor: AppColor.text2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4))),
+              onPressed: () {
+                _taskBloc.deleteTask(id: editModel?[value!].id).then(
+                  (value) async {
+                    AuthenticationBlocController()
+                        .authenticationBloc
+                        .add(GetUserData());
+                    navigateTo(homeRoute);
+                    JTToast.successToast(
+                        message: ScreenUtil.t(I18nKey.updateSuccess)!);
+                  },
+                ).onError((ApiError error, stackTrace) {
+                  setState(() {});
+                }).catchError(
+                  (error, stackTrace) {
+                    setState(() {});
+                  },
+                );
+              },
+              child: Text(
+                'Hủy công việc',
+                style: AppTextTheme.headerTitle(AppColor.others1),
+              )),
     );
   }
 
@@ -647,7 +456,7 @@ class _ViewDetailState extends State<ViewDetail> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                   child: Text(
-                    'Thanh cong',
+                    'Đang diễn ra',
                     style: AppTextTheme.mediumHeaderTitle(AppColor.shade9),
                   ),
                 )
@@ -662,18 +471,21 @@ class _ViewDetailState extends State<ViewDetail> {
             icontitle(
                 icon: SvgIcons.accessTime,
                 text:
-                    '${_editModel?.estimateTime} tiếng, ${readTimestamp(_editModel?.startTime)} - ${readTimestampEnd(_editModel?.startTime)} '),
+                    '${_editModel?.estimateTime ?? editModel?[value!].estimateTime} tiếng, ${readTimestamp(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} - ${readTimestampEnd(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} '),
             const SizedBox(
               height: 10,
             ),
             icontitle(
                 icon: SvgIcons.calenderToday,
-                text: readTimestamp2(_editModel?.date)),
+                text: readTimestamp2(
+                    _editModel?.date ?? editModel?[value!].date)),
             const SizedBox(
               height: 10,
             ),
             icontitle(
-                icon: SvgIcons.dollar1, text: '${_editModel?.totalPrice}'),
+                icon: SvgIcons.dollar1,
+                text:
+                    '${_editModel?.totalPrice ?? editModel?[value!].totalPrice}'),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width,
@@ -695,7 +507,7 @@ class _ViewDetailState extends State<ViewDetail> {
               ),
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                _editModel?.note ?? '',
+                _editModel?.note ?? editModel?[value!].note ?? '',
                 style: AppTextTheme.normalText(AppColor.text1),
               ),
             ),
@@ -716,7 +528,8 @@ class _ViewDetailState extends State<ViewDetail> {
                 Row(
                   children: [
                     Text(
-                      count.toString() + ' / ${_editModel?.checkList.length}',
+                      count.toString() +
+                          ' / ${_editModel?.checkList.length ?? editModel?[value!].checkList.length}',
                       style: AppTextTheme.normalText(AppColor.text3),
                     ),
                     TextButton(
@@ -740,43 +553,56 @@ class _ViewDetailState extends State<ViewDetail> {
               ],
             ),
             isShowListTask
-                ? Container(
+                ? const SizedBox()
+                : Container(
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: AppColor.shade1,
+                      color: AppColor.text2,
                     ),
+                    constraints: const BoxConstraints(minHeight: 0.0),
                     width: MediaQuery.of(context).size.width,
-                    height: 50,
                     child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return checkbox(
-                          isCheck: _editModel!.checkList[index].status,
-                          name: _editModel!.checkList[index].name,
+                          isCheck: _editModel?.checkList[index].status ??
+                              editModel?[value!].checkList[index].status ??
+                              false,
+                          name: _editModel?.checkList[index].name ??
+                              editModel![value!].checkList[index].name,
                         );
                       },
-                      itemCount: _editModel?.checkList.length,
+                      itemCount: _editModel?.checkList.length ??
+                          editModel?[value!].checkList.length,
                     ),
-                  )
-                : const SizedBox(),
-            Container(
-              color: AppColor.shade1,
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-            ),
-            Text(
-              'Chụp hình thành quả',
-              style: AppTextTheme.mediumBodyText(AppColor.primary1),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            listimage(name: 'Trước'),
-            const SizedBox(
-              height: 12,
-            ),
-            listimage(name: 'Sau'),
+                  ),
+            if (_editModel != null)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: AppColor.shade1,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    height: 1,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  Text(
+                    'Chụp hình thành quả',
+                    style: AppTextTheme.mediumBodyText(AppColor.primary1),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  listimage(name: 'Trước'),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  listimage(name: 'Sau'),
+                ],
+              ),
           ],
         ),
       ),
@@ -976,8 +802,10 @@ class _ViewDetailState extends State<ViewDetail> {
                 width: 80,
                 height: 80,
                 child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(_editModel?.tasker.avatar ?? ''),
+                  backgroundImage: NetworkImage(
+                      editModel?[value!].tasker.avatar ??
+                          _editModel?.tasker.avatar ??
+                          ''),
                 ),
               ),
               const SizedBox(
@@ -988,7 +816,9 @@ class _ViewDetailState extends State<ViewDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _editModel?.tasker.name ?? '',
+                    editModel?[value!].tasker.name ??
+                        _editModel?.tasker.name ??
+                        '',
                     style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                   ),
                   TextButton(
@@ -1063,7 +893,7 @@ class _ViewDetailState extends State<ViewDetail> {
 
   String readTimestamp2(int? timestamp) {
     var format = DateFormat('E, dd/MM/yyyy');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp ?? 0);
     var time = '';
     time = format.format(date);
 
@@ -1072,7 +902,7 @@ class _ViewDetailState extends State<ViewDetail> {
 
   String readTimestamp(int? timestamp) {
     var format = DateFormat('HH:mm');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp!);
     var time = '';
     time = format.format(date);
 
@@ -1081,10 +911,12 @@ class _ViewDetailState extends State<ViewDetail> {
 
   String readTimestampEnd(int? timestamp) {
     var format = DateFormat('HH:mm');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp!);
     var time = '';
-    time = format.format(
-        date.add(Duration(hours: int.parse(_editModel?.estimateTime ?? '0'))));
+    time = format.format(date.add(Duration(
+        hours: int.parse(_editModel?.estimateTime ??
+            editModel?[value!].estimateTime ??
+            '0'))));
 
     return time;
   }
@@ -1248,29 +1080,67 @@ class _ViewDetailState extends State<ViewDetail> {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            content: SizedBox(
-              child: Column(
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 400,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: 100,
                       height: 100,
                       child: CircleAvatar(
-                        backgroundColor: AppColor.inactive2,
+                        backgroundImage:
+                            NetworkImage(_editModel?.tasker.avatar ?? ''),
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return rates[index];
-                        },
-                        itemCount: rates.length,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        editModel?[value!].tasker.name ??
+                            _editModel?.tasker.name ??
+                            '',
+                        style: AppTextTheme.mediumBigText(AppColor.text1),
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RatingBar(
+                          itemSize: 24,
+                          initialRating: 0,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          ratingWidget: RatingWidget(
+                            full: SvgIcon(SvgIcons.starReview,
+                                size: 12, color: AppColor.primary2),
+                            half: SvgIcon(SvgIcons.starHalfReview, size: 12),
+                            empty: const Icon(
+                              Icons.star_outline_outlined,
+                              size: 12,
+                            ),
+                          ),
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 4.0),
+                          onRatingUpdate: (rating) {
+                            setState(() {
+                              rate = rating.toString();
+                            });
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Text(
+                            rate,
+                            style:
+                                AppTextTheme.normalHeaderTitle(AppColor.text1),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 16,
@@ -1281,6 +1151,7 @@ class _ViewDetailState extends State<ViewDetail> {
                       child: TextField(
                         maxLines: 5,
                         style: AppTextTheme.mediumBodyText(AppColor.text3),
+                        controller: _controller,
                         cursorColor: AppColor.text3,
                         decoration: InputDecoration(
                           fillColor: AppColor.shade1,
@@ -1300,22 +1171,65 @@ class _ViewDetailState extends State<ViewDetail> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: 8,
-                      margin: const EdgeInsets.symmetric(vertical: 16),
+                      child: TextButton(
+                        onPressed: _createRate,
+                        child: Text(
+                          'Gửi đánh giá',
+                          style: AppTextTheme.headerTitle(AppColor.text2),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                          ),
+                          minimumSize: const Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: AppColor.primary2,
+                        ),
+                      ),
                     ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                  ]),
-            ),
-          );
+                  ],
+                ),
+              ),
+            );
+          });
         });
+  }
+
+  _createRate() {
+    setState(() {
+      _editRateModel.comments = [
+        CommentsModel.fromJson(
+            {'rating': rate, 'description': _controller.text})
+      ];
+    });
+    _rateBloc.createRate(editModel: _editRateModel).then(
+      (value) async {
+        AuthenticationBlocController().authenticationBloc.add(GetUserData());
+        Navigator.pop(context);
+
+        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+      },
+    ).onError((ApiError error, stackTrace) {
+      setState(() {});
+    }).catchError(
+      (error, stackTrace) {
+        setState(() {});
+      },
+    );
   }
 
   _fetchDataOnPage() {
     _userBloc.getProfile();
     _taskBloc.fetchAllData(params: {});
+    _rateBloc.fetchAllData(params: {});
   }
+}
+
+class Comment {
+  final String rating;
+  final String description;
+
+  Comment(this.rating, this.description);
 }

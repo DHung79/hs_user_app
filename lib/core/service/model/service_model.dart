@@ -31,7 +31,7 @@ class ServiceModel extends BaseModel {
     ));
     _options.addAll(BaseModel.mapList<OptionsModel>(
       json: json,
-      key: 'option',
+      key: 'options',
     ));
   }
 
@@ -174,14 +174,14 @@ class TranslationModel extends BaseModel {
 }
 
 class OptionsModel extends BaseModel {
-  final int _name;
+  final String _name;
   final int _price;
   final int _quantity;
   final String _note;
   final String __id;
 
   OptionsModel.fromJson(Map<String, dynamic> json)
-      : _name = json['name'] ?? 0,
+      : _name = json['name'] ?? '',
         _price = json['price'] ?? 0,
         _quantity = json['quantity'] ?? 0,
         _note = json['note'] ?? '',
@@ -194,7 +194,7 @@ class OptionsModel extends BaseModel {
         'note': _note,
         '_id': __id,
       };
-  int get name => _name;
+  String get name => _name;
   int get price => _price;
   int get quantity => _quantity;
   String get note => _note;

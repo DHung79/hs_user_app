@@ -45,11 +45,9 @@ class ServiceApiProvider {
   }) async {
     final path =
         ApiConstants.apiDomain + ApiConstants.apiVersion + ApiConstants.users;
-    final body = convert.jsonEncode({'id': id});
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.deleteData<T>(
       path: path,
-      body: body,
       headers: ApiHelper.headers(token),
     );
     return response;
@@ -83,7 +81,6 @@ class ServiceApiProvider {
         '/$id';
     final body = convert.jsonEncode(EditBaseModel.toEditJson(editModel!));
     final token = await ApiHelper.getUserToken();
-    logDebug('path: $path\nbody: $body');
     final response = await RestApiHandlerData.putData<T>(
       path: path,
       body: body,

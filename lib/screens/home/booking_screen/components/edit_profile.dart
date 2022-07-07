@@ -130,7 +130,6 @@ class _EditProfileState extends State<EditProfile> {
             onPressed: () {
               if (_key.currentState!.validate()) {
                 _key.currentState!.save();
-                logDebug('confirmbutton');
                 _editUserInfo();
               } else {
                 setState(() {
@@ -144,8 +143,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+
   _editUserInfo() {
-    logDebug(_editModel.address);
     _userBloc.editProfile(editModel: _editModel).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());

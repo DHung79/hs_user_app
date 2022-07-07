@@ -4,6 +4,7 @@ import 'package:hs_user_app/core/task/model/task_model.dart';
 import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
+import '../../rate/model/rate_model.dart';
 
 class ApiError implements Exception {
   String _errorCode = '';
@@ -82,8 +83,6 @@ class BaseModel {
     if (T == ListServiceModel) {
       return ListServiceModel.fromJson(json) as T;
     }
-
-
     if (T == TranslationModel) {
       return TranslationModel.fromJson(json) as T;
     }
@@ -103,6 +102,18 @@ class BaseModel {
     }
     if (T == OtpModel) {
       return OtpModel.fromJson(json) as T;
+    }
+    if (T == CommentsModel) {
+      return CommentsModel.fromJson(json) as T;
+    }
+    if (T == MedalModel) {
+      return MedalModel.fromJson(json) as T;
+    }
+    if (T == RateModel) {
+      return RateModel.fromJson(json) as T;
+    }
+    if (T == ListRateModel) {
+      return ListRateModel.fromJson(json) as T;
     }
     logError("Unknown BaseModel class: $T");
     throw Exception("Unknown BaseModel class: $T");
@@ -202,6 +213,20 @@ class EditBaseModel {
       return model.toEditJson();
     }
 
+    return {};
+  }
+
+  static Map<String, dynamic> toEditRateJson(EditBaseModel model) {
+    if (model is EditRateModel) {
+      return model.toEditJson();
+    }
+    return {};
+  }
+
+  static Map<String, dynamic> toCreateRateJson(EditBaseModel model) {
+    if (model is EditRateModel) {
+      return model.toCreateJson();
+    }
     return {};
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert' as convert;
 import '../../../main.dart';
+import '../../base/models/upload_image.dart';
 import '../../constants/api_constants.dart';
 import '../../helpers/api_helper.dart';
 import '../../rest/rest_api_handler_data.dart';
@@ -124,6 +125,23 @@ class UserApiProvider {
       path: path,
       body: body,
       headers: ApiHelper.headers(token),
+    );
+    return response;
+  }
+
+  uploadImage<T extends BaseModel>({
+    required UploadImage image,
+  }) async {
+    final path = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.users +
+        ApiConstants.upload;
+    final token = await ApiHelper.getUserToken();
+    final response = await RestApiHandlerData.putUpload<T>(
+      path: path,
+      headers: ApiHelper.upload(token),
+      field: 'avatar',
+      filePath: image.path!,
     );
     return response;
   }

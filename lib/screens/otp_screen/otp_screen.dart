@@ -45,11 +45,10 @@ class _OtpScreenState extends State<OtpScreen> {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
-          logDebug('state: $state');
+  
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is CheckOTPDoneState) {
-            logDebug('currentRoute: $currentRoute');
 
             if (currentRoute == otpForgotPassWordRoute) {
               navigateTo(resetPasswordRoute);
@@ -84,10 +83,10 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                         onPressed: () {
                           if (currentRoute == otpForgotPassWordRoute) {
-                            logDebug(currentRoute);
+                     
                             navigateTo(forgotPasswordRoute);
                           } else {
-                            logDebug(currentRoute);
+      
                             navigateTo(registerRoute);
                           }
                         },

@@ -224,6 +224,12 @@ class SvgIcons {
   static SvgIconData checkboxOutlineTask = SvgIconData(
     path: 'assets/svg/Check_box_outline_blank.svg',
   );
+  static SvgIconData starReview = SvgIconData(
+    path: 'assets/svg/Star.svg',
+  );
+  static SvgIconData starHalfReview = SvgIconData(
+    path: 'assets/svg/Star_half.svg',
+  );
 }
 
 class SvgIcon extends StatelessWidget {

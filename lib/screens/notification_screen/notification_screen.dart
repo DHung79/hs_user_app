@@ -101,64 +101,66 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Row _taskerremove({
+  Widget _taskerremove({
     required String name,
     required String content,
     required String time,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            border: Border(
-              left: BorderSide(width: 4, color: AppColor.primary2),
-              bottom: BorderSide(width: 1, color: AppColor.shade1),
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(width: 4, color: AppColor.primary2),
+                bottom: BorderSide(width: 1, color: AppColor.shade1),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: CircleAvatar(
-                    backgroundColor: AppColor.primary1,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircleAvatar(
+                      backgroundColor: AppColor.primary1,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  width: 19,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: AppTextTheme.normalText(AppColor.primary1),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      content,
-                      style: AppTextTheme.normalText(AppColor.text1),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      time,
-                      style: AppTextTheme.normalText(AppColor.text7),
-                    )
-                  ],
-                )
-              ],
+                  const SizedBox(
+                    width: 19,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: AppTextTheme.normalText(AppColor.primary1),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        content,
+                        style: AppTextTheme.normalText(AppColor.text1),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        time,
+                        style: AppTextTheme.normalText(AppColor.text7),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

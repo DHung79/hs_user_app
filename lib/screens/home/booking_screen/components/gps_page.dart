@@ -27,6 +27,7 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
   List<dynamic> _placeList = [];
   List<String> todoList = [];
   String nameAddress = '';
+  bool mapButton = false;
 
   bool _haveData = false;
 
@@ -353,7 +354,10 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
                   padding: EdgeInsets.zero,
                 ),
                 onPressed: () {
-                  navigateTo(chooseLocationRoute);
+                  setState(() {
+                    mapButton = !mapButton;
+                    navigateTo(chooseLocationRoute);
+                  });
                 },
                 child: SvgIcon(
                   SvgIcons.map1,

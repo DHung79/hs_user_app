@@ -1,11 +1,10 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
-import '../../../../core/user/bloc/User_bloc.dart';
+import '../../../../core/base/models/upload_image.dart';
+import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../main.dart';
 import '../../../../routes/route_names.dart';
@@ -27,21 +26,9 @@ class _EditFormState extends State<EditForm> {
   final _userBloc = UserBloc();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
-  File? _image;
+  final List<UploadImage> _images = [];
 
-  final _picker = ImagePicker();
   // Implementing the image picker
-  Future<void> _openImagePicker() async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-        _editModel.avatar = _image!.path;
-        logDebug(_editModel.avatar);
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -147,7 +134,7 @@ class _EditFormState extends State<EditForm> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _editModel.gender = newValue!;
-                    logDebug(_editModel.gender);
+
                     if (newValue == 'Nam') {
                       _editModel.gender = 'male';
                     } else if (newValue == 'Nữ') {
@@ -197,12 +184,25 @@ class _EditFormState extends State<EditForm> {
             child: SizedBox.fromSize(
               size: const Size.fromRadius(50),
               // size: Size.fromRadius(40), // Image radius
-              child: _image != null && _editModel.avatar != ''
-                  ? Image.file(_image!, fit: BoxFit.cover)
-                  : Image.network(
-                      _editModel.avatar,
+              child: _images.isNotEmpty
+                  ? Image.memory(
+                      _images.first.imageData!,
+                      width: 100,
+                      height: 100,
                       fit: BoxFit.cover,
-                    ),
+                    )
+                  : _editModel.avatar.isNotEmpty
+                      ? Image.network(
+                          _editModel.avatar,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          "assets/images/logo.png",
+                          width: 100,
+                          height: 100,
+                        ),
             ),
           ),
           Padding(
@@ -225,7 +225,12 @@ class _EditFormState extends State<EditForm> {
                   style: AppTextTheme.normalText(AppColor.text3),
                 ),
               ),
-              onPressed: _openImagePicker,
+              onPressed: () {
+                setState(() {
+                  _errorMessage = '';
+                });
+                _pickImage();
+              },
             ),
           ),
         ],
@@ -234,12 +239,15 @@ class _EditFormState extends State<EditForm> {
   }
 
   _editUserInfo() {
-    logDebug(_editModel.avatar);
     _userBloc.editProfile(editModel: _editModel).then(
       (value) async {
-        AuthenticationBlocController().authenticationBloc.add(GetUserData());
-        navigateTo(settingProfileRoute);
-        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+        if (_images.isNotEmpty) {
+          _uploadImage();
+        } else {
+          AuthenticationBlocController().authenticationBloc.add(GetUserData());
+          navigateTo(settingProfileRoute);
+          JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+        }
       },
     ).onError((ApiError error, stackTrace) {
       setState(() {
@@ -262,7 +270,6 @@ class _EditFormState extends State<EditForm> {
         onPressed: () {
           if (_key.currentState!.validate()) {
             _key.currentState!.save();
-            logDebug('confirmbutton');
             _editUserInfo();
           } else {
             setState(() {
@@ -340,6 +347,47 @@ class _EditFormState extends State<EditForm> {
           )
         ],
       ),
+    );
+  }
+
+  _pickImage() async {
+    List<XFile?> imagesPicked = [];
+    final ImagePicker _picker = ImagePicker();
+    imagesPicked = [await _picker.pickImage(source: ImageSource.gallery)];
+    if (imagesPicked.isNotEmpty) {
+      final images = imagesPicked
+          .map(
+            (image) async => UploadImage(
+              key: '${DateTime.now().millisecondsSinceEpoch}-${image!.name}',
+              name: image.name,
+              path: image.path,
+              imageData: await image.readAsBytes(),
+            ),
+          )
+          .toList();
+      final image = await images.first;
+      setState(() {
+        _images.clear();
+        _images.add(image);
+      });
+    }
+  }
+
+  _uploadImage() {
+    _userBloc.uploadImage(image: _images.first).then((value) {
+      AuthenticationBlocController().authenticationBloc.add(GetUserData());
+      navigateTo(profileUserRoute);
+      JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+    }).onError((ApiError error, stackTrace) {
+      setState(() {
+        _errorMessage = 'Ảnh không đúng định dạng';
+      });
+    }).catchError(
+      (error, stackTrace) {
+        setState(() {
+          _errorMessage = error.toString();
+        });
+      },
     );
   }
 }

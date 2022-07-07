@@ -91,11 +91,7 @@ class _SettingScreenState extends State<SettingScreen> {
             },
             child: snapshot.hasData
                 ? content(snapshot)
-                : Center(
-                    child: CircularProgressIndicator(
-                      color: AppColor.primary2,
-                    ),
-                  ),
+                : const SizedBox(),
           );
         },
       ),

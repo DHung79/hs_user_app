@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import '../../../main.dart';
 import '../../base/blocs/block_state.dart';
+import '../../base/models/upload_image.dart';
 import '../../rest/api_helpers/api_exception.dart';
 import '../model/user_model.dart';
 import '../resources/user_repository.dart';
@@ -133,6 +134,24 @@ class UserBloc {
     }
   }
 
+  Future<UserModel> uploadImage({required UploadImage image}) async {
+    try {
+      // Await response from server.
+      final data = await _repository.uploadImage<UserModel>(
+        image: image,
+      );
+      if (data.error != null) {
+        // Error exist
+        return Future.error(data.error!);
+      } else {
+        // Adding response data.
+        return Future.value(data.model);
+      }
+    } on AppException catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<UserModel> editProfile({EditUserModel? editModel}) async {
     try {
       // Await response from server.
@@ -150,6 +169,7 @@ class UserBloc {
       return Future.error(e);
     }
   }
+ 
 
   dispose() {
     _allDataFetcher.close();

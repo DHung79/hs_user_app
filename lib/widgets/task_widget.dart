@@ -54,14 +54,14 @@ class _TasksWidgetState extends State<TasksWidget> {
             ),
             _item(
                 task:
-                    '${widget.task?.estimateTime} tiếng, ${readTimestamp(widget.task?.startTime)} - ${readTimestampEnd(widget.task?.startTime)}',
+                    '${widget.task?.estimateTime} tiếng, ${readTimestamp(widget.task!.startTime)} - ${readTimestampEnd(widget.task!.startTime)}',
                 icon: SvgIcon(
                   SvgIcons.accessTime,
                   size: 24,
                   color: AppColor.shade5,
                 )),
             _item(
-                task: readTimestamp2(widget.task?.date),
+                task: readTimestamp2(widget.task!.date),
                 icon: SvgIcon(
                   SvgIcons.calenderToday,
                   size: 24,
@@ -166,7 +166,7 @@ class _TasksWidgetState extends State<TasksWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                readTimestamp(widget.task?.updatedTime),
+                convertToAgo(widget.task!.updatedTime),
                 style: AppTextTheme.normalText(AppColor.text7),
               ),
             ),
@@ -178,14 +178,37 @@ class _TasksWidgetState extends State<TasksWidget> {
           padding:
               const EdgeInsets.only(top: 4, bottom: 4, right: 12, left: 12),
           child: Text(
-            statusTask(index: widget.task?.status),
+            statusTask(
+              index: widget.task?.status,
+              condition: widget.task?.startTime,
+            ),
             style: AppTextTheme.mediumBodyText(
-              colorStatus(index: widget.task?.status),
+              colorStatus(
+                index: widget.task?.status,
+              ),
             ),
           ),
-        ),
+        )
       ],
     );
+  }
+
+  String convertToAgo(int input) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(input);
+
+    Duration diff = DateTime.now().difference(date);
+
+    if (diff.inDays >= 1) {
+      return 'Đã đăng ${diff.inDays} ngày trước';
+    } else if (diff.inHours >= 1) {
+      return 'Đã đăng ${diff.inHours} giờ trước';
+    } else if (diff.inMinutes >= 1) {
+      return 'Đã đăng ${diff.inMinutes} phút trước';
+    } else if (diff.inSeconds >= 1) {
+      return 'Đã đăng ${diff.inSeconds} giây trước';
+    } else {
+      return 'Vừa mới đăng';
+    }
   }
 
   Color colorStatus({required index}) {
@@ -198,8 +221,6 @@ class _TasksWidgetState extends State<TasksWidget> {
     } else if (index == 2) {
       color = AppColor.shade9;
     } else if (index == 3) {
-      color = AppColor.shade9;
-    } else if (index == 4) {
       color = AppColor.others1;
     } else {
       color = AppColor.test1;
@@ -207,17 +228,19 @@ class _TasksWidgetState extends State<TasksWidget> {
     return color;
   }
 
-  String statusTask({required index}) {
+  String statusTask({required index, required condition}) {
     String text = '';
     if (index == 0) {
       text = 'Đang chờ nhận';
     } else if (index == 1) {
-      text = 'Đã nhận';
+      if (DateTime.now().isBefore(readTimestamp3(condition))) {
+        text = 'Đã nhận';
+      } else {
+        text = 'Đang làm';
+      }
     } else if (index == 2) {
-      text = 'Đang làm';
-    } else if (index == 3) {
       text = 'Thành công';
-    } else if (index == 4) {
+    } else if (index == 3) {
       text = 'Đã bị hủy';
     } else {
       text = 'Lỗi';
@@ -230,9 +253,7 @@ class _TasksWidgetState extends State<TasksWidget> {
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(url)
-          ),
+          CircleAvatar(backgroundImage: NetworkImage(url)),
           const SizedBox(
             width: 12,
           ),
@@ -247,28 +268,33 @@ class _TasksWidgetState extends State<TasksWidget> {
     );
   }
 
-  String readTimestamp(int? timestamp) {
+  String readTimestamp(int timestamp) {
     var format = DateFormat('HH:mm');
-    var date = DateTime.fromMicrosecondsSinceEpoch((timestamp ?? 0 * 1000));
+    var date = DateTime.fromMillisecondsSinceEpoch((timestamp));
     var time = '';
     time = format.format(date);
 
     return time;
   }
 
-  String readTimestamp2(int? timestamp) {
-    logDebug(timestamp);
+  String readTimestamp2(int timestamp) {
     var format = DateFormat('E, dd/MM/yyyy');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
     var time = '';
     time = format.format(date);
 
     return time;
   }
 
-  String readTimestampEnd(int? timestamp) {
+  DateTime readTimestamp3(int timestamp) {
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
+
+    return date;
+  }
+
+  String readTimestampEnd(int timestamp) {
     var format = DateFormat('HH:mm');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp ?? 0 * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     var time = '';
     time = format.format(
         date.add(Duration(hours: int.parse(widget.task?.estimateTime ?? '0'))));

@@ -20,7 +20,7 @@ class _TaskHistoryState extends State<TaskHistory> {
   final PageState _pageState = PageState();
   final _taskBloc = TaskBloc();
   TaskModel? task;
-
+  List<TaskModel> statusess = [];
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -56,40 +56,46 @@ class _TaskHistoryState extends State<TaskHistory> {
             (context, AsyncSnapshot<ApiResponse<ListTaskModel?>> snapshot) {
           if (snapshot.hasData) {
             final tasks = snapshot.data!.model!.records;
-
-            return ListView.builder(
-                itemCount: tasks.length,
+            statusess = tasks.where((e) => e.status >= 2).toList();
+            if (statusess.isNotEmpty) {
+              return ListView.builder(
+                itemCount: statusess.length,
                 itemBuilder: (context, index) {
-                  if (tasks[index].status >= 3) {
-                    return TasksWidget(
-                      name: tasks[index].tasker.name,
-                      url: tasks[index].tasker.avatar,
-                      nameButton: 'Xem chi tiết',
-                      task: tasks[index],
-                      onPressed: (callBackTask) {
-                        setState(() {
-                          task = callBackTask;
-                          callBackTask?.startTime;
-                          callBackTask?.endTime;
-                          callBackTask?.date;
-                          callBackTask?.address;
-                          callBackTask?.note;
-                          callBackTask?.checkList;
-                          int.parse(callBackTask!.estimateTime);
-                          callBackTask.service.options.isNotEmpty
-                              ? callBackTask.service.options.first.note
-                              : '';
-                          callBackTask.service.options.isNotEmpty
-                              ? callBackTask.service.options.first.quantity
-                              : 0;
-                        });
-                        navigateTo(viewDetailRoute);
-                      },
-                    );
-                  } else {
-                    return const SizedBox();
-                  }
-                });
+                  return TasksWidget(
+                    name: statusess[index].tasker.name,
+                    url: statusess[index].tasker.avatar,
+                    nameButton: 'Xem chi tiết',
+                    task: statusess[index],
+                    onPressed: (callBackTask) {
+                      setState(() {
+                        task = callBackTask;
+                        callBackTask?.startTime;
+                        callBackTask?.endTime;
+                        callBackTask?.date;
+                        callBackTask?.address;
+                        callBackTask?.note;
+                        callBackTask?.checkList;
+                        int.parse(callBackTask!.estimateTime);
+                        callBackTask.service.options.isNotEmpty
+                            ? callBackTask.service.options.first.note
+                            : '';
+                        callBackTask.service.options.isNotEmpty
+                            ? callBackTask.service.options.first.quantity
+                            : 0;
+                      });
+                      navigateTo(viewDetailRoute);
+                    },
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  'Không có dữ liệu',
+                  style: AppTextTheme.mediumHeaderTitle(AppColor.primary2),
+                ),
+              );
+            }
           }
           return Center(
               child: CircularProgressIndicator(

@@ -30,11 +30,14 @@ class _PostFastState extends State<PostFast> {
   final PageState _pageState = PageState();
   int valueWeek = 0;
   int value = 0;
+  String note = '';
+  int quantity = 0;
+  String name = '';
   bool isSwitched = false;
   late EditTaskModel? editModel;
-  DateTime timePick = DateTime.now();
+  late DateTime timePick = selectedDate;
   int price = 0;
-  DateTime? selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
   List<ServiceModel>? listOptions;
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
@@ -74,7 +77,8 @@ class _PostFastState extends State<PostFast> {
     }
   }
 
-  TimeOfDay _time = const TimeOfDay(hour: 7, minute: 15);
+  final TimeOfDay _time =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
@@ -82,13 +86,12 @@ class _PostFastState extends State<PostFast> {
     );
     if (newTime != null) {
       setState(() {
-        _time = newTime;
         editModel?.startTime = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          _time.hour,
-          _time.minute,
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          newTime.hour,
+          newTime.minute,
         ).millisecondsSinceEpoch;
       });
     }
@@ -232,8 +235,7 @@ class _PostFastState extends State<PostFast> {
                                                 padding: const EdgeInsets.only(
                                                     left: 8),
                                                 child: Text(
-                                                  editModel!
-                                                      .checkList[index].name,
+                                                  listTask[index],
                                                   style:
                                                       AppTextTheme.normalText(
                                                           AppColor.text1),
@@ -265,7 +267,7 @@ class _PostFastState extends State<PostFast> {
                                       ),
                                     );
                                   },
-                                  itemCount: editModel!.checkList.length,
+                                  itemCount: listTask.length,
                                 ),
                               ),
                               Padding(
@@ -307,14 +309,21 @@ class _PostFastState extends State<PostFast> {
                           )),
                   payButton(
                     listOptions![0].options[value].price.toString(),
-                    listOptions![0].options[value].name,
+                    listOptions![0].options[value].name.toString(),
                     onPressed: () {
                       setState(() {
-                        editModel?.service =
-                            ServiceModel.fromJson({'id': serviceId});
-
-                        editModel?.date = selectedDate!.millisecondsSinceEpoch;
-                        editModel?.startTime = timePick.millisecondsSinceEpoch;
+                        editModel?.endTime =
+                            DateTime.fromMillisecondsSinceEpoch(
+                                    editModel!.startTime)
+                                .add(
+                                  Duration(
+                                    hours: int.parse(editModel!.estimateTime),
+                                  ),
+                                )
+                                .millisecondsSinceEpoch;
+                        editModel?.date = selectedDate.millisecondsSinceEpoch;
+                        editModel?.estimateTime =
+                            listOptions![0].options[value].name.toString();
                         note = listOptions![0].options[value].note;
                         quantity = listOptions![0].options[value].quantity;
                         editModel?.note = noteForTasker.text;
@@ -322,9 +331,7 @@ class _PostFastState extends State<PostFast> {
                             .map((e) => CheckListModel.fromJson(
                                 {'name': e, 'status': false}))
                             .toList();
-
                         _mainPage = !_mainPage;
-                        logDebug(_mainPage);
                       });
                     },
                   ),
@@ -434,7 +441,7 @@ class _PostFastState extends State<PostFast> {
                                 }),
                             _item(
                                 text:
-                                    '${editModel!.estimateTime} tiếng, ${readTimestamp(editModel!.startTime)} đến ${readTimestamp(editModel!.endTime)}',
+                                    '${editModel!.estimateTime} tiếng, ${readTimestamp(editModel!.startTime)} đến ${readTimestampEnd(editModel!.startTime)}',
                                 icon: SvgIcons.accessTime),
                             _item(
                                 text: readTimestamp3(editModel!.date),
@@ -620,7 +627,7 @@ class _PostFastState extends State<PostFast> {
                   onPressed: () {
                     if (_key.currentState!.validate()) {
                       _key.currentState!.save();
-                      logDebug('confirmbutton');
+
                       _editUserInfo();
                     } else {
                       setState(() {
@@ -635,31 +642,27 @@ class _PostFastState extends State<PostFast> {
   }
 
   String readTimestamp(int timestamp) {
-    var now = DateTime.now();
     var format = DateFormat('HH:mm');
     var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-    var diff = date.difference(now);
     var time = '';
+    time = format.format(date);
 
-    if (diff.inSeconds <= 0 ||
-        diff.inSeconds > 0 && diff.inMinutes == 0 ||
-        diff.inMinutes > 0 && diff.inHours == 0 ||
-        diff.inHours > 0 && diff.inDays == 0) {
-      time = format.format(date);
-    } else {
-      if (diff.inDays == 1) {
-        time = diff.inDays.toString() + 'DAY AGO';
-      } else {
-        time = diff.inDays.toString() + 'DAYS AGO';
-      }
-    }
+    return time;
+  }
+
+  String readTimestampEnd(int? timestamp) {
+    var format = DateFormat('HH:mm');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp! * 1000);
+    var time = '';
+    time = format.format(
+        date.add(Duration(hours: int.parse(editModel?.estimateTime ?? '0'))));
 
     return time;
   }
 
   String readTimestamp2(int timestamp) {
     var format = DateFormat('d');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     var time = '';
     time = format.format(date);
 
@@ -781,7 +784,7 @@ class _PostFastState extends State<PostFast> {
               selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day + index);
 
-              editModel?.date = selectedDate!.millisecondsSinceEpoch;
+              editModel?.date = selectedDate.millisecondsSinceEpoch;
             }
           });
         },
@@ -838,7 +841,7 @@ class _PostFastState extends State<PostFast> {
     );
   }
 
-  Widget room(int time, String note, int quantity, int index) {
+  Widget room(String time, String note, int quantity, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: InkWell(
@@ -963,10 +966,10 @@ class _PostFastState extends State<PostFast> {
     // editModel?.typeHome = 'apartment';
 
     // logDebug(editModel!.toEditTaskJson());
-    editModel?.note;
-    editModel?.startTime;
-    editModel?.date;
-    editModel?.checkList = [];
+    editModel?.endTime =
+        DateTime.fromMillisecondsSinceEpoch(editModel!.startTime)
+            .add(Duration(hours: int.parse(editModel!.estimateTime)))
+            .millisecondsSinceEpoch; 
 
     _taskBloc.editTask(editModel: editModel).then(
       (value) async {
@@ -1130,7 +1133,7 @@ class _PostFastState extends State<PostFast> {
 
   Widget payButton(
     String price,
-    int name, {
+    String name, {
     required void Function()? onPressed,
   }) {
     return Container(
@@ -1346,7 +1349,6 @@ class _PostFastState extends State<PostFast> {
   }
 
   _editUserInfo() {
-    logDebug(_editUser?.address);
     _userBloc.editProfile(editModel: _editUser).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());

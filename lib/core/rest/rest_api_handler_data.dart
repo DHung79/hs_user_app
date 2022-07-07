@@ -1,7 +1,6 @@
 import 'package:hs_user_app/main.dart';
 
 import 'api_helpers/api_base_helper.dart';
-import 'models/rest_api_response.dart';
 
 class RestApiHandlerData {
   static final ApiBaseHelper _apiBaseHelper = ApiBaseHelper();
@@ -27,6 +26,7 @@ class RestApiHandlerData {
       body: body,
       headers: headers,
     );
+    logDebug('token: ${response.model.toString()}');
     return response;
   }
 
@@ -58,14 +58,13 @@ class RestApiHandlerData {
 
   static Future<ApiResponse<T>> deleteData<T extends BaseModel>({
     required String path,
-    dynamic body,
     Map<String, String>? headers,
   }) async {
     final response = await _apiBaseHelper.delete<T>(
       path: path,
-      body: body,
       headers: headers,
     );
+    logDebug(response);
     return response;
   }
 
@@ -92,6 +91,7 @@ class RestApiHandlerData {
       body: body,
       headers: headers,
     );
+    logDebug('response2: $response');
     return response;
   }
 
@@ -142,6 +142,21 @@ class RestApiHandlerData {
     final response = await _apiBaseHelper.getList<T>(
       path: path,
       headers: headers,
+    );
+    return response;
+  }
+
+  static Future<ApiResponse<T>> putUpload<T extends BaseModel>({
+    required String path,
+    Map<String, String>? headers,
+    required String field,
+    required String filePath,
+  }) async {
+    final response = await _apiBaseHelper.putUpload<T>(
+      path: path,
+      headers: headers,
+      field: field,
+      filePath: filePath,
     );
     return response;
   }

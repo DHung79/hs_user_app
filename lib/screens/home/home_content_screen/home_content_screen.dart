@@ -73,15 +73,21 @@ class _HomeContentState extends State<HomeContent> {
                       color: Color.fromRGBO(79, 117, 140, 0.16)),
                 ],
                 borderRadius: BorderRadius.vertical(
-                    top: Radius.zero, bottom: Radius.circular(10))),
-            padding: const EdgeInsets.all(16),
+                top: Radius.zero,
+                bottom: Radius.circular(10),
+              ),
+            ),
+            padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
                 Expanded(
                   child: Row(
                     children: [
-                      avatarHome(user!),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: avatarHome(user!),
+                      ),
                       const SizedBox(
                         width: 24,
                       ),
@@ -89,7 +95,10 @@ class _HomeContentState extends State<HomeContent> {
                     ],
                   ),
                 ),
-                notification()
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: notification(),
+                )
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
@@ -222,14 +231,17 @@ class _HomeContentState extends State<HomeContent> {
             height: 4,
           ),
           SizedBox(
-            height: 16,
             child: TextButton(
-              style: ButtonStyle(
-                // backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.all(0)),
+              style: TextButton.styleFrom(
+                minimumSize: const Size(0, 0),
+                padding: const EdgeInsets.only(bottom: 16.0, right: 8.0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                splashFactory: NoSplash.splashFactory,
+                primary: AppColor.text2,
               ),
-              onPressed: () {},
+              onPressed: () {
+                navigateTo(posttaskRoute);
+              },
               child: Text(
                 'ĐĂNG NGAY',
                 style: AppTextTheme.mediumBodyText(AppColor.primary2),
@@ -257,6 +269,8 @@ class _HomeContentState extends State<HomeContent> {
           navigateTo(notificationRoute);
         },
         style: TextButton.styleFrom(
+          primary: AppColor.text2,
+          splashFactory: NoSplash.splashFactory,
           padding: EdgeInsets.zero,
           minimumSize: const Size(24, 24),
           shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),

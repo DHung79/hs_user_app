@@ -33,14 +33,12 @@ int startTime = 0;
 int endTime = 0;
 String address = '';
 int date = 0;
-String note = '';
-int name = 0;
-int quantity = 0;
 String noteTasker = '';
 int dateActive = 0;
 List listTaskForTasker = [];
 String idTask = '';
 int estimateTime = 0;
+String? currentFcmToken;
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 // Page index
 GlobalKey globalKey = GlobalKey();
@@ -96,7 +94,7 @@ class _AppState extends State<App> {
     return Consumer<AppStateNotifier>(
       builder: (context, appState, child) {
         return MaterialApp.router(
-          title: 'Smart Building',
+          title: 'HomeService',
           debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
           darkTheme: ThemeConfig.darkTheme,

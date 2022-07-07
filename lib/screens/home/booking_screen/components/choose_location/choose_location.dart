@@ -27,7 +27,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
   final PageState _pageState = PageState();
   late GoogleMapController _mapController;
   late TaskModel task;
-  String? nameAddressChoose = '';
+  String nameAddressChoose = '';
+  bool mapButton = false;
   final LocationSettings locationSettings = const LocationSettings(
       accuracy: LocationAccuracy.best, distanceFilter: 0);
 
@@ -41,6 +42,12 @@ class _ChooseLocationState extends State<ChooseLocation> {
   @override
   void initState() {
     _debounce = Debouncer(delayTime: const Duration(milliseconds: 500));
+
+    if (googleSearchPlacesApiKey.currentState != null) {
+      nameAddressChoose = googleSearchPlacesApiKey.currentState!.nameAddress;
+      mapButton = googleSearchPlacesApiKey.currentState!.mapButton;
+    }
+    if (mapButton) {
     _debounce.debounce(
       afterDuration: () async {
         await placemarkFromCoordinates(
@@ -59,11 +66,9 @@ class _ChooseLocationState extends State<ChooseLocation> {
           },
         );
       },
-    );
-    logDebug(googleSearchPlacesApiKey.currentState);
-    if (googleSearchPlacesApiKey.currentState != null) {
-      nameAddressChoose = googleSearchPlacesApiKey.currentState?.nameAddress;
+      );
     }
+    
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
 
     _selectedPlate = Marker(
@@ -71,7 +76,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
       position: _location.target,
     );
 
-    locationFromAddress(nameAddressChoose!).then(
+    locationFromAddress(nameAddressChoose).then(
       (locations) {
         if (locations.isNotEmpty) {
           final newLocation =
@@ -84,8 +89,6 @@ class _ChooseLocationState extends State<ChooseLocation> {
         } else {}
       },
     );
-   
-    logDebug('nameAddressChoose: $nameAddressChoose');
     super.initState();
   }
 
@@ -329,7 +332,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                         ),
                         Expanded(
                           child: Text(
-                            nameAddressChoose!,
+                            nameAddressChoose,
                             style: AppTextTheme.normalText(AppColor.text1),
                             overflow: TextOverflow.ellipsis,
                           ),

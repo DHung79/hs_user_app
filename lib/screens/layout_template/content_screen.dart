@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hs_user_app/config/fcm/fcm.dart';
 import '../../core/user/bloc/user_bloc.dart';
 import '../../core/user/model/user_model.dart';
 import '/routes/route_names.dart';
@@ -54,11 +56,36 @@ class _PageTemplateState extends State<PageTemplate> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   bool showNoti = false;
   final _userBloc = UserBloc();
+  PushNotification? _notificationInfo;
 
   @override
   void initState() {
     _authenticationBloc = AuthenticationBlocController().authenticationBloc;
     _authenticationBloc.add(AppLoadedup());
+    requestPermissionsLocal();
+    registerNotification(
+      getFcmToken: (fcmToken) {
+        currentFcmToken = fcmToken;
+      },
+      notificationInfo: _notificationInfo,
+    );
+    checkForInitialMessage(getNotification: (notification) {
+      setState(() {
+        _notificationInfo = notification;
+      });
+    });
+    initLocalPushNotification();
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = PushNotification(
+        title: message.notification?.title,
+        body: message.notification?.title,
+        dataTitle: message.data['title'].toString(),
+        dataBody: message.data['body'].toString(),
+      );
+      setState(() {
+        _notificationInfo = notification;
+      });
+    });
     super.initState();
   }
 
@@ -132,7 +159,7 @@ class _PageTemplateState extends State<PageTemplate> {
                       //   supportedLocales.firstWhere(
                       //       (e) => e.languageCode == state.currentLang),
                       // );
-                    
+
                       widget.onUserFetched(state.currentUser);
                     }
                   },

@@ -141,13 +141,13 @@ class EditTaskModel extends EditBaseModel {
 
   Map<String, dynamic> toCreateJson() {
     Map<String, dynamic> params = {
-      'location_gps': locationGps,
-      'service': service,
+      'location_gps': locationGps!.toJson(),
+      'service': service!.toJson(),
       'address': address,
       'estimate_time': estimateTime,
       'start_time': startTime,
       'end_time': endTime,
-      'date': date.toString(),
+      'date': date,
       'note': note,
       'status': status,
       'type_home': typeHome,

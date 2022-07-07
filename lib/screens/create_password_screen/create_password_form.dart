@@ -34,7 +34,6 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
-          logDebug('state: $state');
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is ResetPasswordDoneState) {
@@ -168,7 +167,6 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
     setState(() {
       _errorMessage = '';
     });
-    logDebug(email);
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(

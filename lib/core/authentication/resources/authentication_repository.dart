@@ -10,8 +10,7 @@ class AuthenticationRepository {
       String id, String? password) async {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
-    final body =
-        convert.jsonEncode({'id': id, 'password': password});
+    final body = convert.jsonEncode({'id': id, 'password': password});
     final response = await provider.signUpWithEmailAndPassword(body);
     return response;
   }
@@ -77,8 +76,9 @@ class AuthenticationRepository {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
     final body = convert.jsonEncode({'email': email, 'password': password});
+    logDebug('body: $body');
     final response = await provider.userLogin(body);
-
+    logDebug('response: $response');
     return response;
   }
 
@@ -87,7 +87,6 @@ class AuthenticationRepository {
         const Duration(seconds: 1)); // simulate a network delay
     final body = convert.jsonEncode({'email': email});
     final response = await provider.checkEmail(body);
-    logDebug(body);
     return response;
   }
 

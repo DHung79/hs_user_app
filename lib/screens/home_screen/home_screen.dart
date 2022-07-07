@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: false,
       body: _widgetOptions.elementAt(homePageIndex),
       bottomNavigationBar: Container(
-        // color: Colors.white,
+        height: 100,
         padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
@@ -75,110 +75,93 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
           boxShadow: kElevationToShadow[4],
         ),
-        child: ClipRRect(
+        child: Container(
+          decoration: const BoxDecoration(
             borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(20.0)),
-            child: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              type: BottomNavigationBarType.fixed,
-              elevation: 10,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Container(
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: SvgIcon(
-                        SvgIcons.home1,
-                        color: AppColor.text3,
-                        size: 24,
-                      ),
-                    ),
-                    backgroundColor: Colors.white,
-                    label: 'Trang chủ',
-                    activeIcon: Container(
-                      child: SvgIcon(
-                        SvgIcons.home1,
-                        color: AppColor.primary1,
-                        size: 24,
-                      ),
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          color: AppColor.shade3,
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                    )),
-                BottomNavigationBarItem(
-                    icon: Container(
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: SvgIcon(
-                        SvgIcons.dailyTask,
-                        color: AppColor.text3,
-                        size: 24,
-                      ),
-                    ),
-                    backgroundColor: Colors.white,
-                    label: 'Đặt lịch',
-                    activeIcon: Container(
-                      child: SvgIcon(
-                        SvgIcons.dailyTask,
-                        color: AppColor.primary2,
-                        size: 24,
-                      ),
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(255, 245, 232, 1),
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                    )),
-                BottomNavigationBarItem(
-                    icon: Container(
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: SvgIcon(
-                        SvgIcons.user1,
-                        color: AppColor.text3,
-                        size: 24,
-                      ),
-                    ),
-                    backgroundColor: AppColor.shade10,
-                    label: 'Cài đặt',
-                    activeIcon: Container(
-                      child: SvgIcon(
-                        SvgIcons.user1,
-                        color: AppColor.shade6,
-                        size: 24,
-                      ),
-                      padding: const EdgeInsets.only(
-                          top: 14.25, bottom: 14.25, left: 41.67, right: 41.67),
-                      decoration: BoxDecoration(
-                          color: AppColor.shade10,
-                          borderRadius: BorderRadius.circular(10)),
-                      margin: const EdgeInsets.only(bottom: 8),
-                    )),
-              ],
-              currentIndex: homePageIndex,
-              selectedItemColor: homePageIndex == 0
-                  ? AppColor.primary1
-                  : homePageIndex == 1
-                      ? AppColor.primary2
-                      : const Color.fromRGBO(0, 139, 203, 1),
-              onTap: _onItemTapped,
-              // selectedFontSize: 12,
-              // selectedLabelStyle: FontStyle().selectFontNav,
-              // unselectedLabelStyle: FontStyle().unselectFontNav,
-            )),
+                BorderRadius.vertical(top: Radius.circular(20.0)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              navigaButton(
+                  onPressed: () {
+                    _onItemTapped(0);
+                  },
+                  icon: SvgIcons.home1,
+                  name: 'Trang chủ',
+                  activeColor: AppColor.primary1,
+                  isActive: homePageIndex == 0,
+                  paddingActiveColor: AppColor.shade3
+              ),
+              navigaButton(
+                onPressed: () {
+                  _onItemTapped(1);
+                },
+                icon: SvgIcons.dailyTask,
+                name: 'Đặt lịch',
+                activeColor: AppColor.primary2,
+                isActive: homePageIndex == 1,
+                paddingActiveColor: AppColor.shade4,
+              ),
+              navigaButton(
+                onPressed: () {
+                  _onItemTapped(2);
+                },
+                icon: SvgIcons.user1,
+                name: 'Cài đặt',
+                activeColor: AppColor.shade6,
+                isActive: homePageIndex == 2,
+                paddingActiveColor: AppColor.shade10,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget navigaButton(
+      {required void Function()? onPressed,
+      required SvgIconData icon,
+      required String name,
+      required bool isActive,
+      required Color activeColor,
+      required Color paddingActiveColor}) {
+    final _color = isActive ? activeColor : AppColor.text3;
+    final _colorText = isActive ? activeColor : AppColor.text7;
+
+    return TextButton(
+      style: TextButton.styleFrom(
+        splashFactory: NoSplash.splashFactory,
+        primary: Colors.white,
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(0, 0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      onPressed: onPressed,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            width: MediaQuery.of(context).size.width / 3 - 52,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: isActive ? paddingActiveColor : Colors.transparent,
+            ),
+            child: SvgIcon(
+              icon,
+              size: 24,
+              color: _color,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            name,
+            style: AppTextTheme.subText(_colorText),
+          )
+        ],
       ),
     );
   }

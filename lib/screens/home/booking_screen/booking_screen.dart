@@ -27,7 +27,9 @@ class _BookingState extends State<Booking> {
     TaskPage(
       key: taskPageKey,
     ),
-    const TaskNow(),
+    TaskNow(
+      key: taskNowKey,
+    ),
     TaskHistory(
       key: taskHistoryKey,
     ),

@@ -39,7 +39,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
   final _taskBloc = TaskBloc();
   EditTaskModel? _editModel;
   EditUserModel? _editModelUser;
-  late DateTime timePick = DateTime.now();
+  late DateTime timePick = selectedDate;
   DateTime selectedDate = DateTime.now();
   int? timeSend;
   String? weekDay;
@@ -49,9 +49,10 @@ class _ConfirmPageState extends State<ConfirmPage> {
   bool isSwitched = false;
   late String nameAddress = '';
   int value = 0;
-  DateTime today = DateTime.now();
   int valueWeek = 0;
-  String? _price = '';
+  String? note;
+  int? quantity;
+  String? name;
   final TextEditingController _addTask = TextEditingController();
   TextEditingController noteForTasker = TextEditingController();
   bool _mainPage = true;
@@ -85,10 +86,10 @@ class _ConfirmPageState extends State<ConfirmPage> {
 
   @override
   void initState() {
-    logDebug(postTaskKey.currentState?.editModel);
     if (postTaskKey.currentState != null) {
       _editModel = postTaskKey.currentState?.editModel;
-      _price = postTaskKey.currentState?.price.toString();
+      note = postTaskKey.currentState?.note;
+      quantity = postTaskKey.currentState?.quantity;
     }
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
@@ -151,7 +152,6 @@ class _ConfirmPageState extends State<ConfirmPage> {
           builder: (context,
               AsyncSnapshot<ApiResponse<ListServiceModel?>> snapshot) {
             listOptions = snapshot.data?.model!.records;
-            logDebug(listOptions);
             if (snapshot.hasData) {
               return ListView(
                 children: [
@@ -310,8 +310,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
                           )),
 
                   payButton(
-                    listOptions![0].options[0].price.toString(),
-                    listOptions![0].options[0].name,
+                    listOptions![0].options[value].price.toString(),
+                    listOptions![0].options[value].name.toString(),
                     onPressed: () {
                       if (_editModel?.address == '') {
                         showDialog(
@@ -324,21 +324,33 @@ class _ConfirmPageState extends State<ConfirmPage> {
                             });
                       } else {
                         setState(() {
-                          quantity = listOptions![0].options[0].quantity;
-                          name = listOptions![0].options[0].name;
-                          note = listOptions![0].options[0].note;
+                          quantity = listOptions![0].options[value].quantity;
+                          name = listOptions![0].options[value].name.toString();
+                          note = listOptions![0].options[value].note;
                           _editModel?.date =
                               selectedDate.millisecondsSinceEpoch;
-                          _editModel?.startTime =
-                              timePick.millisecondsSinceEpoch;
+                          _editModel?.startTime = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            timePick.hour,
+                            timePick.minute,
+                          ).millisecondsSinceEpoch;
+
+                          _editModel
+                              ?.endTime = DateTime.fromMillisecondsSinceEpoch(
+                                  _editModel!.startTime)
+                              .add(Duration(
+                                  hours: int.parse(_editModel!.estimateTime)))
+                              .millisecondsSinceEpoch;
                           _editModel?.note = noteForTasker.text;
                           _editModel?.checkList = listTask
                               .map((e) => CheckListModel.fromJson(
                                   {'name': e, 'status': false}))
                               .toList();
-                          _editModel?.estimateTime = name.toString();
+                          _editModel?.estimateTime =
+                              listOptions!.first.options[value].name;
 
-                          logDebug(_editModel?.address);
                           _mainPage = !_mainPage;
                         });
                       }
@@ -382,7 +394,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                 onPressed: () {
                   setState(() {
                     _mainPageProfile
-                        ? navigateTo(homeRoute)
+                        ? navigateTo(posttaskRoute)
                         : _mainPageProfile = !_mainPageProfile;
                   });
                 },
@@ -539,7 +551,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                                   AppColor.text1),
                             ),
                             Text(
-                              _price!,
+                              _editModel!.totalPrice.toString(),
                               style: AppTextTheme.mediumBigText(AppColor.text1),
                             )
                           ],
@@ -699,7 +711,6 @@ class _ConfirmPageState extends State<ConfirmPage> {
                   onPressed: () {
                     if (_key.currentState!.validate()) {
                       _key.currentState!.save();
-                      logDebug('confirmbutton');
                       _editUserInfo();
                     } else {
                       setState(() {
@@ -817,7 +828,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
         DateTime.fromMillisecondsSinceEpoch(_editModel!.startTime)
             .add(Duration(hours: int.parse(_editModel!.estimateTime)))
             .millisecondsSinceEpoch;
-    logDebug(_editModel?.toCreateJson());
+    logDebug('create task: ${_editModel?.toCreateJson()}');
     _taskBloc.createTask(editModel: _editModel).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());
@@ -956,7 +967,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
     );
   }
 
-  Widget room(int time, String note, int quantity, int index) {
+  Widget room(String time, String note, int quantity, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: InkWell(
@@ -1038,8 +1049,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
     ];
 
     for (int i = 0; i <= 6; i++) {
-      int day = today.add(Duration(days: i)).day;
-      int dayOfWeek = today.add(Duration(days: i)).weekday;
+      int day = selectedDate.add(Duration(days: i)).day;
+      int dayOfWeek = selectedDate.add(Duration(days: i)).weekday;
       switch (dayOfWeek) {
         case 1:
           {
@@ -1140,7 +1151,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
 
   Widget payButton(
     String price,
-    int name, {
+    String name, {
     required void Function()? onPressed,
   }) {
     return Container(
@@ -1294,11 +1305,9 @@ class _ConfirmPageState extends State<ConfirmPage> {
         onPressed: () {
           setState(() {
             valueWeek = index;
-            logDebug(valueWeek);
             if (valueWeek == index) {
               selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day + index);
-              logDebug(selectedDate);
             }
           });
         },
@@ -1392,7 +1401,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
     );
   }
 
-  TimeOfDay _time = const TimeOfDay(hour: 7, minute: 15);
+  final TimeOfDay _time =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
@@ -1400,13 +1410,12 @@ class _ConfirmPageState extends State<ConfirmPage> {
     );
     if (newTime != null) {
       setState(() {
-        _time = newTime;
         timePick = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          _time.hour,
-          _time.minute,
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          newTime.hour,
+          newTime.minute,
         );
       });
     }
@@ -1486,7 +1495,6 @@ class _ConfirmPageState extends State<ConfirmPage> {
   }
 
   _editUserInfo() {
-    logDebug(_editModelUser?.address);
     _userBloc.editProfile(editModel: _editModelUser).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());

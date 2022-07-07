@@ -27,10 +27,12 @@ class _PostTaskState extends State<PostTask> {
   int valueWeek = 0;
   int value = 0;
   bool isSwitched = false;
-  DateTime timePick = DateTime.now();
   int price = 0;
+  String note = '';
+  int quantity = 0;
   String? nameAddress;
-  DateTime? selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
+  late DateTime timePick = selectedDate;
   List<ServiceModel>? listOptions;
   final currentRoute = getCurrentRoute();
   TextEditingController noteForTasker = TextEditingController();
@@ -52,22 +54,20 @@ class _PostTaskState extends State<PostTask> {
     }
   }
 
-  TimeOfDay _time =
-      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
-      initialTime: _time,
+      initialTime:
+          TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
     );
     if (newTime != null) {
       setState(() {
-        _time = newTime;
         timePick = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          _time.hour,
-          _time.minute,
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          newTime.hour,
+          newTime.minute,
         );
       });
     }
@@ -94,7 +94,6 @@ class _PostTaskState extends State<PostTask> {
       nameAddress = pickTypeHomeKey.currentState?.nameAddress;
       editModel.typeHome = pickTypeHomeKey.currentState!.typeHome;
       editModel.addressTitle = pickTypeHomeKey.currentState!.addressTitle.text;
-      logDebug('nameAddress: $nameAddress');
     }
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     super.initState();
@@ -309,40 +308,53 @@ class _PostTaskState extends State<PostTask> {
                               ),
                             ],
                           )),
+                  if (listOptions!.isNotEmpty &&
+                      listOptions!.first.options.isNotEmpty)
+                    payButton(
+                      listOptions![0].options[value].price.toString(),
+                      listOptions![0].options[value].name.toString(),
+                      onPressed: () {
+                        logDebug(
+                            readTimestamp2(timePick.millisecondsSinceEpoch));
+                        if (nameAddress == null) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Text('Chưa nhập địa chỉ!'),
+                                  content: Text('Vui lòng nhập địa chỉ'),
+                                );
+                              });
+                        } else {
+                          setState(() {
+                            editModel.estimateTime =
+                                listOptions![0].options[value].name.toString();
+                            editModel.date =
+                                selectedDate.millisecondsSinceEpoch;
+                            note = listOptions![0].options[value].note;
+                            logDebug(note);
+                            quantity = listOptions![0].options[value].quantity;
+                            editModel.totalPrice =
+                                listOptions![0].options[value].price;
+                            editModel.startTime = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              timePick.hour,
+                              timePick.minute,
+                            ).millisecondsSinceEpoch;
 
-                  payButton(
-                    listOptions![0].options[value].price.toString(),
-                    listOptions![0].options[value].name,
-                    onPressed: () {
-                      if (nameAddress == null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const AlertDialog(
-                                title: Text('Chưa nhập địa chỉ!'),
-                                content: Text('Vui lòng nhập địa chỉ'),
-                              );
-                            });
-                      } else {
-                        setState(() {
-                          editModel.estimateTime =
-                              listOptions![0].options[value].name.toString();
-                          editModel.date = selectedDate!.millisecondsSinceEpoch;
-                          note = listOptions![0].options[value].note;
-                          quantity = listOptions![0].options[value].quantity;
-                          price = listOptions![0].options[value].price;
-                          editModel.startTime = timePick.millisecondsSinceEpoch;
-                          editModel.note = noteForTasker.text;
-                          editModel.checkList = listTask
-                              .map((e) => CheckListModel.fromJson(
-                                  {'name': e, 'status': false}))
-                              .toList();
-                          editModel.address = nameAddress!;
-                        });
-                        navigateTo(confirmRoute);
-                      }
-                    },
-                  ),
+                            editModel.note = noteForTasker.text;
+                            editModel.checkList = listTask
+                                .map((e) => CheckListModel.fromJson(
+                                    {'name': e, 'status': false}))
+                                .toList();
+                            editModel.address = nameAddress!;
+                          });
+                          navigateTo(confirmRoute);
+                        }
+                      },
+                    ),
                 ],
               );
             } else {
@@ -353,6 +365,11 @@ class _PostTaskState extends State<PostTask> {
             }
           }),
     );
+  }
+
+  DateTime readTimestamp2(int timestamp) {
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    return date;
   }
 
   void _showMaterialDialog() {
@@ -588,7 +605,7 @@ class _PostTaskState extends State<PostTask> {
 
   Widget payButton(
     String price,
-    int name, {
+    String name, {
     required void Function()? onPressed,
   }) {
     return Container(
@@ -614,7 +631,7 @@ class _PostTaskState extends State<PostTask> {
     );
   }
 
-  Container contentSwitch() {
+  Widget contentSwitch() {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -705,11 +722,9 @@ class _PostTaskState extends State<PostTask> {
         onPressed: () {
           setState(() {
             valueWeek = index;
-            logDebug(valueWeek);
             if (valueWeek == index) {
               selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day + index);
-              logDebug(selectedDate);
             }
           });
         },
@@ -764,7 +779,7 @@ class _PostTaskState extends State<PostTask> {
     );
   }
 
-  Widget room(int time, String note, int quantity, int index) {
+  Widget room(String time, String note, int quantity, int index) {
     return InkWell(
         splashColor: Colors.transparent,
         onTap: () {

@@ -87,7 +87,6 @@ class AuthenticationProvider {
     final url = ApiConstants.apiDomain + ApiConstants.apiVersion + '/fcm_token';
     final response = await RestApiHandlerData.deleteData<Status>(
       path: url,
-      body: body,
       headers: ApiHelper.headers(null),
     );
     return response;
@@ -123,6 +122,7 @@ class AuthenticationProvider {
       body: body,
       headers: ApiHelper.headers(null),
     );
+    logDebug('body: $body');
     return response;
   }
 

@@ -29,6 +29,44 @@ class ApiHelper {
     return params;
   }
 
+  static Future<String?> getTaskToken() async {
+    final SharedPreferences sharedPreferences = await prefs;
+    if (sharedPreferences.getString('authtokenTask') != null) {
+      return sharedPreferences.getString('authtokenTask');
+    }
+    return '';
+  }
+
+  static Map<String, String> headersTask(String? token) {
+    Map<String, String> params = {
+      'Content-Type': 'application/json',
+    };
+    if (token != null && token.isNotEmpty) {
+      params['x-auth-token'] = token;
+      // if (currentFcmToken != null && currentFcmToken!.isNotEmpty) {
+      //   params['fcmToken'] = currentFcmToken!;
+      // }
+    }
+    // if (deviceOS.isNotEmpty) {
+    //   params['deviceOS'] = deviceOS;
+    // }
+    // if (deviceId.isNotEmpty) {
+    //   params['deviceId'] = deviceId;
+    // }
+    return params;
+  }
+
+  static Map<String, String> upload(String? token) {
+    Map<String, String> params = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    if (token != null && token.isNotEmpty) {
+      params['x-auth-token'] = token;
+    }
+    logDebug(token);
+    return params;
+  }
+  
   static Map<String, String> downloadHeaders(String? token) {
     Map<String, String> params = {
       'Content-Type': 'application/octet-stream',

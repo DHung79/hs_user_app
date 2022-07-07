@@ -6,7 +6,7 @@ import '../../rest/models/rest_api_response.dart';
 class TaskRepository {
   final _provider = TaskApiProvider();
 
-  Future<ApiResponse<T?>> deleteObject<T extends BaseModel>({
+  Future<ApiResponse<T?>> deleteTask<T extends BaseModel>({
     String? id,
   }) =>
       _provider.deleteTask<T>(

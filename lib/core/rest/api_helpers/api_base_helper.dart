@@ -93,18 +93,13 @@ class ApiBaseHelper {
 
   Future<ApiResponse<T>> delete<T extends BaseModel>({
     required String path,
-    dynamic body,
     Map<String, String>? headers,
   }) async {
     ApiResponse<T> apiResponse;
     try {
-      final uri = Uri.parse(path);
-      final request = http.Request("DELETE", uri);
-      request.headers.addAll(headers ?? {});
-      request.body = body;
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-      apiResponse = _returnDeleteResponse<T>(response.statusCode, responseBody);
+      final response = await http.delete(Uri.parse(path), headers: headers);
+      apiResponse = _returnDeleteResponse<T>(response);
+      logDebug(response.headers);
     } on SocketException {
       return ApiResponse(
         null,
@@ -295,23 +290,24 @@ class ApiBaseHelper {
   }
 
   ApiResponse<T> _returnDeleteResponse<T extends BaseModel>(
-      int statusCode, String body) {
-    if (statusCode == 200) {
-      var responseJson = json.decode(body);
+      http.Response response) {
+    logDebug(response.statusCode);
+    if (response.statusCode == 200) {
+      var responseJson = json.decode(response.body);
       return ApiResponse(BaseModel.fromJson<T>(responseJson), null);
-    } else if (statusCode >= 400 && statusCode < 500) {
-      var parsedJson = json.decode(body.toString());
+    } else if (response.statusCode >= 400 && response.statusCode < 500) {
+      var parsedJson = json.decode(response.body.toString());
       ApiError _error;
       if (parsedJson is String) {
         _error = ApiError.fromJson(
-          {'error_code': statusCode, 'error_message': parsedJson},
+          {'error_code': response.statusCode, 'error_message': parsedJson},
         );
       } else if (parsedJson is Map<String, dynamic>) {
         _error = ApiError.fromJson(parsedJson);
       } else {
         _error = ApiError.fromJson(
           {
-            'error_code': statusCode,
+            'error_code': response.statusCode,
             'error_message': parsedJson.toString(),
           },
         );
@@ -326,7 +322,7 @@ class ApiBaseHelper {
       null,
       ApiError.fromJson(
         {
-          'error_code': statusCode,
+          'error_code': response.statusCode,
           'error_message': 'Error occured while Communication with Server'
         },
       ),
@@ -436,5 +432,30 @@ class ApiBaseHelper {
         },
       ),
     );
+  }
+
+  Future<ApiResponse<T>> putUpload<T extends BaseModel>({
+    required String path,
+    Map<String, String>? headers,
+    required String field,
+    required String filePath,
+  }) async {
+    ApiResponse<T> responseJson;
+
+    try {
+      final request = http.MultipartRequest('PUT', Uri.parse(path));
+      request.headers['x-auth-token'] = headers!['x-auth-token']!;
+      request.files.add(await http.MultipartFile.fromPath(field, filePath));
+      final response = await http.Response.fromStream(await request.send());
+      responseJson = _returnResponse<T>(response);
+    } on SocketException {
+      return ApiResponse(
+        null,
+        ApiError.fromJson(
+          {'error_code': -999, 'error_message': 'No Internet Connection'},
+        ),
+      );
+    }
+    return responseJson;
   }
 }
