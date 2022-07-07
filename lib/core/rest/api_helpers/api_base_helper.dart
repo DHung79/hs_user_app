@@ -453,4 +453,28 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<bool> removeFcmToken({
+    required String path,
+    dynamic body,
+    Map<String, String>? headers,
+  }) async {
+    // ignore: prefer_typing_uninitialized_variables
+    var responseJson;
+    try {
+      final response = await http.delete(
+        Uri.parse(path),
+        body: body,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        responseJson = true;
+      } else {
+        responseJson = false;
+      }
+    } on SocketException {
+      return false;
+    }
+    return responseJson;
+  }
 }

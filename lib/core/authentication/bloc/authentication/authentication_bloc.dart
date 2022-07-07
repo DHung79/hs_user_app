@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 import '../../../../../main.dart';
+import '../../../notification/notification.dart';
 import '../../../user/bloc/user_bloc.dart';
 import '../../../user/model/user_model.dart';
 import '../../auth.dart';
@@ -250,8 +251,7 @@ class AuthenticationBloc
     });
 
     on<UserLogOut>((event, emit) async {
-      // await authenticationService.signOut({'fcmToken': currentFcmToken});
-      _cleanupCache();
+      await _cleanupCache();
       emit(UserLogoutState());
     });
 
@@ -260,7 +260,7 @@ class AuthenticationBloc
 
       final token = sharedPreferences.getString('authtoken');
       if (token == null || token.isEmpty) {
-        _cleanupCache();
+        await _cleanupCache();
         emit(AuthenticationStart());
       } else {
         await sharedPreferences.reload();
@@ -279,10 +279,7 @@ class AuthenticationBloc
           }
         }
         if (_isExpired) {
-          // if (currentFcmToken != null && currentFcmToken!.isNotEmpty) {
-          //   await authenticationService.removeFcmToken(currentFcmToken!);
-          // }
-          _cleanupCache();
+          await _cleanupCache();
           emit(UserTokenExpired());
         } else {
           final userJson = sharedPreferences.getString('userJson');
@@ -315,7 +312,7 @@ class AuthenticationBloc
             final account = await UserBloc().getProfile();
             // ignore: unnecessary_null_comparison
             if (account == null) {
-              _cleanupCache();
+              await _cleanupCache();
               emit(UserTokenExpired());
             } else {
               final json = account.toJson();
@@ -331,7 +328,7 @@ class AuthenticationBloc
     });
 
     on<TokenExpired>((event, emit) async {
-      _cleanupCache();
+      await _cleanupCache();
       emit(UserTokenExpired());
     });
 
@@ -451,6 +448,9 @@ class AuthenticationBloc
   }
 
   _cleanupCache() async {
+    if (currentFcmToken != null) {
+      await NotificationRepository().removeFcmToken(fcmToken: currentFcmToken!);
+    }
     final SharedPreferences sharedPreferences = await prefs;
     sharedPreferences.remove('authtoken');
     sharedPreferences.remove('userJson');

@@ -89,4 +89,21 @@ class NotificationApiProvider {
     );
     return response;
   }
+
+  Future<bool> removeFcmToken<T extends BaseModel>({
+    required String fcmToken,
+  }) async {
+    var path = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.fcmToken +
+        ApiConstants.user;
+    final body = convert.jsonEncode({'fcm_token': fcmToken});
+    final token = await ApiHelper.getUserToken();
+    final response = await RestApiHandlerData.removeFcmToken(
+      path: path,
+      body: body,
+      headers: ApiHelper.headers(token),
+    );
+    return response;
+  }
 }

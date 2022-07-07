@@ -1,6 +1,4 @@
 import 'dart:convert' as convert;
-import 'package:hs_user_app/main.dart';
-
 import '../../authentication/resources/authentication_provider.dart';
 
 class AuthenticationRepository {
