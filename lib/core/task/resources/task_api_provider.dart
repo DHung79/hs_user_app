@@ -48,7 +48,6 @@ class TaskApiProvider {
         ApiConstants.tasks +
         ApiConstants.user +
         '/$id';
-    logDebug('path: $path');
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.deleteData<T>(
       path: path,

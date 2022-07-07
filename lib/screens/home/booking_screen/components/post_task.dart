@@ -314,8 +314,6 @@ class _PostTaskState extends State<PostTask> {
                       listOptions![0].options[value].price.toString(),
                       listOptions![0].options[value].name.toString(),
                       onPressed: () {
-                        logDebug(
-                            readTimestamp2(timePick.millisecondsSinceEpoch));
                         if (nameAddress == null) {
                           showDialog(
                               context: context,
@@ -332,7 +330,6 @@ class _PostTaskState extends State<PostTask> {
                             editModel.date =
                                 selectedDate.millisecondsSinceEpoch;
                             note = listOptions![0].options[value].note;
-                            logDebug(note);
                             quantity = listOptions![0].options[value].quantity;
                             editModel.totalPrice =
                                 listOptions![0].options[value].price;

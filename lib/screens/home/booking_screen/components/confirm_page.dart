@@ -828,7 +828,6 @@ class _ConfirmPageState extends State<ConfirmPage> {
         DateTime.fromMillisecondsSinceEpoch(_editModel!.startTime)
             .add(Duration(hours: int.parse(_editModel!.estimateTime)))
             .millisecondsSinceEpoch;
-    logDebug('create task: ${_editModel?.toCreateJson()}');
     _taskBloc.createTask(editModel: _editModel).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());

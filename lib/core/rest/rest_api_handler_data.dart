@@ -26,7 +26,6 @@ class RestApiHandlerData {
       body: body,
       headers: headers,
     );
-    logDebug('token: ${response.model.toString()}');
     return response;
   }
 
@@ -64,7 +63,6 @@ class RestApiHandlerData {
       path: path,
       headers: headers,
     );
-    logDebug(response);
     return response;
   }
 
@@ -91,7 +89,6 @@ class RestApiHandlerData {
       body: body,
       headers: headers,
     );
-    logDebug('response2: $response');
     return response;
   }
 

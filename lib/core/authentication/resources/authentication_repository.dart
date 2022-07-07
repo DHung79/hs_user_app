@@ -76,9 +76,7 @@ class AuthenticationRepository {
     await Future.delayed(
         const Duration(seconds: 1)); // simulate a network delay
     final body = convert.jsonEncode({'email': email, 'password': password});
-    logDebug('body: $body');
     final response = await provider.userLogin(body);
-    logDebug('response: $response');
     return response;
   }
 

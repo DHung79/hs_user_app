@@ -199,7 +199,6 @@ Widget _buildErrorMessage() {
   _showError(String errorCode) async {
     setState(() {
       _errorMessage = showError(errorCode, context);
-      logDebug(_errorMessage);
     });
   }
 }

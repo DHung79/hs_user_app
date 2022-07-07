@@ -205,7 +205,6 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
                   onTap: () {
                     setState(() {
                       nameAddress = todoList[index];
-                      // logDebug(nameAddress);
                     });
                     navigateTo(chooseLocationRoute);
                   },

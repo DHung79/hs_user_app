@@ -99,7 +99,6 @@ class ApiBaseHelper {
     try {
       final response = await http.delete(Uri.parse(path), headers: headers);
       apiResponse = _returnDeleteResponse<T>(response);
-      logDebug(response.headers);
     } on SocketException {
       return ApiResponse(
         null,
@@ -119,13 +118,11 @@ class ApiBaseHelper {
     // ignore: prefer_typing_uninitialized_variables
     var responseJson;
     try {
-      // logDebug('body: $body');
       final response = await http.post(
         Uri.parse(path),
         body: body,
         headers: headers,
       );
-      // logDebug(response.body.toString());
       if (response.statusCode == 200) {
         responseJson = true;
       } else {
@@ -246,7 +243,6 @@ class ApiBaseHelper {
   }
 
   ApiResponse<T> _returnResponse<T extends BaseModel>(http.Response response) {
-    logDebug(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseJson = json.decode(response.body.toString());
       if (responseJson is Map<String, dynamic>) {
@@ -291,7 +287,6 @@ class ApiBaseHelper {
 
   ApiResponse<T> _returnDeleteResponse<T extends BaseModel>(
       http.Response response) {
-    logDebug(response.statusCode);
     if (response.statusCode == 200) {
       var responseJson = json.decode(response.body);
       return ApiResponse(BaseModel.fromJson<T>(responseJson), null);

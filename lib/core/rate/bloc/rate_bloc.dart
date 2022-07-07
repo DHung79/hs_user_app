@@ -41,7 +41,6 @@ class RateBloc {
   }
 
   Future<RateModel> createRate({EditRateModel? editModel}) async {
-    logDebug('data: $editModel');
     try {
       // Await response from server.
       final data = await _repository.createRate<RateModel, EditRateModel>(
@@ -49,7 +48,6 @@ class RateBloc {
       );
       if (data.error != null) {
         // Error exist
-        logDebug('error');
         return Future.error(data.error!);
       } else {
         // Adding response data.

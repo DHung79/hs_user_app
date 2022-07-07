@@ -3,8 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hs_user_app/core/rate/model/rate_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/task_history.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/task_now.dart';
 import 'package:hs_user_app/theme/svg_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +14,8 @@ import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
+import '../pages/task_history.dart';
+import '../pages/task_now.dart';
 
 class ViewDetail extends StatefulWidget {
   const ViewDetail({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class _ViewDetailState extends State<ViewDetail> {
   List<RateModel>? _listRateModel;
   final EditRateModel _editRateModel = EditRateModel.fromModel(null);
   int? value;
-  String rate = '';
+  double rate = 0;
   final TextEditingController _controller = TextEditingController();
 
   Color getColor(Set<MaterialState> states) {
@@ -58,7 +58,6 @@ class _ViewDetailState extends State<ViewDetail> {
   @override
   void initState() {
     _editModel = taskHistoryKey.currentState?.task;
-    logDebug('_editModel: $_editModel');
     editModel = taskNowKey.currentState?.statuses;
     value = taskNowKey.currentState?.value;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
@@ -156,9 +155,19 @@ class _ViewDetailState extends State<ViewDetail> {
                         child: SizedBox(
                           width: 100,
                           height: 100,
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(_editModel?.tasker.avatar ?? ''),
+                          child: ClipOval(
+                            child: _editModel!.tasker.avatar.isNotEmpty
+                                ? Image.network(
+                                    _editModel!.tasker.avatar,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    "assets/images/logo.png",
+                                    width: 100,
+                                    height: 100,
+                                  ),
                           ),
                         ),
                       ),
@@ -272,7 +281,6 @@ class _ViewDetailState extends State<ViewDetail> {
                                       user: _listRateModel?[index]
                                               .comments
                                               .first
-                                              
                                               .description ??
                                           '',
                                       rate: _listRateModel?[index]
@@ -311,7 +319,7 @@ class _ViewDetailState extends State<ViewDetail> {
               ),
               onPressed: () {
                 setState(() {
-                  rate = 0.toString();
+                  rate = 0;
                   _controller.text = '';
                 });
                 _showMaterialDialog();
@@ -801,11 +809,19 @@ class _ViewDetailState extends State<ViewDetail> {
               SizedBox(
                 width: 80,
                 height: 80,
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      editModel?[value!].tasker.avatar ??
-                          _editModel?.tasker.avatar ??
-                          ''),
+                child: ClipOval(
+                  child: _editModel!.tasker.avatar.isNotEmpty
+                      ? Image.network(
+                          _editModel!.tasker.avatar,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          "assets/images/logo.png",
+                          width: 100,
+                          height: 100,
+                        ),
                 ),
               ),
               const SizedBox(
@@ -1127,15 +1143,16 @@ class _ViewDetailState extends State<ViewDetail> {
                           itemPadding:
                               const EdgeInsets.symmetric(horizontal: 4.0),
                           onRatingUpdate: (rating) {
+                            
                             setState(() {
-                              rate = rating.toString();
+                              rate = rating;
                             });
                           },
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),
                           child: Text(
-                            rate,
+                            rate.toString(),
                             style:
                                 AppTextTheme.normalHeaderTitle(AppColor.text1),
                           ),

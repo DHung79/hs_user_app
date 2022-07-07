@@ -63,7 +63,6 @@ class ApiHelper {
     if (token != null && token.isNotEmpty) {
       params['x-auth-token'] = token;
     }
-    logDebug(token);
     return params;
   }
   
