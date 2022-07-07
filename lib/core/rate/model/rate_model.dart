@@ -35,12 +35,12 @@ class RateModel extends BaseModel {
 class MedalModel extends BaseModel {
   final String __id;
   final String _name;
-  final _total;
+  final int _total;
 
   MedalModel.fromJson(Map<String, dynamic> json)
       : __id = json['_id'] ?? '',
         _name = json['name'] ?? '',
-        _total = json['total'] ?? null;
+        _total = json['total'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         "_id": __id,
@@ -50,13 +50,13 @@ class MedalModel extends BaseModel {
 
   String get id => __id;
   String get name => _name;
-  get total => _total;
+  int get total => _total;
 }
 
 class CommentsModel extends BaseModel {
   // final UserModel _user;
   final String _description;
-  final _rating;
+  final double _rating;
   // final String __id;
 
   CommentsModel.fromJson(Map<String, dynamic> json)
@@ -65,7 +65,9 @@ class CommentsModel extends BaseModel {
       //     key: 'user',
       //   ),
       : _description = json['description'] ?? '',
-        _rating = json['rating'] ?? null;
+        _rating = json['rating'] is int
+            ? json['rating'].toDouble()
+            : json['rating'] ?? 0;
   // __id = json['id'] ?? '';
 
   Map<String, dynamic> toJson() => {
@@ -77,7 +79,7 @@ class CommentsModel extends BaseModel {
 
   // UserModel get user => _user;
   String get description => _description;
-  get rating => _rating;
+  double get rating => _rating;
   // String get id => __id;
 }
 

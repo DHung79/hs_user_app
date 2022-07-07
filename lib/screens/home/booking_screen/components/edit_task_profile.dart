@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hs_user_app/core/service/model/service_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/task_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/authentication/auth.dart';
 import '../../../../core/service/bloc/service_bloc.dart';
-
 import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
+import '../pages/task_page.dart';
 
 final editTaskProfileKey = GlobalKey<_EditTaskProfileState>();
 

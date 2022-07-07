@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
-
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../routes/route_names.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
-import '../model/code_saleoff.dart';
+
+class CodeSaleoff {
+  final String code;
+  final String saleoff;
+
+  CodeSaleoff({required this.code, required this.saleoff});
+}
 
 class Promotion extends StatefulWidget {
   const Promotion({Key? key}) : super(key: key);

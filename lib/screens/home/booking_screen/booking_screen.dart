@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
-
+import 'package:hs_user_app/widgets/jt_indicator.dart';
 import '../../../core/user/model/user_model.dart';
 import '../../layout_template/content_screen.dart';
-import 'components/task_history.dart';
-import 'components/task_now.dart';
-import 'components/task_page.dart';
+import 'pages/task_history.dart';
+import 'pages/task_now.dart';
+import 'pages/task_page.dart';
 
 class Booking extends StatefulWidget {
   const Booking({Key? key}) : super(key: key);
@@ -22,18 +22,6 @@ class _BookingState extends State<Booking> {
       selectIndexBooking = index;
     });
   }
-
-  List booking = [
-    TaskPage(
-      key: taskPageKey,
-    ),
-    TaskNow(
-      key: taskNowKey,
-    ),
-    TaskHistory(
-      key: taskHistoryKey,
-    ),
-  ];
 
   void _onAddTask() {
     setState(() {
@@ -55,7 +43,9 @@ class _BookingState extends State<Booking> {
         future: _pageState.currentUser,
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
-            child: content(context), // child: content(context),
+            child: snapshot.hasData
+                ? buildContent(snapshot.data!)
+                : const JTIndicator(),
             pageState: _pageState,
             onFetch: () {
               _fetchDataOnPage();
@@ -66,7 +56,7 @@ class _BookingState extends State<Booking> {
     );
   }
 
-  Scaffold content(BuildContext context) {
+  Widget buildContent(UserModel user) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -143,11 +133,30 @@ class _BookingState extends State<Booking> {
           ),
         ],
       ),
-      body: booking.elementAt(selectIndexBooking),
+      body: _getPage(user),
     );
   }
 
-  Center emptyTask() {
+  Widget _getPage(UserModel user) {
+    if (selectIndexBooking == 1) {
+      return TaskNow(
+        user: user,
+        key: taskNowKey,
+      );
+    } else if (selectIndexBooking == 2) {
+      return TaskHistory(
+        user: user,
+        key: taskHistoryKey,
+      );
+    } else {
+      return TaskPage(
+        user: user,
+        key: taskPageKey,
+      );
+    }
+  }
+
+  Widget emptyTask() {
     return Center(
       // height: double.infinity,
 
@@ -179,5 +188,4 @@ class _BookingState extends State<Booking> {
   }
 }
 
-void _fetchDataOnPage() {
-}
+void _fetchDataOnPage() {}

@@ -8,10 +8,10 @@ class TasksWidget extends StatefulWidget {
   final void Function(TaskModel?)? onPressed;
   final String nameButton;
   final TaskModel? task;
-  String name = '';
-  String url;
+  final String name;
+  final String url;
 
-  TasksWidget({
+  const TasksWidget({
     Key? key,
     this.task,
     required this.name,
