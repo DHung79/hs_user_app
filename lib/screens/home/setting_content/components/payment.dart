@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
-
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/theme/svg_constants.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../layout_template/content_screen.dart';
-import '../model/cost_model.dart';
+
+class Cost {
+  final String name;
+  final String money;
+  Cost({required this.name, required this.money});
+}
 
 class Payment extends StatefulWidget {
   const Payment({Key? key}) : super(key: key);

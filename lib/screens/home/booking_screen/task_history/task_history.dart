@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/routes/route_names.dart';
+import '/routes/route_names.dart';
 import '../../../../core/task/bloc/task_bloc.dart';
 import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/user.dart';
@@ -43,30 +43,21 @@ class _TaskHistoryState extends State<TaskHistory> {
             return ListView.builder(
               itemCount: statusess.length,
               itemBuilder: (context, index) {
-                return TasksWidget(
-                  name: statusess[index].tasker.name,
-                  url: statusess[index].tasker.avatar,
-                  nameButton: 'Xem chi tiết',
-                  task: statusess[index],
-                  onPressed: (callBackTask) {
-                    setState(() {
-                      task = callBackTask;
-                      callBackTask?.startTime;
-                      callBackTask?.endTime;
-                      callBackTask?.date;
-                      callBackTask?.address;
-                      callBackTask?.note;
-                      callBackTask?.checkList;
-                      int.parse(callBackTask!.estimateTime);
-                      callBackTask.service.options.isNotEmpty
-                          ? callBackTask.service.options.first.note
-                          : '';
-                      callBackTask.service.options.isNotEmpty
-                          ? callBackTask.service.options.first.quantity
-                          : 0;
-                    });
-                    navigateTo(viewDetailRoute);
-                  },
+                final task = statusess[index];
+                final double padding = index == 0 ? 14 : 12;
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: padding,
+                    horizontal: 16,
+                  ),
+                  child: TasksWidget(
+                    tab: 2,
+                    nameButton: 'Xem chi tiết',
+                    task: task,
+                    onPressed: (task) {
+                      navigateTo(taskDetailRoute);
+                    },
+                  ),
                 );
               },
             );

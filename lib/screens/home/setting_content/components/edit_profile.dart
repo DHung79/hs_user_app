@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/home/setting_screen/components/edit_form.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
-
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/theme/svg_constants.dart';
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
+import 'edit_form.dart';
 
 class SettingEditProfile extends StatefulWidget {
   const SettingEditProfile({Key? key}) : super(key: key);
@@ -59,7 +58,7 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
     );
   }
 
-  Widget content(AsyncSnapshot<UserModel> snapshot) {  
+  Widget content(AsyncSnapshot<UserModel> snapshot) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.text2,
@@ -82,10 +81,9 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
         ),
         centerTitle: true,
       ),
-      body: EditForm(editModel:snapshot.data!),
+      body: EditForm(editModel: snapshot.data!),
     );
   }
-
 
   void _fetchDataOnPage() {
     _userBloc.getProfile();

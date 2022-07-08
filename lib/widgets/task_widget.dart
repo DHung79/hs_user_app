@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
+import '/main.dart';
+import '/theme/svg_constants.dart';
+import '/widgets/display_date_time.dart';
 import 'package:intl/intl.dart';
 import '../core/task/task.dart';
 
 class TasksWidget extends StatefulWidget {
   final void Function(TaskModel?)? onPressed;
   final String nameButton;
-  final TaskModel? task;
-  final String name;
-  final String url;
+  final TaskModel task;
+  final int tab;
 
   const TasksWidget({
     Key? key,
-    this.task,
-    required this.name,
-    required this.url,
+    required this.task,
     required this.nameButton,
     this.onPressed,
+    this.tab = 0,
   }) : super(key: key);
 
   @override
@@ -25,109 +24,170 @@ class TasksWidget extends StatefulWidget {
 }
 
 class _TasksWidgetState extends State<TasksWidget> {
+  final now = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: AppColor.text2,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.24),
-              blurStyle: BlurStyle.normal,
-              blurRadius: 10,
-              spreadRadius: 4,
-            ),
-          ],
+    final startTime = formatFromInt(
+      displayedFormat: 'hh:mm aaa',
+      value: widget.task.startTime,
+      context: context,
+    );
+    final endTime = formatFromInt(
+      displayedFormat: 'hh:mm aaa',
+      value: widget.task.endTime,
+      context: context,
+    );
+    final date = formatFromInt(
+      displayedFormat: 'E, dd/MM/yyyy',
+      value: widget.task.date,
+      context: context,
+    );
+
+    final price =
+        NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
         ),
-        child: Column(
-          children: [
-            _title(),
-            Container(
-              margin: const EdgeInsets.only(top: 12, bottom: 12),
-              color: AppColor.shade1,
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-            ),
-            _item(
-                task:
-                    '${widget.task?.estimateTime} tiếng, ${readTimestamp(widget.task!.startTime)} - ${readTimestampEnd(widget.task!.startTime)}',
-                icon: SvgIcon(
-                  SvgIcons.accessTime,
-                  size: 24,
-                  color: AppColor.shade5,
-                )),
-            _item(
-                task: readTimestamp2(widget.task!.date),
-                icon: SvgIcon(
-                  SvgIcons.calenderToday,
-                  size: 24,
-                  color: AppColor.shade5,
-                )),
-            _item(
-                task: widget.task?.address,
-                icon: SvgIcon(
-                  SvgIcons.epLocation,
-                  size: 24,
-                  color: AppColor.shade5,
-                )),
-            _item(
-                task: widget.task?.totalPrice.toString(),
-                icon: SvgIcon(
-                  SvgIcons.dollar1,
-                  size: 24,
-                  color: AppColor.shade5,
-                )),
-            const SizedBox(
-              height: 6,
-            ),
-            const Divider(
-              height: 1,
-            ),
-            widget.name != ''
-                ? _profile(name: widget.name, url: widget.url)
-                : const SizedBox(),
-            const Divider(
-              height: 1,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: TextButton(
-                onPressed: () {
-                  widget.onPressed!(widget.task);
-                },
-                child: Text(
-                  widget.nameButton,
-                  style: AppTextTheme.headerTitle(AppColor.primary2),
+        color: AppColor.text2,
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.shadow.withOpacity(0.24),
+            blurStyle: BlurStyle.normal,
+            blurRadius: 10,
+            spreadRadius: 4,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildHeader(),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: Divider(),
+          ),
+          if (widget.tab == 2 && widget.task.status == 3)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 59),
+                decoration: BoxDecoration(
+                  color: AppColor.shade2,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    side: BorderSide(
-                      width: 1,
-                      color: AppColor.primary2,
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: _contentHeader(
+                            headerTitle: 'Người hủy công việc',
+                            contentTitle: _getWhoCancelTask(),
+                          ),
+                        ),
+                        VerticalDivider(
+                          thickness: 2,
+                          color: AppColor.shade1,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: _contentHeader(
+                            headerTitle: 'Tổng tiền (VND)',
+                            contentTitle: price,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          _detailItem(
+            title: '${widget.task.estimateTime} tiếng, $startTime - $endTime',
+            icon: SvgIcon(
+              SvgIcons.accessTime,
+              size: 24,
+              color: AppColor.shade5,
+            ),
+          ),
+          _detailItem(
+            title: date,
+            icon: SvgIcon(
+              SvgIcons.calenderToday,
+              size: 24,
+              color: AppColor.shade5,
+            ),
+          ),
+          _detailItem(
+            title: widget.task.address,
+            icon: SvgIcon(
+              SvgIcons.epLocation,
+              size: 24,
+              color: AppColor.shade5,
+            ),
+          ),
+          if (widget.tab != 2 || widget.task.status == 2)
+            _detailItem(
+              title: price,
+              icon: SvgIcon(
+                SvgIcons.dollar1,
+                size: 24,
+                color: AppColor.shade5,
+              ),
+            ),
+          _taskInfoOf(widget.task),
+          TextButton(
+            onPressed: () {
+              widget.onPressed!(widget.task);
+            },
+            child: Text(
+              widget.nameButton,
+              style: AppTextTheme.headerTitle(AppColor.primary2),
+            ),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+                side: BorderSide(
+                  width: 1,
+                  color: AppColor.primary2,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _item({
-    required String? task,
+  Widget _contentHeader({
+    String? contentTitle,
+    String? headerTitle,
+  }) {
+    return Column(
+      children: [
+        Text(
+          headerTitle ?? '',
+          style: AppTextTheme.subText(AppColor.text3),
+        ),
+        Text(
+          contentTitle ?? '',
+          style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+        ),
+      ],
+    );
+  }
+
+  Widget _detailItem({
+    required String? title,
     required SvgIcon icon,
   }) {
     return Container(
@@ -140,7 +200,7 @@ class _TasksWidgetState extends State<TasksWidget> {
           ),
           Expanded(
             child: Text(
-              task ?? '',
+              title ?? '',
               style: AppTextTheme.normalText(AppColor.text1),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -151,7 +211,7 @@ class _TasksWidgetState extends State<TasksWidget> {
     );
   }
 
-  Widget _title() {
+  Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -166,7 +226,7 @@ class _TasksWidgetState extends State<TasksWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                convertToAgo(widget.task!.updatedTime),
+                timeAgoFromNow(widget.task.updatedTime, context),
                 style: AppTextTheme.normalText(AppColor.text7),
               ),
             ),
@@ -178,13 +238,10 @@ class _TasksWidgetState extends State<TasksWidget> {
           padding:
               const EdgeInsets.only(top: 4, bottom: 4, right: 12, left: 12),
           child: Text(
-            statusTask(
-              index: widget.task?.status,
-              condition: widget.task?.startTime,
-            ),
+            getStatusName(),
             style: AppTextTheme.mediumBodyText(
               colorStatus(
-                index: widget.task?.status,
+                index: widget.task.status,
               ),
             ),
           ),
@@ -193,27 +250,8 @@ class _TasksWidgetState extends State<TasksWidget> {
     );
   }
 
-  String convertToAgo(int input) {
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(input);
-
-    Duration diff = DateTime.now().difference(date);
-
-    if (diff.inDays >= 1) {
-      return 'Đã đăng ${diff.inDays} ngày trước';
-    } else if (diff.inHours >= 1) {
-      return 'Đã đăng ${diff.inHours} giờ trước';
-    } else if (diff.inMinutes >= 1) {
-      return 'Đã đăng ${diff.inMinutes} phút trước';
-    } else if (diff.inSeconds >= 1) {
-      return 'Đã đăng ${diff.inSeconds} giây trước';
-    } else {
-      return 'Vừa mới đăng';
-    }
-  }
-
   Color colorStatus({required index}) {
     Color color;
-
     if (index == 0) {
       color = AppColor.primary2;
     } else if (index == 1) {
@@ -228,77 +266,74 @@ class _TasksWidgetState extends State<TasksWidget> {
     return color;
   }
 
-  String statusTask({required index, required condition}) {
-    String text = '';
-    if (index == 0) {
-      text = 'Đang chờ nhận';
-    } else if (index == 1) {
-      if (DateTime.now().isBefore(readTimestamp3(condition))) {
-        text = 'Đã nhận';
-      } else {
-        text = 'Đang làm';
-      }
-    } else if (index == 2) {
-      text = 'Thành công';
-    } else if (index == 3) {
-      text = 'Đã bị hủy';
-    } else {
-      text = 'Lỗi';
+  String getStatusName() {
+    switch (widget.task.status) {
+      case 0:
+        return 'Đang chờ nhận';
+      case 1:
+        final date = DateTime.fromMillisecondsSinceEpoch(widget.task.date);
+        if (date.difference(now).inDays <= 0 &&
+            widget.task.startTime <= now.millisecondsSinceEpoch) {
+          return 'Đã nhận';
+        } else {
+          return 'Đang làm';
+        }
+      case 2:
+        return 'Thành công';
+      case 3:
+        return 'Đã bị hủy';
+      default:
+        return '';
     }
-    return text;
   }
 
-  Widget _profile({required String name, required String url}) {
-    return Container(
-      padding: const EdgeInsets.only(top: 12, bottom: 12),
-      child: Row(
+  String _getWhoCancelTask() {
+    final String name =
+        widget.task.tasker.isDeleted ? 'Người giúp việc' : 'Người dùng';
+    return name;
+  }
+
+  Widget _taskInfoOf(TaskModel task) {
+    final user = task.user;
+    final tasker = task.tasker;
+    final String avatar = widget.tab == 0 ? user.avatar : tasker.avatar;
+    final String name = widget.tab == 0 ? user.name : tasker.name;
+    if (name.isNotEmpty) {
+      return Column(
         children: [
-          CircleAvatar(backgroundImage: NetworkImage(url)),
-          const SizedBox(
-            width: 12,
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: Divider(),
           ),
-          Expanded(
-            child: Text(
-              name,
-              style: AppTextTheme.normalText(AppColor.text1),
-            ),
-          )
+          Row(
+            children: [
+              ClipOval(
+                child: Image.network(
+                  avatar,
+                  width: 35,
+                  height: 35,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: Text(
+                    name,
+                    style: AppTextTheme.normalText(AppColor.text1),
+                  ),
+                ),
+              )
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: Divider(),
+          ),
         ],
-      ),
-    );
-  }
-
-  String readTimestamp(int timestamp) {
-    var format = DateFormat('HH:mm');
-    var date = DateTime.fromMillisecondsSinceEpoch((timestamp));
-    var time = '';
-    time = format.format(date);
-
-    return time;
-  }
-
-  String readTimestamp2(int timestamp) {
-    var format = DateFormat('E, dd/MM/yyyy');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-    var time = '';
-    time = format.format(date);
-
-    return time;
-  }
-
-  DateTime readTimestamp3(int timestamp) {
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-
-    return date;
-  }
-
-  String readTimestampEnd(int timestamp) {
-    var format = DateFormat('HH:mm');
-    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    var time = '';
-    time = format.format(
-        date.add(Duration(hours: int.parse(widget.task?.estimateTime ?? '0'))));
-
-    return time;
+      );
+    } else {
+      return const SizedBox(height: 12);
+    }
   }
 }

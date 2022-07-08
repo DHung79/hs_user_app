@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/layout_template/content_screen.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
-
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/screens/layout_template/content_screen.dart';
+import '/theme/svg_constants.dart';
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';

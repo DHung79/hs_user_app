@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
+import '/main.dart';
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../routes/route_names.dart';
@@ -77,7 +77,7 @@ class _PromotionState extends State<Promotion> {
                       elevation: 8,
                       leading: TextButton(
                         onPressed: () {
-                          navigateTo(posttaskRoute);
+                          navigateTo(bookNewTaskRoute);
                         },
                         child: SvgIcon(
                           SvgIcons.arrowBack,

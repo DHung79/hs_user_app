@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/widgets/button_widget2.dart';
-
+import '/main.dart';
+import '/widgets/button_widget2.dart';
 import '../../../../core/task/model/task_model.dart';
 import '../../../../widgets/task_widget.dart';
 
@@ -12,8 +11,6 @@ class DialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TasksWidget(
       task: task,
-      name: '',
-      url: '',
       nameButton: 'Xem chi tiết',
       onPressed: (model) => showDialog(
         context: context,

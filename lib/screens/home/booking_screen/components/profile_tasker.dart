@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/theme/svg_constants.dart';
 
 import '../../../../core/user/model/user_model.dart';
 import '../../../layout_template/content_screen.dart';
@@ -54,7 +54,7 @@ class _ProfileTaskerState extends State<ProfileTasker> {
         ),
         leading: TextButton(
           onPressed: () {
-            navigateTo(viewDetailRoute);
+            navigateTo(taskDetailRoute);
           },
           child: SvgIcon(
             SvgIcons.arrowBack,

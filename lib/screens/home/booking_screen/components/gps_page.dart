@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
@@ -283,7 +281,7 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
                 size: 24,
               ),
               onPressed: () {
-                navigateTo(posttaskRoute);
+                navigateTo(bookNewTaskRoute);
               },
             ),
           ),

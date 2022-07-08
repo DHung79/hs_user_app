@@ -16,8 +16,8 @@ const String notificationRoute = '/notification';
 const String taskHistoryRoute = '/task-history';
 const String profileTaskersRoute = '/profile-taskers';
 
-const String posttaskRoute = '/post-task';
-const String postFastRoute = '/post-fast';
+const String bookNewTaskRoute = '/post-task';
+const String rebookTaskRoute = '/post-fast';
 const String editTaskProfileRoute = '/edit-task-profile';
 const String gpsPageRoute = '/gps-page';
 const String otpRegisterRoute = 'otp-register';
@@ -34,4 +34,4 @@ const String promotionRoute = '/promotion/';
 
 const String confirmRoute = '/confirm-page';
 const String editProfileRoute = '/edit-profile';
-const String viewDetailRoute = '/view-detail';
+const String taskDetailRoute = '/view-detail';

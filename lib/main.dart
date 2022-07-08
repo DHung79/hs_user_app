@@ -40,7 +40,6 @@ String idTask = '';
 int estimateTime = 0;
 String? currentFcmToken;
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-// Page index
 GlobalKey globalKey = GlobalKey();
 
 navigateTo(String route) async {

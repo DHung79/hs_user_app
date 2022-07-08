@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-
+import '/main.dart';
+import '/routes/route_names.dart';
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
@@ -70,7 +69,7 @@ class _EditProfileState extends State<EditProfile> {
           child: SvgIcon(SvgIcons.arrowBack),
           onPressed: () {
             if (currentRoute == editPostFastRoute) {
-              navigateTo(postFastRoute);
+              navigateTo(rebookTaskRoute);
             } else {
               navigateTo(confirmRoute);
             }
@@ -149,7 +148,7 @@ class _EditProfileState extends State<EditProfile> {
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());
         if (currentRoute == editPostFastRoute) {
-          navigateTo(postFastRoute);
+          navigateTo(rebookTaskRoute);
         } else {
           navigateTo(confirmRoute);
         }

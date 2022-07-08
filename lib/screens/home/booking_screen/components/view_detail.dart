@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hs_user_app/core/rate/model/rate_model.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
+import '/core/rate/model/rate_model.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/theme/svg_constants.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../../../core/rate/bloc/rate_bloc.dart';
 import '../../../../core/task/bloc/task_bloc.dart';
@@ -14,8 +13,6 @@ import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
-import '../pages/task_history.dart';
-import '../pages/task_now.dart';
 
 class ViewDetail extends StatefulWidget {
   const ViewDetail({Key? key}) : super(key: key);
@@ -57,9 +54,6 @@ class _ViewDetailState extends State<ViewDetail> {
   bool isChecked3 = false;
   @override
   void initState() {
-    _editModel = taskHistoryKey.currentState?.task;
-    editModel = taskNowKey.currentState?.statuses;
-    value = taskNowKey.currentState?.value;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();

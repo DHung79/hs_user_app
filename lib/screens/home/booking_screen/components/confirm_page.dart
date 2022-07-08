@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/post_task.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/screens/home/booking_screen/components/post_task.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
@@ -394,7 +394,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                 onPressed: () {
                   setState(() {
                     _mainPageProfile
-                        ? navigateTo(posttaskRoute)
+                        ? navigateTo(bookNewTaskRoute)
                         : _mainPageProfile = !_mainPageProfile;
                   });
                 },

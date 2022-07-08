@@ -30,7 +30,7 @@ class AppRoutePath {
         isUnknown = false;
 
   AppRoutePath.posttask()
-      : name = posttaskRoute,
+      : name = bookNewTaskRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.profileTasker()
@@ -59,11 +59,11 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.viewDetail()
-      : name = viewDetailRoute,
+      : name = taskDetailRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.postFast()
-      : name = postFastRoute,
+      : name = rebookTaskRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.settingProfile()
@@ -189,7 +189,7 @@ class AppRoutePath {
     if (name == profileUserRoute) {
       return AppRoutePath.profileUser();
     }
-    if (name == postFastRoute) {
+    if (name == rebookTaskRoute) {
       return AppRoutePath.postFast();
     }
     if (name == paymentRoute) {
@@ -240,7 +240,7 @@ class AppRoutePath {
     if (name == bookingRoute) {
       return AppRoutePath.booking();
     }
-    if (name == posttaskRoute) {
+    if (name == bookNewTaskRoute) {
       return AppRoutePath.posttask();
     }
     if (name == confirmRoute) {
@@ -250,7 +250,7 @@ class AppRoutePath {
       return AppRoutePath.editProfile();
     }
 
-    if (name == viewDetailRoute) {
+    if (name == taskDetailRoute) {
       return AppRoutePath.viewDetail();
     }
 

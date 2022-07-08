@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/choose_location/choose_location.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
+import '/screens/home/booking_screen/components/choose_location/choose_location.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../layout_template/content_screen.dart';
 
@@ -150,7 +150,7 @@ class _PickTypeHomeState extends State<PickTypeHome> {
                   ),
                   onPressed: () {
                     typeHome = _index;
-                    navigateTo(posttaskRoute);
+                    navigateTo(bookNewTaskRoute);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),

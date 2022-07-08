@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/routes/route_names.dart';
+import '/routes/route_names.dart';
 import '../../../../core/task/bloc/task_bloc.dart';
 import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../main.dart';
 import '../../../../widgets/task_widget.dart';
 
-final taskNowKey = GlobalKey<_TaskNowState>();
-
-class TaskNow extends StatefulWidget {
+class TaskBooked extends StatefulWidget {
   final UserModel user;
-  const TaskNow({Key? key, required this.user}) : super(key: key);
+  const TaskBooked({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
-  State<TaskNow> createState() => _TaskNowState();
+  State<TaskBooked> createState() => _TaskBookedState();
 }
 
-class _TaskNowState extends State<TaskNow> {
+class _TaskBookedState extends State<TaskBooked> {
   final _taskBloc = TaskBloc();
   int value = 0;
 
   TaskModel? task;
-  List<TaskModel> waitings = [];
-  List<TaskModel> accepteds = [];
-  List<TaskModel> inprocess = [];
-  List<TaskModel> statuses = [];
 
   @override
   void initState() {
@@ -40,34 +37,40 @@ class _TaskNowState extends State<TaskNow> {
       builder: (context, AsyncSnapshot<ApiResponse<ListTaskModel?>> snapshot) {
         if (snapshot.hasData) {
           final tasks = snapshot.data!.model!.records;
-          waitings = tasks.where((e) => e.status == 0).toList();
-
-          accepteds = tasks.where((e) {
+          final waitingTasks = tasks.where((e) => e.status == 0).toList();
+          final acceptedTasks = tasks.where((e) {
             return e.status == 1 &&
                 DateTime.now().isBefore(readTimestamp2(e.startTime));
           }).toList();
-          inprocess = tasks.where((e) {
+          final inprocessTasks = tasks.where((e) {
             return e.status == 1 &&
                 DateTime.now().isAfter(readTimestamp2(e.startTime));
           }).toList();
-          statuses = [
-            inprocess,
-            accepteds,
-            waitings,
+          final userOrders = [
+            inprocessTasks,
+            acceptedTasks,
+            waitingTasks,
           ].expand((x) => x).toList();
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: statuses.length,
+            itemCount: userOrders.length,
             itemBuilder: (context, index) {
-              return TasksWidget(
-                nameButton: 'Xem chi tiết',
-                task: statuses[index],
-                name: statuses[index].tasker.name,
-                url: statuses[index].tasker.avatar,
-                onPressed: (model) {
-                  value = index;
-                  navigateTo(viewDetailRoute);
-                },
+              final task = userOrders[index];
+              final double padding = index == 0 ? 14 : 12;
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: padding,
+                  horizontal: 16,
+                ),
+                child: TasksWidget(
+                  tab: 1,
+                  nameButton: 'Xem chi tiết',
+                  task: task,
+                  onPressed: (model) {
+                    value = index;
+                    navigateTo(taskDetailRoute);
+                  },
+                ),
               );
             },
           );

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/screens/create_password_screen/create_password_screen.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/choose_location/choose_location.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/confirm_page.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/edit_profile.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/edit_task_profile.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/pick_type_home.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/post_fast.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/post_task.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/profile_tasker.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/promotion.dart';
-import 'package:hs_user_app/screens/home/booking_screen/components/view_detail.dart';
-import 'package:hs_user_app/screens/home/setting_screen/components/edit_profile.dart';
-import 'package:hs_user_app/screens/home/setting_screen/components/payment.dart';
-import 'package:hs_user_app/screens/home/setting_screen/components/profile_screen.dart';
-import 'package:hs_user_app/screens/home/setting_screen/components/setting_change_password.dart';
-import 'package:hs_user_app/screens/home_screen/home_screen.dart';
-import 'package:hs_user_app/screens/notification_screen/notification_screen.dart';
-import 'package:hs_user_app/screens/otp_screen/otp_screen.dart';
-import 'package:hs_user_app/screens/register_screen/register_screen.dart';
-import 'package:hs_user_app/screens/reset_password_screen/reset_password_screen.dart';
+import '/screens/create_password_screen/create_password_screen.dart';
+import '/screens/home/booking_screen/booking_screen.dart';
+import '/screens/home/booking_screen/components/choose_location/choose_location.dart';
+import '/screens/home/booking_screen/components/confirm_page.dart';
+import '/screens/home/booking_screen/components/edit_profile.dart';
+import '/screens/home/booking_screen/components/edit_task_profile.dart';
+import '/screens/home/booking_screen/components/pick_type_home.dart';
+import '/screens/home/booking_screen/components/post_fast.dart';
+import '/screens/home/booking_screen/components/post_task.dart';
+import '/screens/home/booking_screen/components/profile_tasker.dart';
+import '/screens/home/booking_screen/components/promotion.dart';
+import '/screens/home/booking_screen/components/view_detail.dart';
+import '/screens/home_screen/home_screen.dart';
+import '/screens/notification_screen/notification_screen.dart';
+import '/screens/otp_screen/otp_screen.dart';
+import '/screens/register_screen/register_screen.dart';
+import '/screens/reset_password_screen/reset_password_screen.dart';
 import '../screens/home/booking_screen/components/gps_page.dart';
+import '../screens/home/setting_content/components/edit_profile.dart';
+import '../screens/home/setting_content/components/payment.dart';
+import '../screens/home/setting_content/components/profile_screen.dart';
+import '../screens/home/setting_content/components/setting_change_password.dart';
 import '/screens/forgot_password_screen/forgot_password_screen.dart';
 import '/screens/onboarding/authentication_screen.dart';
 import '../screens/not_found/page_not_found_screen.dart';
@@ -81,7 +82,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == bookingRoute) {
       return const HomeScreen();
     }
-    if (route == posttaskRoute) {
+    if (route == bookNewTaskRoute) {
       return PostTask(key: postTaskKey);
     }
     if (route == promotionRoute) {
@@ -90,11 +91,14 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == editTaskProfileRoute) {
       return const EditTaskProfile();
     }
-    if (route == postFastRoute) {
-      return PostFast(
-        key: postFastKey,
-      );
+    if (route == rebookTaskRoute) {
+      if (route.length > rebookTaskRoute.length) {
+        final id = route.substring(rebookTaskRoute.length + 1, route.length);
+        if (id.isNotEmpty) return QuickBook(taskId: id);
+      }
+      return const BookingContent();
     }
+
     if (route == paymentRoute) {
       return const Payment();
     }
@@ -138,7 +142,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == editPostFastRoute) {
       return const EditProfile();
     }
-    if (route == viewDetailRoute) {
+    if (route == taskDetailRoute) {
       return const ViewDetail();
     }
 
@@ -170,19 +174,6 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         key: pickTypeHomeKey,
       );
     }
-    // if (route == roleRoute) {
-    //   return const UserManagementScreen(tab: 1);
-    // }
-    // if (route == createRoleRoute) {
-    //   return const UserManagementScreen();
-    // }
-    // if (route.startsWith(editRoleRoute)) {
-    //   if (route.length > editRoleRoute.length) {
-    //     final id = route.substring(editRoleRoute.length + 1, route.length);
-    //     if (id.isNotEmpty) return UserManagementScreen(id: id);
-    //   }
-    //   return const UserManagementScreen(tab: 1);
-    // }
 
     return PageNotFoundScreen(route);
   }

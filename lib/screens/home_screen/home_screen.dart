@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/screens/layout_template/content_screen.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
+import '/main.dart';
+import '/screens/layout_template/content_screen.dart';
+import '/theme/svg_constants.dart';
+import '/widgets/jt_indicator.dart';
 import '../../core/user/model/user_model.dart';
 import '../home/booking_screen/booking_screen.dart';
 import '../home/home_content_screen/home_content_screen.dart';
-import '../home/setting_screen/setting_screen.dart';
+import '../home/setting_content/setting_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final int homeTab;
+  final int bookingTab;
+  const HomeScreen({
+    Key? key,
+    this.homeTab = 0,
+    this.bookingTab = 0,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,11 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool backHome = true;
   final PageState _pageState = PageState();
-  final List<Widget> _widgetOptions = <Widget>[
-    const HomeContent(),
-    const Booking(),
-    const SettingScreen(),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -50,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
           future: _pageState.currentUser,
           builder: (context, AsyncSnapshot<UserModel> snapshot) {
             return PageContent(
-              child: content(), // child: content(context),
+              child: snapshot.hasData
+                  ? buildContent(snapshot.data!)
+                  : const JTIndicator(),
               pageState: _pageState,
               onFetch: () {
                 _fetchDataOnPage();
@@ -62,10 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Scaffold content() {
+  Widget buildContent(UserModel user) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: _widgetOptions.elementAt(homePageIndex),
+      body: _getContent(user),
       bottomNavigationBar: Container(
         height: 100,
         padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
@@ -77,8 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Container(
           decoration: const BoxDecoration(
-            borderRadius:
-                BorderRadius.vertical(top: Radius.circular(20.0)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,8 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   name: 'Trang chủ',
                   activeColor: AppColor.primary1,
                   isActive: homePageIndex == 0,
-                  paddingActiveColor: AppColor.shade3
-              ),
+                  paddingActiveColor: AppColor.shade3),
               navigaButton(
                 onPressed: () {
                   _onItemTapped(1);
@@ -120,13 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget navigaButton(
-      {required void Function()? onPressed,
-      required SvgIconData icon,
-      required String name,
-      required bool isActive,
-      required Color activeColor,
-      required Color paddingActiveColor}) {
+  Widget navigaButton({
+    required void Function()? onPressed,
+    required SvgIconData icon,
+    required String name,
+    required bool isActive,
+    required Color activeColor,
+    required Color paddingActiveColor,
+  }) {
     final _color = isActive ? activeColor : AppColor.text3;
     final _colorText = isActive ? activeColor : AppColor.text7;
 
@@ -165,6 +168,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
 
-void _fetchDataOnPage() {}
+  Widget _getContent(UserModel user) {
+    if (homePageIndex == 1) {
+      return BookingContent(tab: widget.bookingTab);
+    } else if (homePageIndex == 2) {
+      return const SettingContent();
+    } else {
+      return const HomeContent();
+    }
+  }
+
+  _fetchDataOnPage() {}
+}

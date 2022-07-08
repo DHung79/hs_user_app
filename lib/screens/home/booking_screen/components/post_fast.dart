@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/core/service/model/service_model.dart';
-import 'package:hs_user_app/core/task/task.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
+import '/core/service/model/service_model.dart';
+import '/core/task/task.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/authentication/auth.dart';
@@ -14,18 +14,21 @@ import '../../../../theme/validator_text.dart';
 import '../../../../widgets/button_widget2.dart';
 import '../../../../widgets/jt_toast.dart';
 import '../../../layout_template/content_screen.dart';
-import '../pages/task_page.dart';
 
-final postFastKey = GlobalKey<_PostFastState>();
+final postFastKey = GlobalKey<_QuickBookState>();
 
-class PostFast extends StatefulWidget {
-  const PostFast({Key? key}) : super(key: key);
+class QuickBook extends StatefulWidget {
+  final String taskId;
+  const QuickBook({
+    Key? key,
+    required this.taskId,
+  }) : super(key: key);
 
   @override
-  State<PostFast> createState() => _PostFastState();
+  State<QuickBook> createState() => _QuickBookState();
 }
 
-class _PostFastState extends State<PostFast> {
+class _QuickBookState extends State<QuickBook> {
   final PageState _pageState = PageState();
   int valueWeek = 0;
   int value = 0;
@@ -98,7 +101,6 @@ class _PostFastState extends State<PostFast> {
 
   @override
   void initState() {
-    editModel = EditTaskModel.fromModel(taskPageKey.currentState?.task);
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -966,7 +968,7 @@ class _PostFastState extends State<PostFast> {
     editModel?.endTime =
         DateTime.fromMillisecondsSinceEpoch(editModel!.startTime)
             .add(Duration(hours: int.parse(editModel!.estimateTime)))
-            .millisecondsSinceEpoch; 
+            .millisecondsSinceEpoch;
 
     _taskBloc.editTask(editModel: editModel).then(
       (value) async {

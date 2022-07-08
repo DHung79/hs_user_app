@@ -1,191 +1,147 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/widgets/jt_indicator.dart';
-import '../../../core/user/model/user_model.dart';
-import '../../layout_template/content_screen.dart';
-import 'pages/task_history.dart';
-import 'pages/task_now.dart';
-import 'pages/task_page.dart';
+import '../../../core/user/user.dart';
+import '/main.dart';
+import '/widgets/jt_indicator.dart';
+import 'book_task/book_task.dart';
+import 'task_history/task_history.dart';
+import 'task_booked/task_booked.dart';
 
-class Booking extends StatefulWidget {
-  const Booking({Key? key}) : super(key: key);
+class BookingContent extends StatefulWidget {
+  final int tab;
+  const BookingContent({
+    Key? key,
+    this.tab = 0,
+  }) : super(key: key);
 
   @override
-  State<Booking> createState() => _BookingState();
+  State<BookingContent> createState() => _BookingContentState();
 }
 
-class _BookingState extends State<Booking> {
-  final PageState _pageState = PageState();
-  bool add = false;
-  void _onItemTapped(int index) {
-    setState(() {
-      selectIndexBooking = index;
-    });
+class _BookingContentState extends State<BookingContent> {
+  final _userBloc = UserBloc();
+  late int _currentTab;
+  @override
+  void initState() {
+    _currentTab = widget.tab;
+    super.initState();
   }
 
-  void _onAddTask() {
-    setState(() {
-      add = !add;
-    });
+  @override
+  void dispose() {
+    _userBloc.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return PageTemplate(
-      pageState: _pageState,
-      onUserFetched: (user) => setState(() {}),
-      onFetch: () {
-        _fetchDataOnPage();
-      },
-      appBarHeight: 0,
-      child: FutureBuilder(
-        future: _pageState.currentUser,
-        builder: (context, AsyncSnapshot<UserModel> snapshot) {
-          return PageContent(
-            child: snapshot.hasData
-                ? buildContent(snapshot.data!)
-                : const JTIndicator(),
-            pageState: _pageState,
-            onFetch: () {
-              _fetchDataOnPage();
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget buildContent(UserModel user) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 16,
-        shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
-        backgroundColor: Colors.white,
-        actions: [
-          Container(
-            width: MediaQuery.of(context).size.width / 3,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    color: selectIndexBooking == 0
-                        ? AppColor.primary1
-                        : Colors.transparent,
-                    width: 4),
-              ),
-            ),
-            child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.white),
-                onPressed: () {
-                  _onItemTapped(0);
-                },
-                child: Text(
-                  'Đăng việc',
-                  style: selectIndexBooking == 0
-                      ? AppTextTheme.normalText(AppColor.primary1)
-                      : AppTextTheme.normalText(AppColor.text3),
-                )),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 3,
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: selectIndexBooking == 1
-                            ? AppColor.primary1
-                            : Colors.transparent,
-                        width: 4))),
-            child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.white),
-                onPressed: () {
-                  _onItemTapped(1);
-                },
-                child: Text(
-                  'Hiện tại',
-                  style: selectIndexBooking == 1
-                      ? AppTextTheme.normalText(AppColor.primary1)
-                      : AppTextTheme.normalText(AppColor.text3),
-                )),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 3,
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: selectIndexBooking == 2
-                            ? AppColor.primary1
-                            : Colors.transparent,
-                        width: 4))),
-            child: TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.white,
+    final screenSize = MediaQuery.of(context).size;
+    return StreamBuilder(
+        stream: _userBloc.getProfile().asStream(),
+        builder: (context, AsyncSnapshot<UserModel?> snapshot) {
+          if (snapshot.hasData) {
+            final user = snapshot.data!;
+            return Column(
+              children: [
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColor.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.shadow.withOpacity(0.16),
+                        blurRadius: 16,
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildHeaderItem(
+                        title: 'Đăng việc',
+                        isActive: _currentTab == 0,
+                        onPressed: () {
+                          setState(() {
+                            _currentTab = 0;
+                          });
+                        },
+                      ),
+                      _buildHeaderItem(
+                        title: 'Hiện tại',
+                        isActive: _currentTab == 1,
+                        onPressed: () {
+                          setState(() {
+                            _currentTab = 1;
+                          });
+                        },
+                      ),
+                      _buildHeaderItem(
+                        title: 'Lịch sử',
+                        isActive: _currentTab == 2,
+                        onPressed: () {
+                          setState(() {
+                            _currentTab = 2;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  _onItemTapped(2);
-                },
-                child: Text(
-                  'Lịch sử',
-                  style: selectIndexBooking == 2
-                      ? AppTextTheme.normalText(AppColor.primary1)
-                      : AppTextTheme.normalText(AppColor.text3),
-                )),
+                SizedBox(
+                  height: screenSize.height - 150 - 24,
+                  child: _getContent(user),
+                ),
+              ],
+            );
+          }
+          return const JTIndicator();
+        });
+  }
+
+  Widget _buildHeaderItem({
+    required String title,
+    required bool isActive,
+    required void Function()? onPressed,
+  }) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: isActive ? AppColor.primary1 : Colors.transparent,
+              width: 4,
+            ),
           ),
-        ],
+        ),
+        child: TextButton(
+          style: TextButton.styleFrom(backgroundColor: Colors.white),
+          onPressed: onPressed,
+          child: Text(
+            title,
+            style: isActive
+                ? AppTextTheme.normalText(AppColor.primary1)
+                : AppTextTheme.normalText(AppColor.text3),
+          ),
+        ),
       ),
-      body: _getPage(user),
     );
   }
 
-  Widget _getPage(UserModel user) {
-    if (selectIndexBooking == 1) {
-      return TaskNow(
+  Widget _getContent(UserModel user) {
+    if (_currentTab == 1) {
+      return TaskBooked(
         user: user,
-        key: taskNowKey,
       );
-    } else if (selectIndexBooking == 2) {
+    } else if (_currentTab == 2) {
       return TaskHistory(
         user: user,
-        key: taskHistoryKey,
       );
     } else {
-      return TaskPage(
+      return BookTask(
         user: user,
-        key: taskPageKey,
       );
     }
   }
-
-  Widget emptyTask() {
-    return Center(
-      // height: double.infinity,
-
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset('assets/images/logodemo.png'),
-          const SizedBox(
-            height: 32,
-          ),
-          SizedBox(
-            width: 161.0,
-            height: 52.0,
-            child: TextButton(
-              child: Text(
-                'Đăng việc ngay',
-                style: AppTextTheme.headerTitle(AppColor.text2),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(AppColor.primary2),
-              ),
-              onPressed: _onAddTask,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
-
-void _fetchDataOnPage() {}

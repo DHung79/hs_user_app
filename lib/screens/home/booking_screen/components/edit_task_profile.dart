@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/core/service/model/service_model.dart';
-import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
+import '/core/service/model/service_model.dart';
+import '/main.dart';
+import '/routes/route_names.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/authentication/auth.dart';
 import '../../../../core/service/bloc/service_bloc.dart';
@@ -9,7 +9,6 @@ import '../../../../core/task/model/task_model.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../theme/svg_constants.dart';
 import '../../../layout_template/content_screen.dart';
-import '../pages/task_page.dart';
 
 final editTaskProfileKey = GlobalKey<_EditTaskProfileState>();
 
@@ -91,7 +90,6 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
 
   @override
   void initState() {
-    editModel = EditTaskModel.fromModel(taskPageKey.currentState?.task);
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     super.initState();
@@ -133,7 +131,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         leading: BackButton(
             color: AppColor.text1,
             onPressed: () {
-              navigateTo(postFastRoute);
+              navigateTo(rebookTaskRoute);
             }),
         title: Text(
           'Chỉnh sửa thông tin công việc',
@@ -317,7 +315,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
                               );
                             });
                       } else {
-                        navigateTo(postFastRoute);
+                        navigateTo(rebookTaskRoute);
                         quantity = listOptions![0].options[0].quantity;
                         name = listOptions![0].options[0].name;
                         note = listOptions![0].options[0].note;

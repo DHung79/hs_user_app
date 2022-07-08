@@ -5,7 +5,7 @@ import '../../rest/models/rest_api_response.dart';
 
 class TaskModel extends BaseModel {
   final LocationGpsModel _locationGps;
-  final UserModel _postedUser;
+  final UserModel _user;
   final TaskerModel _tasker;
   final ServiceModel _service;
   final String __id;
@@ -30,7 +30,7 @@ class TaskModel extends BaseModel {
           json: json,
           key: 'locationGps',
         ),
-        _postedUser = BaseModel.map<UserModel>(
+        _user = BaseModel.map<UserModel>(
           json: json,
           key: 'posted_user',
         ),
@@ -65,7 +65,7 @@ class TaskModel extends BaseModel {
 
   Map<String, dynamic> toJson() => {
         'location_gps': _locationGps.toJson(),
-        'posted_user': _postedUser.toJson(),
+        'posted_user': _user.toJson(),
         'tasker': _tasker.toJson(),
         'service': _service.toJson(),
         '_id': __id,
@@ -87,7 +87,7 @@ class TaskModel extends BaseModel {
       };
 
   LocationGpsModel get locationGps => _locationGps;
-  UserModel get postedUser => _postedUser;
+  UserModel get user => _user;
   TaskerModel get tasker => _tasker;
   ServiceModel get service => _service;
   String get id => __id;
