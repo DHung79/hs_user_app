@@ -8,10 +8,10 @@ class TasksWidget extends StatefulWidget {
   final void Function(TaskModel?)? onPressed;
   final String nameButton;
   final TaskModel? task;
-  String name = '';
-  String url;
+  final String name;
+  final String url;
 
-  TasksWidget({
+  const TasksWidget({
     Key? key,
     this.task,
     required this.name,
@@ -52,6 +52,52 @@ class _TasksWidgetState extends State<TasksWidget> {
               height: 1,
               width: MediaQuery.of(context).size.width,
             ),
+            if (widget.task?.status == 3)
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColor.shade2,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'Người hủy công việc',
+                          style: AppTextTheme.subText(AppColor.text3),
+                        ),
+                        Text(
+                          'Tasker',
+                          style:
+                              AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+                        )
+                      ],
+                    ),
+                    Container(
+                      width: 2,
+                      color: AppColor.shade1,
+                      height: 35,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Tổng số tiền nhận',
+                          style: AppTextTheme.subText(AppColor.text3),
+                        ),
+                        Text(
+                          '${NumberFormat.decimalPattern(
+                            'vi_vn',
+                          ).format(widget.task?.totalPrice)} VND',
+                          style:
+                              AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             _item(
                 task:
                     '${widget.task?.estimateTime} tiếng, ${readTimestamp(widget.task!.startTime)} - ${readTimestampEnd(widget.task!.startTime)}',
@@ -74,13 +120,16 @@ class _TasksWidgetState extends State<TasksWidget> {
                   size: 24,
                   color: AppColor.shade5,
                 )),
-            _item(
-                task: widget.task?.totalPrice.toString(),
-                icon: SvgIcon(
-                  SvgIcons.dollar1,
-                  size: 24,
-                  color: AppColor.shade5,
-                )),
+            widget.task?.status == 3
+                ? const SizedBox()
+                : _item(
+                    task: NumberFormat.decimalPattern('vi_vn')
+                        .format(widget.task?.totalPrice),
+                    icon: SvgIcon(
+                      SvgIcons.dollar1,
+                      size: 24,
+                      color: AppColor.shade5,
+                    )),
             const SizedBox(
               height: 6,
             ),
@@ -166,7 +215,9 @@ class _TasksWidgetState extends State<TasksWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                convertToAgo(widget.task!.updatedTime),
+                widget.task!.createdTime < widget.task!.updatedTime
+                    ? convertToAgo(widget.task!.updatedTime)
+                    : convertToAgo(widget.task!.createdTime),
                 style: AppTextTheme.normalText(AppColor.text7),
               ),
             ),

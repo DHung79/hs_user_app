@@ -59,7 +59,7 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
     );
   }
 
-  Widget content(AsyncSnapshot<UserModel> snapshot) {  
+  Widget content(AsyncSnapshot<UserModel> snapshot) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColor.text2,
@@ -82,10 +82,11 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
         ),
         centerTitle: true,
       ),
-      body: EditForm(editModel:snapshot.data!),
+      body: EditForm(
+        editModel: snapshot.data!,
+      ),
     );
   }
-
 
   void _fetchDataOnPage() {
     _userBloc.getProfile();

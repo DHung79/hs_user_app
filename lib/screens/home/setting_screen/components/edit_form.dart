@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +26,7 @@ class _EditFormState extends State<EditForm> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
   final List<UploadImage> _images = [];
+  bool _showKeyboard = false;
 
   // Implementing the image picker
 
@@ -37,20 +37,29 @@ class _EditFormState extends State<EditForm> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _key,
-          autovalidateMode: _autovalidate,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _key,
+        autovalidateMode: _autovalidate,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: ListView(
             children: [
               avatar(),
               inputField(),
               confirmbutton(),
+              _showKeyboard
+                  ? const SizedBox(
+                      height: 300,
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),
@@ -62,6 +71,9 @@ class _EditFormState extends State<EditForm> {
     return Column(
       children: [
         formprofile(
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(50),
+          ],
           initialValue: _editModel.name,
           color: AppColor.text3,
           name: 'Tên hiển thị',
@@ -87,6 +99,9 @@ class _EditFormState extends State<EditForm> {
           children: [
             Expanded(
               child: formprofile(
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                ],
                 keyboardType: TextInputType.number,
                 initialValue: _editModel.phoneNumber,
                 color: AppColor.text3,
@@ -106,7 +121,12 @@ class _EditFormState extends State<EditForm> {
                     return ValidatorText.empty(
                         fieldName: ScreenUtil.t(I18nKey.phoneNumber)!);
                   }
-                  return null;
+                  if (isPhoneNoValid(value)) {
+                    return null;
+                  } else {
+                    return ValidatorText.invalidFormat(
+                        fieldName: ScreenUtil.t(I18nKey.phoneNumber)!);
+                  }
                 },
               ),
             ),
@@ -151,6 +171,9 @@ class _EditFormState extends State<EditForm> {
         formprofile(
           initialValue: _editModel.address,
           color: AppColor.text3,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(300),
+          ],
           name: 'Địa chỉ',
           onSaved: (value) {
             _editModel.address = value!.trim();
@@ -163,15 +186,21 @@ class _EditFormState extends State<EditForm> {
             });
           },
           validator: (value) {
-            if (value!.isEmpty || value.trim().isEmpty) {
-              return ValidatorText.empty(
-                  fieldName: ScreenUtil.t(I18nKey.address)!);
+            if (value!.length < 5) {
+              return ValidatorText.atLeast(
+                  fieldName: ScreenUtil.t(I18nKey.address)!, atLeast: 5);
             }
             return null;
           },
         ),
       ],
     );
+  }
+
+  bool isPhoneNoValid(String? phoneNo) {
+    if (phoneNo == null) return false;
+    final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+    return regExp.hasMatch(phoneNo);
   }
 
   Padding avatar() {
@@ -302,6 +331,8 @@ class _EditFormState extends State<EditForm> {
       {required String name,
       required Color color,
       String? initialValue,
+      int? maxLength,
+      FocusNode? focusNode,
       void Function(String?)? onSaved,
       void Function(String)? onChanged,
       String? Function(String?)? validator,
@@ -320,12 +351,24 @@ class _EditFormState extends State<EditForm> {
             constraints: const BoxConstraints(minHeight: 50),
             margin: const EdgeInsets.only(top: 8.0),
             child: TextFormField(
+              onTap: () {
+                if (FocusScope.of(context).hasFocus) {
+                  setState(() {
+                    _showKeyboard = true;
+                  });
+                } else {
+                  setState(() {
+                    _showKeyboard = false;
+                  });
+                }
+              },
+              focusNode: focusNode,
+              inputFormatters: inputFormatters,
               keyboardType: keyboardType,
               onSaved: onSaved,
               onChanged: onChanged,
               validator: validator,
               initialValue: initialValue,
-              inputFormatters: inputFormatters,
               style: AppTextTheme.normalText(AppColor.text7),
               decoration: InputDecoration(
                 hintStyle: AppTextTheme.normalText(AppColor.text7),

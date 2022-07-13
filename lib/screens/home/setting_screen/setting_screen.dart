@@ -146,38 +146,39 @@ class _SettingScreenState extends State<SettingScreen> {
                           style: AppTextTheme.mediumBodyText(AppColor.nameText),
                         ),
                       ),
-                      SizedBox(
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: const Size(24, 24),
-                            padding: EdgeInsets.zero,
-                          ),
-                          onPressed: () {
-                            navigateTo(settingProfileRoute);
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: Text(
-                                  'Xem hồ sơ',
-                                  style: AppTextTheme.normalText(
-                                      AppColor.primary2),
-                                ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: const Size(0, 0),
+                          padding: EdgeInsets.zero,
+                          splashFactory: NoSplash.splashFactory,
+                          primary: AppColor.text2,
+
+                        ),
+                        onPressed: () {
+                          navigateTo(settingProfileRoute);
+                        },
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Text(
+                                'Xem hồ sơ',
+                                style:
+                                    AppTextTheme.normalText(AppColor.primary2),
                               ),
-                              Transform(
-                                alignment: FractionalOffset.center,
-                                transform: Matrix4.identity()
-                                  ..rotateZ(180 * 3.1415927 / 180),
-                                child: SvgIcon(
-                                  SvgIcons.arrowBack,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
+                            ),
+                            Transform(
+                              alignment: FractionalOffset.center,
+                              transform: Matrix4.identity()
+                                ..rotateZ(180 * 3.1415927 / 180),
+                              child: SvgIcon(
+                                SvgIcons.arrowBack,
+                                color: AppColor.primary2,
+                                size: 24,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

@@ -224,7 +224,7 @@ class _HomeContentState extends State<HomeContent> {
             height: 4,
           ),
           Text(
-            'Đã 5 ngày tồi bạn chưa dọn dẹp',
+            'Đã 5 ngày rồi bạn chưa dọn dẹp',
             style: AppTextTheme.normalText(AppColor.text8),
           ),
           const SizedBox(
