@@ -24,6 +24,7 @@ class TaskModel extends BaseModel {
   final int _totalPrice;
   final List<CheckListModel> _checkList = [];
   final String _addressTitle;
+  final OptionModel _selectedOption;
 
   TaskModel.fromJson(Map<String, dynamic> json)
       : _locationGps = BaseModel.map<LocationGpsModel>(
@@ -41,6 +42,10 @@ class TaskModel extends BaseModel {
         _service = BaseModel.map<ServiceModel>(
           json: json,
           key: 'service',
+        ),
+        _selectedOption = BaseModel.map<OptionModel>(
+          json: json,
+          key: 'selected_option',
         ),
         __id = json['_id'] ?? '',
         _address = json['address'] ?? '',
@@ -84,6 +89,7 @@ class TaskModel extends BaseModel {
         'total_price': _totalPrice,
         'check_list': _checkList,
         'address_title': _addressTitle,
+        'selected_option': _selectedOption.toJson(),
       };
 
   LocationGpsModel get locationGps => _locationGps;
@@ -106,11 +112,12 @@ class TaskModel extends BaseModel {
   int get totalPrice => _totalPrice;
   List<CheckListModel> get checkList => _checkList;
   String get addressTitle => _addressTitle;
+  OptionModel get selectedOption => _selectedOption;
 }
 
 class EditTaskModel extends EditBaseModel {
-  LocationGpsModel? locationGps = LocationGpsModel.fromJson({});
-  ServiceModel? service = ServiceModel.fromJson({});
+  LocationGpsModel? locationGps;
+  ServiceModel? service;
   List<CheckListModel> checkList = [];
   String address = '';
   String estimateTime = '';
@@ -122,6 +129,7 @@ class EditTaskModel extends EditBaseModel {
   int typeHome = 0;
   int totalPrice = 0;
   String addressTitle = '';
+  OptionModel? selectedOption;
 
   EditTaskModel.fromModel(TaskModel? model) {
     locationGps = model?.locationGps;
@@ -137,6 +145,7 @@ class EditTaskModel extends EditBaseModel {
     totalPrice = model?.totalPrice ?? 0;
     checkList = model?.checkList ?? [];
     addressTitle = model?.addressTitle ?? '';
+    selectedOption = model?.selectedOption;
   }
 
   Map<String, dynamic> toCreateJson() {
@@ -152,8 +161,9 @@ class EditTaskModel extends EditBaseModel {
       'status': status,
       'type_home': typeHome,
       'totalPrice': totalPrice,
-      'check_list': checkList,
+      'check_list': checkList.map((e) => e.toJson()).toList(),
       'address_title': addressTitle,
+      'selected_option': selectedOption!.toJson(),
     };
     return params;
   }
@@ -173,6 +183,7 @@ class EditTaskModel extends EditBaseModel {
       'total_price': totalPrice,
       'check_list': checkList,
       'address_title': addressTitle,
+      'selected_option': selectedOption!.toJson(),
     };
     return params;
   }
@@ -305,95 +316,6 @@ class TaskerModel extends BaseModel {
   int get deleteTime => _deleteTime;
   bool get isDeleted => _isDeleted;
   String get avatar => _avatar;
-}
-
-// class ServiceModel extends BaseModel {
-//   final String __id;
-//   final List<TranslationModel> _translations = [];
-//   final String _name;
-//   final List<OptionModel> _option = [];
-//   final List<AddServiceModel> _addService = [];
-
-//   ServiceModel.fromJson(Map<String, dynamic> json)
-//       : __id = json['_id'] ?? '',
-//         _name = json['name'] ?? '' {
-//     _translations.addAll(BaseModel.mapList<TranslationModel>(
-//       json: json,
-//       key: 'translation',
-//     ));
-//     _option.addAll(BaseModel.mapList<OptionModel>(
-//       json: json,
-//       key: 'option',
-//     ));
-//     _addService.addAll(BaseModel.mapList<AddServiceModel>(
-//       json: json,
-//       key: 'addService',
-//     ));
-//   }
-
-//   Map<String, dynamic> toJson() => {
-//         '_id': __id,
-//         'translation': _translations.map((e) => e.toJson()).toList(),
-//         'name': _name,
-//         'option': _option.map((e) => e.toJson()).toList(),
-//         'addService': _addService.map((e) => e.toJson()).toList(),
-//       };
-
-//   String get id => __id;
-//   List get translation => _translations;
-//   String get name => _name;
-//   List get option => _option;
-//   List get addService => _addService;
-// }
-
-// class TranslationModel extends BaseModel {
-//   final String _language;
-//   final String _name;
-//   final String __id;
-
-//   TranslationModel.fromJson(Map<String, dynamic> json)
-//       : _language = json['language'] ?? '',
-//         _name = json['name'] ?? '',
-//         __id = json['_id'] ?? '';
-
-//   Map<String, dynamic> toJson() => {
-//         'language': _language,
-//         'name': _name,
-//         '_id': __id,
-//       };
-
-//   String get language => _language;
-//   String get name => _name;
-//   String get id => __id;
-// }
-
-class OptionModel extends BaseModel {
-  final String _name;
-  final int _price;
-  final int _quantity;
-  final String _note;
-  final String __id;
-
-  OptionModel.fromJson(Map<String, dynamic> json)
-      : _name = json['name'] ?? '',
-        _price = json['price'] ?? 0,
-        _quantity = json['quantity'] ?? 0,
-        _note = json['note'] ?? '',
-        __id = json['id'] ?? '';
-
-  Map<String, dynamic> toJson() => {
-        'name': _name,
-        'price': _price,
-        'quantity': _quantity,
-        'note': _note,
-        '_id': __id,
-      };
-
-  String get name => _name;
-  int get price => _price;
-  int get quantity => _quantity;
-  String get note => _note;
-  String get id => __id;
 }
 
 class AddServiceModel extends BaseModel {

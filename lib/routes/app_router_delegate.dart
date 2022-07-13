@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/screens/home/components/booking_content/rebook_task/rebook_task_screen.dart';
+import '../screens/home/components/booking_content/components/choose_location/choose_location.dart';
+import '../screens/home/components/booking_content/components/confirm_page.dart';
+import '../screens/home/components/booking_content/components/edit_profile.dart';
+import '../screens/home/components/booking_content/components/edit_task_profile.dart';
+import '../screens/home/components/booking_content/components/gps_page.dart';
+import '../screens/home/components/booking_content/components/pick_type_home.dart';
+
+import '../screens/home/components/booking_content/components/post_task.dart';
+import '../screens/home/components/booking_content/components/profile_tasker.dart';
+import '../screens/home/components/booking_content/components/promotion.dart';
+import '../screens/home/components/booking_content/components/view_detail.dart';
+import '../screens/home/components/setting_content/components/edit_profile.dart';
+import '../screens/home/components/setting_content/components/payment.dart';
+import '../screens/home/components/setting_content/components/profile_screen.dart';
+import '../screens/home/components/setting_content/components/setting_change_password.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
-import '/screens/home/booking_screen/booking_screen.dart';
-import '/screens/home/booking_screen/components/choose_location/choose_location.dart';
-import '/screens/home/booking_screen/components/confirm_page.dart';
-import '/screens/home/booking_screen/components/edit_profile.dart';
-import '/screens/home/booking_screen/components/edit_task_profile.dart';
-import '/screens/home/booking_screen/components/pick_type_home.dart';
-import '/screens/home/booking_screen/components/post_fast.dart';
-import '/screens/home/booking_screen/components/post_task.dart';
-import '/screens/home/booking_screen/components/profile_tasker.dart';
-import '/screens/home/booking_screen/components/promotion.dart';
-import '/screens/home/booking_screen/components/view_detail.dart';
-import '/screens/home_screen/home_screen.dart';
+import '../screens/home/home_screen.dart';
 import '/screens/notification_screen/notification_screen.dart';
 import '/screens/otp_screen/otp_screen.dart';
 import '/screens/register_screen/register_screen.dart';
 import '/screens/reset_password_screen/reset_password_screen.dart';
-import '../screens/home/booking_screen/components/gps_page.dart';
-import '../screens/home/setting_content/components/edit_profile.dart';
-import '../screens/home/setting_content/components/payment.dart';
-import '../screens/home/setting_content/components/profile_screen.dart';
-import '../screens/home/setting_content/components/setting_change_password.dart';
 import '/screens/forgot_password_screen/forgot_password_screen.dart';
 import '/screens/onboarding/authentication_screen.dart';
 import '../screens/not_found/page_not_found_screen.dart';
@@ -80,7 +80,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     }
 
     if (route == bookingRoute) {
-      return const HomeScreen();
+      return const HomeScreen(homeTab: 1);
     }
     if (route == bookNewTaskRoute) {
       return PostTask(key: postTaskKey);
@@ -91,12 +91,12 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == editTaskProfileRoute) {
       return const EditTaskProfile();
     }
-    if (route == rebookTaskRoute) {
+    if (route.startsWith(rebookTaskRoute)) {
       if (route.length > rebookTaskRoute.length) {
         final id = route.substring(rebookTaskRoute.length + 1, route.length);
-        if (id.isNotEmpty) return QuickBook(taskId: id);
+        if (id.isNotEmpty) return RebookTaskScreen(taskId: id);
       }
-      return const BookingContent();
+      return const HomeScreen(homeTab: 1);
     }
 
     if (route == paymentRoute) {
@@ -109,7 +109,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const SettingEditProfile();
     }
     if (route == settingRoute) {
-      return const HomeScreen();
+      return const HomeScreen(homeTab: 2);
     }
     if (route == settingChangePasswordRoute) {
       return const SettingChangePassword();

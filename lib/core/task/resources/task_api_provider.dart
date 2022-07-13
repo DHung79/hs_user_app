@@ -93,4 +93,16 @@ class TaskApiProvider {
     );
     return response;
   }
+
+  Future getMapSuggestion(String input) async {
+    const String mapAPIKey = "AIzaSyB6gUxPMiSb_uEXaQjh7x3w1_1MGVxTGi0";
+    const String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    final path = '$baseURL?input=$input&key=$mapAPIKey';
+    logDebug(path);
+    final response = await RestApiHandlerData.getMapSuggestion(
+      path: path,
+    );
+    return response;
+  }
 }

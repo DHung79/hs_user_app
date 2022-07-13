@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hs_user_app/theme/svg_constants.dart';
-import '/routes/route_names.dart';
 import 'package:validators/validators.dart';
 import '../../core/authentication/auth.dart';
 import '../../main.dart';
 import '../../theme/validator_text.dart';
 import '../../widgets/jt_text_form_field.dart';
-import '../../widgets/jt_toast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);

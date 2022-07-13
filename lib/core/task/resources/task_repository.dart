@@ -42,4 +42,6 @@ class TaskRepository {
           _provider.createTask<T, K>(
             editModel: editModel,
           );
+
+  Future getMapSuggestion(String input) => _provider.getMapSuggestion(input);
 }

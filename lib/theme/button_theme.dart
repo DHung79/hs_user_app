@@ -30,9 +30,10 @@ class AppButtonTheme {
   }
 
   static Widget fillRounded({
-    required void Function()? onPressed,
     required Widget child,
+    void Function()? onPressed,
     Color? color,
+    Color? highlightColor,
     BorderRadiusGeometry borderRadius = BorderRadius.zero,
     BoxConstraints? constraints,
   }) {
@@ -41,9 +42,11 @@ class AppButtonTheme {
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: color,
+          primary: highlightColor,
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
           ),
+          padding: EdgeInsets.zero,
         ),
         onPressed: onPressed,
         child: child,

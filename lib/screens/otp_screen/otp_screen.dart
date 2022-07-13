@@ -1,15 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
 import '../../core/authentication/bloc/authentication/authentication_bloc.dart';
 import '../../core/authentication/bloc/authentication/authentication_event.dart';
 import '../../core/authentication/bloc/authentication/authentication_state.dart';
-import '../../theme/svg_constants.dart';
 import '../../theme/validator_text.dart';
-import '../../widgets/jt_toast.dart';
 import '/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 

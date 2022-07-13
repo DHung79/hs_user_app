@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/core/authentication/bloc/authentication/authentication_bloc_public.dart';
 import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-import '../../theme/svg_constants.dart';
 import 'reset_password_form.dart';
 
 class ResetPasswordScreen extends StatefulWidget {

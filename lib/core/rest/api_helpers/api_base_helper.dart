@@ -477,4 +477,64 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future getMapSuggestion({
+    required String path,
+  }) async {
+    ApiResponse responseJson;
+    try {
+      final response = await http.get(Uri.parse(path));
+      responseJson = _returnMapResponse(response);
+    } on SocketException {
+      return ApiResponse(
+        null,
+        ApiError.fromJson(
+          {'error_code': -999, 'error_message': 'No Internet Connection'},
+        ),
+      );
+    }
+    return responseJson;
+  }
+
+  ApiResponse _returnMapResponse(http.Response response) {
+    if (response.statusCode == 200) {
+      var responseJson = json.decode(response.body.toString())['predictions'];
+      if (responseJson is List<dynamic>) {
+        return ApiResponse(
+            responseJson.map((e) => e["description"].toString()).toList(),
+            null);
+      }
+    } else if (response.statusCode >= 400 && response.statusCode < 500) {
+      var parsedJson = json.decode(response.body.toString());
+      ApiError _error;
+      if (parsedJson is String) {
+        _error = ApiError.fromJson(
+          {'error_code': response.statusCode, 'error_message': parsedJson},
+        );
+      } else if (parsedJson is Map<String, dynamic>) {
+        _error = ApiError.fromJson(parsedJson);
+      } else {
+        _error = ApiError.fromJson(
+          {
+            'error_code': response.statusCode,
+            'error_message': parsedJson.toString(),
+          },
+        );
+      }
+      if (_error.errorMessage == 'token expired') {
+        // Unauthenticated
+        AuthenticationBlocController().authenticationBloc.add(TokenExpired());
+      }
+      return ApiResponse(null, ApiError.fromJson(parsedJson));
+    }
+    return ApiResponse(
+      null,
+      ApiError.fromJson(
+        {
+          'error_code': response.statusCode,
+          'error_message': 'Error occured while Communication with Server'
+        },
+      ),
+    );
+  }
 }

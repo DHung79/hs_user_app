@@ -170,4 +170,13 @@ class RestApiHandlerData {
     );
     return response;
   }
+
+  static Future getMapSuggestion({
+    required String path,
+  }) async {
+    final response = await _apiBaseHelper.getMapSuggestion(
+      path: path,
+    );
+    return response;
+  }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hs_user_app/config/fcm/fcm.dart';
 import '../../core/user/bloc/user_bloc.dart';
 import '../../core/user/model/user_model.dart';
-import '/routes/route_names.dart';
 import '../../core/authentication/auth.dart';
 import '../../main.dart';
 import '../../theme/validator_text.dart';

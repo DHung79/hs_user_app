@@ -123,7 +123,7 @@ class SvgIcons {
     path: 'assets/svg/loading-four1.svg',
   );
   static SvgIconData locationOn = SvgIconData(
-    path: 'assets/svg/Locationon.svg',
+    path: 'assets/svg/location_on.svg',
   );
   static SvgIconData locationSearching = SvgIconData(
     path: 'assets/svg/Locationsearching.svg',

@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/main.dart';
-import 'package:hs_user_app/routes/route_names.dart';
-
-import '../../core/user/model/user_model.dart';
-import '../../theme/svg_constants.dart';
-import '../layout_template/content_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -27,9 +22,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
       appBarHeight: 0,
       child: FutureBuilder(
         future: _pageState.currentUser,
-        builder: (context, AsyncSnapshot<UserModel> snapshot) {
+        builder: (context, snapshot) {
           return PageContent(
-            child: content(), // child: content(context),
+            child: content(),
             pageState: _pageState,
             onFetch: () {
               _fetchDataOnPage();
@@ -44,7 +39,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: AppColor.text2,
       appBar: AppBar(
-        shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
+        shadowColor: AppColor.shadow.withOpacity(0.16),
         elevation: 16,
         backgroundColor: AppColor.text2,
         title: Text(
