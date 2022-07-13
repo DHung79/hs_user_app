@@ -40,9 +40,11 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
       String request = '$baseURL?input=$input&key=$kPLACESAPIKEY';
       var response = await http.get(Uri.parse(request));
 
+      logDebug('response :${response.body}');
       if (response.statusCode == 200) {
         setState(() {
           _placeList = json.decode(response.body)['predictions'];
+          logDebug(_placeList);
         });
       } else {
         throw Exception('Failed to load predictions');
@@ -131,7 +133,6 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
                       _saveList(todoList);
                     });
                     navigateTo(chooseLocationRoute);
-
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

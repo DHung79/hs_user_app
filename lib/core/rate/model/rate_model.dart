@@ -1,5 +1,6 @@
 import '../../base/models/common_model.dart';
 import '../../rest/models/rest_api_response.dart';
+import '../../user/model/user_model.dart';
 
 class RateModel extends BaseModel {
   final String __id;
@@ -35,12 +36,12 @@ class RateModel extends BaseModel {
 class MedalModel extends BaseModel {
   final String __id;
   final String _name;
-  final _total;
+  final double _total;
 
   MedalModel.fromJson(Map<String, dynamic> json)
       : __id = json['_id'] ?? '',
         _name = json['name'] ?? '',
-        _total = json['total'] ?? null;
+        _total = json['total'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         "_id": __id,
@@ -50,35 +51,32 @@ class MedalModel extends BaseModel {
 
   String get id => __id;
   String get name => _name;
-  get total => _total;
+  double get total => _total;
 }
 
 class CommentsModel extends BaseModel {
-  // final UserModel _user;
+  final UserModel _user;
   final String _description;
-  final _rating;
-  // final String __id;
+  final double _rating;
+  final String __id;
 
   CommentsModel.fromJson(Map<String, dynamic> json)
-      // : _user = BaseModel.map<UserModel>(
-      //     json: json,
-      //     key: 'user',
-      //   ),
       : _description = json['description'] ?? '',
-        _rating = json['rating'] ?? null;
-  // __id = json['id'] ?? '';
+        _rating = double.tryParse(json['rating'].toString()) ?? 0,
+        __id = json['id'] ?? '',
+        _user = BaseModel.map<UserModel>(json: json, key: 'user');
 
   Map<String, dynamic> toJson() => {
-        // "user": _user.toJson(),
+        "user": _user,
         "description": _description,
         "rating": _rating,
-        // "_id": __id,
+        "_id": __id,
       };
 
-  // UserModel get user => _user;
+  UserModel get user => _user;
   String get description => _description;
-  get rating => _rating;
-  // String get id => __id;
+  double get rating => _rating;
+  String get id => __id;
 }
 
 class EditRateModel extends EditBaseModel {

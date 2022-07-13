@@ -100,6 +100,7 @@ class _PostFastState extends State<PostFast> {
   @override
   void initState() {
     editModel = EditTaskModel.fromModel(taskPageKey.currentState?.task);
+    logDebug('editModel: ${editModel?.toCreateJson()}');
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -966,12 +967,14 @@ class _PostFastState extends State<PostFast> {
     // editModel?.typeHome = 'apartment';
 
     // logDebug(editModel!.toEditTaskJson());
+    editModel?.locationGps = editModel?.locationGps;
+    editModel?.status = 0;
     editModel?.endTime =
         DateTime.fromMillisecondsSinceEpoch(editModel!.startTime)
             .add(Duration(hours: int.parse(editModel!.estimateTime)))
-            .millisecondsSinceEpoch; 
-
-    _taskBloc.editTask(editModel: editModel).then(
+            .millisecondsSinceEpoch;
+    logDebug(editModel?.toCreateJson());
+    _taskBloc.createTask(editModel: editModel).then(
       (value) async {
         navigateTo(homeRoute);
         AuthenticationBlocController().authenticationBloc.add(GetUserData());

@@ -32,7 +32,6 @@ class _ViewDetailState extends State<ViewDetail> {
   bool _mainPage = true;
   TaskModel? _editModel;
   List<TaskModel>? editModel;
-  List<RateModel>? _listRateModel;
   final EditRateModel _editRateModel = EditRateModel.fromModel(null);
   int? value;
   String rate = '';
@@ -58,8 +57,10 @@ class _ViewDetailState extends State<ViewDetail> {
   @override
   void initState() {
     _editModel = taskHistoryKey.currentState?.task;
-    logDebug('_editModel: $_editModel');
+
     editModel = taskNowKey.currentState?.statuses;
+    logDebug('_editModel :${editModel?[0].toJson()}');
+
     value = taskNowKey.currentState?.value;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
@@ -99,201 +100,169 @@ class _ViewDetailState extends State<ViewDetail> {
 
   Widget content(AsyncSnapshot<UserModel> snapshot) {
     final user = snapshot.data;
+    final comments = _editModel?.tasker.comments;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
         backgroundColor: Colors.white,
-        shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
-        elevation: 16,
-        title: Text(
-          _mainPage ? 'Chi tiết công việc' : 'Thông tin người làm',
-          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-        ),
-        centerTitle: true,
-        leading: TextButton(
-          onPressed: () {
-            setState(() {
-              _mainPage ? navigateTo(bookingRoute) : _mainPage = !_mainPage;
-            });
-          },
-          child: SvgIcon(
-            SvgIcons.arrowBack,
-            color: AppColor.text1,
-            size: 24,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
+          elevation: 16,
+          title: Text(
+            _mainPage ? 'Chi tiết công việc' : 'Thông tin người làm',
+            style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+          ),
+          centerTitle: true,
+          leading: TextButton(
+            onPressed: () {
+              setState(() {
+                _mainPage ? navigateTo(bookingRoute) : _mainPage = !_mainPage;
+              });
+            },
+            child: SvgIcon(
+              SvgIcons.arrowBack,
+              color: AppColor.text1,
+              size: 24,
+            ),
           ),
         ),
-      ),
-      body: _mainPage
-          ? Column(
-              children: [
-                _editModel?.tasker.avatar == '' ? profile() : const SizedBox(),
-                Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      yourProfile(user!),
-                      detailTask(),
-                      payment(context),
-                      buttonReview()
-                    ],
-                  ),
-                )
-              ],
-            )
-          : StreamBuilder(
-              stream: _rateBloc.allData,
-              builder: (context,
-                  AsyncSnapshot<ApiResponse<ListRateModel?>> snapshot) {
-                _listRateModel = snapshot.data?.model!.records;
-
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(_editModel?.tasker.avatar ?? ''),
+        body: _mainPage
+            ? Column(
+                children: [
+                  editModel?[value!].tasker.avatar != ''
+                      ? profile()
+                      : const SizedBox(),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        yourProfile(user!),
+                        detailTask(),
+                        payment(context),
+                        buttonReview()
+                      ],
+                    ),
+                  )
+                ],
+              )
+            : SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(_editModel?.tasker.avatar ?? ''),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        _editModel?.tasker.name ?? '',
+                        style: AppTextTheme.mediumBigText(AppColor.text3),
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 183,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              RatingBarIndicator(
+                                rating: _editModel?.tasker.totalRating ?? 0,
+                                itemCount: 5,
+                                itemPadding: const EdgeInsets.all(2),
+                                itemSize: 24.0,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, _) => SvgIcon(
+                                  SvgIcons.star,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              Text(
+                                _editModel?.tasker.totalRating.toString() ?? '',
+                                style: AppTextTheme.normalHeaderTitle(
+                                    AppColor.text1),
+                              )
+                            ],
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Text(
-                          _editModel?.tasker.name ?? '',
-                          style: AppTextTheme.mediumBigText(AppColor.text3),
-                        ),
-                      ),
-                      Column(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                          child: Text(
+                            '(${_editModel?.tasker.numReview} đánh giá)',
+                            style: AppTextTheme.normalText(AppColor.text1),
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: 183,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SvgIcon(
-                                  SvgIcons.star,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
-                                SvgIcon(
-                                  SvgIcons.star,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
-                                SvgIcon(
-                                  SvgIcons.star,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
-                                SvgIcon(
-                                  SvgIcons.star,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
-                                SvgIcon(
-                                  SvgIcons.starHalf,
-                                  color: AppColor.primary2,
-                                  size: 24,
-                                ),
-                                Text(
-                                  '4.5',
-                                  style: AppTextTheme.normalHeaderTitle(
-                                      AppColor.text1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 4.0, bottom: 16),
-                            child: Text(
-                              '(643 đánh giá)',
-                              style: AppTextTheme.normalText(AppColor.text1),
-                            ),
-                          )
+                          profileTasker(
+                              title: 'Tham gia từ', profile: '3/2019'),
+                          linevertical(context),
+                          profileTasker(title: 'Công việc', profile: '320'),
+                          linevertical(context),
+                          profileTasker(
+                              title: 'Đánh giá tích cực', profile: '90%'),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 25.0, vertical: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            profileTasker(
-                                title: 'Tham gia từ', profile: '3/2019'),
-                            linevertical(context),
-                            profileTasker(title: 'Công việc', profile: '320'),
-                            linevertical(context),
-                            profileTasker(
-                                title: 'Đánh giá tích cực', profile: '90%'),
-                          ],
-                        ),
-                      ),
-                      titleMedal(),
-                      listmedal(),
-                      const SizedBox(
-                        height: 28,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 16),
-                              child: Text(
-                                'Đánh giá tiêu biểu',
-                                style: AppTextTheme.mediumHeaderTitle(
-                                    AppColor.text1),
+                    ),
+                    titleMedal(),
+                    listmedal(),
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 16),
+                            child: Text(
+                              'Đánh giá tiêu biểu',
+                              style: AppTextTheme.mediumHeaderTitle(
+                                  AppColor.text1),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                  minHeight: 400, maxHeight: 600),
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: comments?.length,
+                                itemBuilder: (context, index) {
+                                  return review(
+                                    comment: comments?[index].description ?? '',
+                                    user: comments?[index].user.name ?? '',
+                                    rate: comments?[index].rating.toString() ??
+                                        '',
+                                  );
+                                },
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                    minHeight: 400, maxHeight: 600),
-                                width: MediaQuery.of(context).size.width,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: _listRateModel?.length,
-                                  itemBuilder: (context, index) {
-                                    return review(
-                                      comment: _listRateModel?[index]
-                                              .comments
-                                              .first
-                                              .description ??
-                                          '',
-                                      user: _listRateModel?[index]
-                                              .comments
-                                              .first
-                                              
-                                              .description ??
-                                          '',
-                                      rate: _listRateModel?[index]
-                                              .comments
-                                              .first
-                                              .rating
-                                              .toString() ??
-                                          '',
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }),
-    );
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ));
   }
 
   Widget buttonReview() {
@@ -555,7 +524,6 @@ class _ViewDetailState extends State<ViewDetail> {
             isShowListTask
                 ? const SizedBox()
                 : Container(
-                    padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: AppColor.text2,
@@ -623,56 +591,44 @@ class _ViewDetailState extends State<ViewDetail> {
         SizedBox(
           height: 100,
           child: ListView(
-            physics: const ScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             children: [
               Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
               Container(
                 margin: const EdgeInsets.only(right: 16),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
               Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
               Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
               Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
               Container(
                 margin: const EdgeInsets.only(right: 16.0),
                 width: 100,
                 height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
+                color: AppColor.primary1,
               ),
             ],
           ),
@@ -802,8 +758,8 @@ class _ViewDetailState extends State<ViewDetail> {
                 width: 80,
                 height: 80,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      editModel?[value!].tasker.avatar ??
+                  backgroundImage:
+                      NetworkImage(
                           _editModel?.tasker.avatar ??
                           ''),
                 ),
@@ -816,15 +772,18 @@ class _ViewDetailState extends State<ViewDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    editModel?[value!].tasker.name ??
                         _editModel?.tasker.name ??
                         '',
                     style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     onPressed: () {
                       setState(() {
@@ -1099,7 +1058,7 @@ class _ViewDetailState extends State<ViewDetail> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
-                        editModel?[value!].tasker.name ??
+                        
                             _editModel?.tasker.name ??
                             '',
                         style: AppTextTheme.mediumBigText(AppColor.text1),
@@ -1116,13 +1075,9 @@ class _ViewDetailState extends State<ViewDetail> {
                           allowHalfRating: true,
                           itemCount: 5,
                           ratingWidget: RatingWidget(
-                            full: SvgIcon(SvgIcons.starReview,
-                                size: 12, color: AppColor.primary2),
-                            half: SvgIcon(SvgIcons.starHalfReview, size: 12),
-                            empty: const Icon(
-                              Icons.star_outline_outlined,
-                              size: 12,
-                            ),
+                            full: SvgIcon(SvgIcons.starReview),
+                            half: SvgIcon(SvgIcons.starHalfReview),
+                            empty: const Icon(Icons.star_border_outlined),
                           ),
                           itemPadding:
                               const EdgeInsets.symmetric(horizontal: 4.0),
@@ -1225,11 +1180,4 @@ class _ViewDetailState extends State<ViewDetail> {
     _taskBloc.fetchAllData(params: {});
     _rateBloc.fetchAllData(params: {});
   }
-}
-
-class Comment {
-  final String rating;
-  final String description;
-
-  Comment(this.rating, this.description);
 }
