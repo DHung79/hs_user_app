@@ -196,6 +196,7 @@ class _EditFormState extends State<EditForm> {
           _uploadImage();
         } else {
           AuthenticationBlocController().authenticationBloc.add(GetUserData());
+          await Future.delayed(const Duration(milliseconds: 400));
           navigateTo(userProfileRoute);
           JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
         }
@@ -322,8 +323,9 @@ class _EditFormState extends State<EditForm> {
   }
 
   _uploadImage() {
-    _userBloc.uploadImage(image: _images.first).then((value) {
+    _userBloc.uploadImage(image: _images.first).then((value) async {
       AuthenticationBlocController().authenticationBloc.add(GetUserData());
+      await Future.delayed(const Duration(milliseconds: 400));
       navigateTo(profileUserRoute);
       JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
     }).onError((ApiError error, stackTrace) {
