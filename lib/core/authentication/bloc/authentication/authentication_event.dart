@@ -68,7 +68,6 @@ class ResetPassword extends AuthenticationEvent {
 
   const ResetPassword({
     required this.password,
- 
   });
 
   @override

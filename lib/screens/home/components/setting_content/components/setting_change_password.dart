@@ -17,9 +17,9 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   String _errorMessage = '';
-  TextEditingController oldPassword = TextEditingController();
-  TextEditingController changePassword = TextEditingController();
-  TextEditingController againPassword = TextEditingController();
+  final _currentPassword = TextEditingController();
+  final _newPassword = TextEditingController();
+  final _checkNewPassword = TextEditingController();
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
         centerTitle: true,
         leading: TextButton(
             onPressed: () {
-              navigateTo(settingProfileRoute);
+              navigateTo(userProfileRoute);
             },
             child: SvgIcon(
               SvgIcons.arrowBack,
@@ -96,9 +96,9 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
         autovalidateMode: _autovalidate,
         child: Column(
           children: [
-            changpassword(
+            _changpassword(
               name: 'Mật khẩu cũ',
-              controller: oldPassword,
+              controller: _currentPassword,
               onSaved: (value) {
                 editModel.password = value!.trim();
               },
@@ -119,9 +119,9 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
                 return null;
               },
             ),
-            changpassword(
+            _changpassword(
               name: 'Mật khẩu mới',
-              controller: changePassword,
+              controller: _newPassword,
               onChanged: (value) {
                 setState(() {
                   if (_errorMessage.isNotEmpty) {
@@ -148,9 +148,9 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
                 return null;
               },
             ),
-            changpassword(
+            _changpassword(
               name: 'Nhập lại mật khẩu mới',
-              controller: againPassword,
+              controller: _checkNewPassword,
               onSaved: (value) {
                 editModel.newPassword = value!.trim();
               },
@@ -166,20 +166,20 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
                   return ValidatorText.empty(
                       fieldName: ScreenUtil.t(I18nKey.password)!);
                 }
-                if (value != againPassword.text) {
+                if (value != _checkNewPassword.text) {
                   return 'Mật khẩu không khớp';
                 }
                 return null;
               },
             ),
-            confirmbutton(editModel)
+            _confirmbutton(editModel)
           ],
         ),
       ),
     );
   }
 
-  SizedBox confirmbutton(EditUserModel editModel) {
+  Widget _confirmbutton(EditUserModel editModel) {
     return SizedBox(
       height: 52,
       child: TextButton(
@@ -215,7 +215,7 @@ class _SettingChangePasswordState extends State<SettingChangePassword> {
     );
   }
 
-  Padding changpassword({
+  Widget _changpassword({
     required String name,
     required TextEditingController? controller,
     void Function(String)? onChanged,

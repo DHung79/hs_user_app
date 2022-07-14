@@ -23,10 +23,9 @@ const String gpsPageRoute = '/gps-page';
 const String otpRegisterRoute = 'otp-register';
 const String otpForgotPassWordRoute = '/otp-forgotPassword';
 const String chooseLocationRoute = '/choose-location';
-const String settingProfileRoute = '/setting-profile';
+const String userProfileRoute = '/setting-profile';
 const String settingRoute = '/setting';
-const String settingChangePasswordRoute = '/setting-change-password';
-const String settingEditProfileRoute = '/setting-edit-profile';
+const String userChangePasswordRoute = '/setting-change-password';
 const String paymentRoute = '/payment';
 const String profileUserRoute = '/profile-user';
 

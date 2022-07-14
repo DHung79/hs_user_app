@@ -118,11 +118,13 @@ class _PageTemplateState extends State<PageTemplate> {
         } else if (state is AppAutheticated) {
           _authenticationBloc.add(GetUserData());
         } else if (state is SetUserData<UserModel>) {
-          _currentUser = Future.value(state.currentUser);
+          setState(() {
+            _currentUser = Future.value(state.currentUser);
+          });
         }
       },
-      child: FutureBuilder(
-        future: _currentUser,
+      child: StreamBuilder(
+        stream: _currentUser?.asStream(),
         builder: (context, snapshot) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
@@ -151,15 +153,16 @@ class _PageTemplateState extends State<PageTemplate> {
                   bloc: AuthenticationBlocController().authenticationBloc,
                   listener: (BuildContext context, AuthenticationState state) {
                     if (state is SetUserData<UserModel>) {
-                      widget.pageState!.currentUser = Future.value(
-                        state.currentUser,
-                      );
                       // App.of(context)!.setLocale(
                       //   supportedLocales.firstWhere(
                       //       (e) => e.languageCode == state.currentLang),
                       // );
-
-                      widget.onUserFetched(state.currentUser);
+                      setState(() {
+                        widget.pageState!.currentUser = Future.value(
+                          state.currentUser,
+                        );
+                        widget.onUserFetched(state.currentUser);
+                      });
                     }
                   },
                   child: widget.child,
@@ -197,7 +200,6 @@ class PageContent extends StatelessWidget {
       if (onFetch != null) onFetch!();
       pageState.isInitData = true;
     }
-
     return child;
   }
 }

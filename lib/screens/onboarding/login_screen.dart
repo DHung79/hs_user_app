@@ -24,7 +24,8 @@ class _LoginFormState extends State<LoginForm> {
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
   bool? _isKeepSession = false;
   bool _passwordSecure = true;
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -34,9 +35,6 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     AuthenticationBlocController().authenticationBloc.add(GetLastUser());
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {});
-    });
     _googleSignIn.signInSilently();
     super.initState();
   }
@@ -205,7 +203,7 @@ class _LoginFormState extends State<LoginForm> {
                                 navigateTo(registerRoute);
                               },
                               child: Text(
-                                'Đăng Kí'.toUpperCase(),
+                                'Đăng kí'.toUpperCase(),
                                 style: AppTextTheme.headerTitle(AppColor.text2),
                               ),
                             )
@@ -223,21 +221,12 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
   _loginGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
     setState(() {
       _errorMessage = '';
-      loginGoogle = true;
     });
-
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
     AuthenticationBlocController().authenticationBloc.add(
           UserLoginGoogle(
             keepSession: _isKeepSession!,
@@ -250,7 +239,6 @@ class _LoginFormState extends State<LoginForm> {
   _login() {
     setState(() {
       _errorMessage = '';
-      loginGoogle = false;
     });
     if (widget.state is AuthenticationLoading) return;
 

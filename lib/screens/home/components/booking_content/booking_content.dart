@@ -7,9 +7,11 @@ import 'task_booked/task_booked.dart';
 
 class BookingContent extends StatefulWidget {
   final int tab;
+  final UserModel user;
   const BookingContent({
     Key? key,
     this.tab = 0,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -35,67 +37,60 @@ class _BookingContentState extends State<BookingContent> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     final screenSize = MediaQuery.of(context).size;
-    return StreamBuilder(
-        stream: _userBloc.getProfile().asStream(),
-        builder: (context, AsyncSnapshot<UserModel?> snapshot) {
-          if (snapshot.hasData) {
-            final user = snapshot.data!;
-            return Column(
-              children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.shadow.withOpacity(0.16),
-                        blurRadius: 16,
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildHeaderItem(
-                        title: 'Đăng việc',
-                        isActive: _currentTab == 0,
-                        onPressed: () {
-                          setState(() {
-                            _currentTab = 0;
-                          });
-                        },
-                      ),
-                      _buildHeaderItem(
-                        title: 'Hiện tại',
-                        isActive: _currentTab == 1,
-                        onPressed: () {
-                          setState(() {
-                            _currentTab = 1;
-                          });
-                        },
-                      ),
-                      _buildHeaderItem(
-                        title: 'Lịch sử',
-                        isActive: _currentTab == 2,
-                        onPressed: () {
-                          setState(() {
-                            _currentTab = 2;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: screenSize.height - 150 - 24,
-                  child: _getContent(user),
-                ),
-              ],
-            );
-          }
-          return const SizedBox();
-        });
+
+    return Column(
+      children: [
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColor.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.shadow.withOpacity(0.16),
+                blurRadius: 16,
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeaderItem(
+                title: 'Đăng việc',
+                isActive: _currentTab == 0,
+                onPressed: () {
+                  setState(() {
+                    _currentTab = 0;
+                  });
+                },
+              ),
+              _buildHeaderItem(
+                title: 'Hiện tại',
+                isActive: _currentTab == 1,
+                onPressed: () {
+                  setState(() {
+                    _currentTab = 1;
+                  });
+                },
+              ),
+              _buildHeaderItem(
+                title: 'Lịch sử',
+                isActive: _currentTab == 2,
+                onPressed: () {
+                  setState(() {
+                    _currentTab = 2;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: screenSize.height - 150 - 24,
+          child: _getContent(),
+        ),
+      ],
+    );
   }
 
   Widget _buildHeaderItem({
@@ -128,18 +123,18 @@ class _BookingContentState extends State<BookingContent> {
     );
   }
 
-  Widget _getContent(UserModel user) {
+  Widget _getContent() {
     if (_currentTab == 1) {
       return TaskBooked(
-        user: user,
+        user: widget.user,
       );
     } else if (_currentTab == 2) {
       return TaskHistory(
-        user: user,
+        user: widget.user,
       );
     } else {
       return ListRebookTask(
-        user: user,
+        user: widget.user,
       );
     }
   }

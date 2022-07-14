@@ -67,7 +67,7 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.settingProfile()
-      : name = settingProfileRoute,
+      : name = userProfileRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.otpRegister()
@@ -93,7 +93,7 @@ class AppRoutePath {
         isUnknown = false;
 
   AppRoutePath.settingChangePassword()
-      : name = settingChangePasswordRoute,
+      : name = userChangePasswordRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.createPassword()
@@ -115,7 +115,7 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.settingEditProfile()
-      : name = settingEditProfileRoute,
+      : name = editProfileRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.promotion()
@@ -175,7 +175,7 @@ class AppRoutePath {
     if (name == taskHistoryRoute) {
       return AppRoutePath.taskHistory();
     }
-    if (name == settingProfileRoute) {
+    if (name == userProfileRoute) {
       return AppRoutePath.settingProfile();
     }
 
@@ -216,7 +216,7 @@ class AppRoutePath {
     if (name == editProfileRoute) {
       return AppRoutePath.settingEditProfile();
     }
-    if (name == settingChangePasswordRoute) {
+    if (name == userChangePasswordRoute) {
       return AppRoutePath.settingChangePassword();
     }
     if (name == notificationRoute) {

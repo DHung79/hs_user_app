@@ -147,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ? const SizedBox()
                       : InkWell(
                           onTap: () {
-                            navigateTo(settingChangePasswordRoute);
+                            navigateTo(userChangePasswordRoute);
                           },
                           child: Text(
                             'Đổi mật khẩu',
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextButton(
               onPressed: () {
-                navigateTo(settingEditProfileRoute);
+                navigateTo(editProfileRoute);
               },
               style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,

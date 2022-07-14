@@ -8,10 +8,12 @@ import 'components/setting_content/setting_content.dart';
 class HomeScreen extends StatefulWidget {
   final int homeTab;
   final int bookingTab;
+  final int settingTab;
   const HomeScreen({
     Key? key,
     this.homeTab = 0,
     this.bookingTab = 0,
+    this.settingTab = 0,
   }) : super(key: key);
 
   @override
@@ -21,13 +23,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool backHome = true;
   final PageState _pageState = PageState();
-
+  late UserModel? userModel;
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return PageTemplate(
       pageState: _pageState,
-      onUserFetched: (user) => setState(() {}),
+      onUserFetched: (user) => setState(() {
+        userModel = user;
+      }),
       onFetch: () {
         _fetchDataOnPage();
       },
@@ -37,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
             child: snapshot.hasData
-                ? buildContent(snapshot.data!)
+                ? buildContent(userModel != null ? userModel! : snapshot.data!)
                 : const SizedBox(),
             pageState: _pageState,
             onFetch: () {
@@ -50,63 +54,67 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildContent(UserModel user) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: _getContent(user),
-      bottomNavigationBar: Container(
-        height: 100,
-        padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: Colors.white,
-          boxShadow: kElevationToShadow[4],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: _getContent(user),
         ),
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+        if (widget.settingTab == 0)
+          Container(
+            height: 100,
+            padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
+            decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.shadow.withOpacity(0.32),
+                    blurStyle: BlurStyle.outer,
+                    blurRadius: 8,
+                  ),
+                ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _navigaButton(
+                  icon: SvgIcons.home1,
+                  name: 'Trang chủ',
+                  activeColor: AppColor.primary1,
+                  isActive: widget.homeTab == 0,
+                  paddingActiveColor: AppColor.shade3,
+                  onPressed: () {
+                    navigateTo(homeRoute);
+                  },
+                ),
+                _navigaButton(
+                  icon: SvgIcons.dailyTask,
+                  name: 'Đặt lịch',
+                  activeColor: AppColor.primary2,
+                  isActive: widget.homeTab == 1,
+                  paddingActiveColor: AppColor.shade4,
+                  onPressed: () {
+                    navigateTo(bookingRoute);
+                  },
+                ),
+                _navigaButton(
+                  icon: SvgIcons.user1,
+                  name: 'Cài đặt',
+                  activeColor: AppColor.shade6,
+                  isActive: widget.homeTab == 2,
+                  paddingActiveColor: AppColor.shade10,
+                  onPressed: () {
+                    navigateTo(settingRoute);
+                  },
+                ),
+              ],
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              navigaButton(
-                icon: SvgIcons.home1,
-                name: 'Trang chủ',
-                activeColor: AppColor.primary1,
-                isActive: widget.homeTab == 0,
-                paddingActiveColor: AppColor.shade3,
-                onPressed: () {
-                  navigateTo(homeRoute);
-                },
-              ),
-              navigaButton(
-                icon: SvgIcons.dailyTask,
-                name: 'Đặt lịch',
-                activeColor: AppColor.primary2,
-                isActive: widget.homeTab == 1,
-                paddingActiveColor: AppColor.shade4,
-                onPressed: () {
-                  navigateTo(bookingRoute);
-                },
-              ),
-              navigaButton(
-                icon: SvgIcons.user1,
-                name: 'Cài đặt',
-                activeColor: AppColor.shade6,
-                isActive: widget.homeTab == 2,
-                paddingActiveColor: AppColor.shade10,
-                onPressed: () {
-                  navigateTo(settingRoute);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      ],
     );
   }
 
-  Widget navigaButton({
+  Widget _navigaButton({
     required void Function()? onPressed,
     required SvgIconData icon,
     required String name,
@@ -155,11 +163,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getContent(UserModel user) {
     if (widget.homeTab == 1) {
-      return BookingContent(tab: widget.bookingTab);
+      return BookingContent(
+        tab: widget.bookingTab,
+        user: user,
+      );
     } else if (widget.homeTab == 2) {
-      return const SettingContent();
+      return SettingContent(
+        user: user,
+        tab: widget.settingTab,
+      );
     } else {
-      return const HomeContent();
+      return HomeContent(user: user);
     }
   }
 

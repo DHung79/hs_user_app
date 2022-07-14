@@ -103,7 +103,7 @@ class _ListRebookTaskState extends State<ListRebookTask> {
                   );
                 }
               }
-              return const SizedBox();
+              return const JTIndicator();
             },
           ),
         )

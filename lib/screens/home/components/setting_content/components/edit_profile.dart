@@ -76,7 +76,7 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
         ),
         centerTitle: true,
       ),
-      body: EditForm(editModel: snapshot.data!),
+      body: EditForm(user: snapshot.data!),
     );
   }
 

@@ -35,7 +35,6 @@ class UserApiProvider {
       path: path,
       headers: ApiHelper.headers(token),
     );
-    
     return response;
   }
 

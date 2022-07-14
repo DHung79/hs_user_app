@@ -105,17 +105,27 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == profileTaskersRoute) {
       return const ProfileTasker();
     }
-    if (route == settingEditProfileRoute) {
-      return const SettingEditProfile();
-    }
+
     if (route == settingRoute) {
       return const HomeScreen(homeTab: 2);
     }
-    if (route == settingChangePasswordRoute) {
-      return const SettingChangePassword();
+    if (route == userProfileRoute) {
+      return const HomeScreen(
+        homeTab: 2,
+        settingTab: 1,
+      );
     }
-    if (route == settingProfileRoute) {
-      return const ProfileScreen();
+    if (route == editProfileRoute) {
+      return const HomeScreen(
+        homeTab: 2,
+        settingTab: 2,
+      );
+    }
+    if (route == userChangePasswordRoute) {
+      return const HomeScreen(
+        homeTab: 2,
+        settingTab: 3,
+      );
     }
 
     if (route == gpsPageRoute) {

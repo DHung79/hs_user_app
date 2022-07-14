@@ -3,8 +3,10 @@ import '../../../../core/user/user.dart';
 import '/main.dart';
 
 class HomeContent extends StatefulWidget {
+  final UserModel user;
   const HomeContent({
     Key? key,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -23,23 +25,80 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return StreamBuilder(
-        stream: _userBloc.getProfile().asStream(),
-        builder: (context, AsyncSnapshot<UserModel?> snapshot) {
-          if (snapshot.hasData) {
-            final user = snapshot.data!;
-            return _buildContent(user);
-          }
-          return const SizedBox();
-        });
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 24),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 16,
+                  blurStyle: BlurStyle.outer,
+                  color: AppColor.shadow.withOpacity(0.16),
+                ),
+              ],
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.zero,
+                bottom: Radius.circular(10),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: _avatarHome(),
+                      ),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      _buildHeader(),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: _buildNotification(),
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      'Dịch vụ',
+                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                    ),
+                  ),
+                  _buildTab(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _avatarHome(UserModel? user) {
+  Widget _avatarHome() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: user!.avatar.isNotEmpty
+      child: widget.user.avatar.isNotEmpty
           ? Image.network(
-              user.avatar,
+              widget.user.avatar,
               fit: BoxFit.cover,
               width: 40,
               height: 40,
@@ -52,14 +111,14 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
-  Widget _buildHeader(UserModel user) {
+  Widget _buildHeader() {
     return Flexible(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Xin chào ${user.name}',
+            'Xin chào ${widget.user.name}',
             style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
           ),
           const SizedBox(
@@ -90,74 +149,6 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ),
           )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent(UserModel user) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 24),
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 16,
-                    blurStyle: BlurStyle.outer,
-                    color: Color.fromRGBO(79, 117, 140, 0.16)),
-              ],
-              borderRadius: BorderRadius.vertical(
-                top: Radius.zero,
-                bottom: Radius.circular(10),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: _avatarHome(user),
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      _buildHeader(user),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: _buildNotification(),
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      'Dịch vụ',
-                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-                    ),
-                  ),
-                  _buildTab(),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
