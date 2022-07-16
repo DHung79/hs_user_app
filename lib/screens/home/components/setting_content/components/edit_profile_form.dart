@@ -6,16 +6,17 @@ import '../../../../../core/base/models/upload_image.dart';
 import '../../../../../core/user/user.dart';
 import '../../../../../main.dart';
 import '../../../../../theme/validator_text.dart';
+import '../../../../../widgets/error_message.dart';
 
-class EditForm extends StatefulWidget {
+class EditProfileForm extends StatefulWidget {
   final UserModel user;
-  const EditForm({Key? key, required this.user}) : super(key: key);
+  const EditProfileForm({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<EditForm> createState() => _EditFormState();
+  State<EditProfileForm> createState() => _EditProfileFormState();
 }
 
-class _EditFormState extends State<EditForm> {
+class _EditProfileFormState extends State<EditProfileForm> {
   String _errorMessage = '';
   late EditUserModel _editModel;
   final _userBloc = UserBloc();
@@ -43,6 +44,7 @@ class _EditFormState extends State<EditForm> {
             padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
             child: inputField(),
           ),
+          ErrorMessage(errorMessage: _errorMessage),
           confirmbutton(),
         ],
       ),

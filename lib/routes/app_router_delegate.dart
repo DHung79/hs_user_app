@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/screens/home/components/booking_content/rebook_task/rebook_task_screen.dart';
+import 'package:hs_user_app/screens/home/components/booking_content/rebook_task/book_task_screen.dart';
 import '../screens/home/components/booking_content/components/choose_location/choose_location.dart';
 import '../screens/home/components/booking_content/components/confirm_page.dart';
 import '../screens/home/components/booking_content/components/edit_profile.dart';
 import '../screens/home/components/booking_content/components/edit_task_profile.dart';
 import '../screens/home/components/booking_content/components/gps_page.dart';
 import '../screens/home/components/booking_content/components/pick_type_home.dart';
-
 import '../screens/home/components/booking_content/components/post_task.dart';
 import '../screens/home/components/booking_content/components/profile_tasker.dart';
 import '../screens/home/components/booking_content/components/promotion.dart';
 import '../screens/home/components/booking_content/components/view_detail.dart';
-import '../screens/home/components/setting_content/components/edit_profile.dart';
-import '../screens/home/components/setting_content/components/payment.dart';
-import '../screens/home/components/setting_content/components/profile_screen.dart';
-import '../screens/home/components/setting_content/components/setting_change_password.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
 import '../screens/home/home_screen.dart';
 import '/screens/notification_screen/notification_screen.dart';
@@ -83,7 +78,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const HomeScreen(homeTab: 1);
     }
     if (route == bookNewTaskRoute) {
-      return PostTask(key: postTaskKey);
+      return const BookTaskScreen();
     }
     if (route == promotionRoute) {
       return const Promotion();
@@ -94,14 +89,11 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route.startsWith(rebookTaskRoute)) {
       if (route.length > rebookTaskRoute.length) {
         final id = route.substring(rebookTaskRoute.length + 1, route.length);
-        if (id.isNotEmpty) return RebookTaskScreen(taskId: id);
+        if (id.isNotEmpty) return BookTaskScreen(taskId: id);
       }
       return const HomeScreen(homeTab: 1);
     }
 
-    if (route == paymentRoute) {
-      return const Payment();
-    }
     if (route == profileTaskersRoute) {
       return const ProfileTasker();
     }
@@ -127,15 +119,17 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         settingTab: 3,
       );
     }
+    if (route == paymentRoute) {
+      return const HomeScreen(
+        homeTab: 2,
+        settingTab: 4,
+      );
+    }
 
     if (route == gpsPageRoute) {
       return GoogleSearchPlacesApi(
         key: googleSearchPlacesApiKey,
       );
-    }
-
-    if (route == profileUserRoute) {
-      return const ProfileScreen();
     }
 
     if (route == chooseLocationRoute) {

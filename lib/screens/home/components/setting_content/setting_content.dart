@@ -1,13 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hs_user_app/screens/home/components/setting_content/components/edit_password_form.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/user/user.dart';
 import '/core/authentication/bloc/authentication/authentication_bloc_public.dart';
 import '/main.dart';
-import 'components/edit_form.dart';
+import 'components/edit_profile_form.dart';
 import 'components/language_dialog.dart';
 import 'components/logout_dialog.dart';
+import 'components/payment_screen.dart';
 
 class SettingContent extends StatefulWidget {
   final UserModel user;
@@ -91,11 +93,17 @@ class _SettingContentState extends State<SettingContent> {
               if (widget.tab == 2) {
                 navigateTo(userProfileRoute);
               }
+              if (widget.tab == 3) {
+                navigateTo(userProfileRoute);
+              }
+              if (widget.tab == 4) {
+                navigateTo(settingRoute);
+              }
             },
           ),
           Center(
             child: Text(
-              widget.tab == 1 ? 'Hồ sơ người dùng' : 'Chỉnh sửa hồ sơ',
+              _getHeaderTitle(),
               style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
             ),
           ),
@@ -114,6 +122,21 @@ class _SettingContentState extends State<SettingContent> {
           style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
         ),
       );
+    }
+  }
+
+  String _getHeaderTitle() {
+    switch (widget.tab) {
+      case 1:
+        return 'Hồ sơ người dùng';
+      case 2:
+        return 'Chỉnh sửa hồ sơ';
+      case 3:
+        return 'Đổi mật khẩu';
+      case 4:
+        return 'Ví điện tử';
+      default:
+        return '';
     }
   }
 
@@ -152,6 +175,8 @@ class _SettingContentState extends State<SettingContent> {
                   style: AppTextTheme.mediumBodyText(AppColor.nameText),
                 ),
                 InkWell(
+                  splashColor: AppColor.transparent,
+                  highlightColor: AppColor.transparent,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
@@ -193,14 +218,17 @@ class _SettingContentState extends State<SettingContent> {
 
   Widget _buildContent() {
     if (widget.tab > 1) {
-      return Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            EditForm(user: widget.user),
-          ],
-        ),
-      );
+      return widget.tab == 4
+          ? const PaymentScreen()
+          : Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  if (widget.tab == 2) EditProfileForm(user: widget.user),
+                  if (widget.tab == 3) EditPasswordForm(user: widget.user),
+                ],
+              ),
+            );
     } else {
       return Padding(
         padding: const EdgeInsets.all(16),
@@ -281,6 +309,8 @@ class _SettingContentState extends State<SettingContent> {
           itemBuilder: (BuildContext context, index) {
             final item = settingMenu[index];
             return InkWell(
+              splashColor: AppColor.transparent,
+              highlightColor: AppColor.transparent,
               onTap: item.onTap,
               child: Container(
                 padding: const EdgeInsets.all(18),
@@ -470,6 +500,8 @@ class _SettingContentState extends State<SettingContent> {
                     style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                   ),
                   InkWell(
+                    splashColor: AppColor.transparent,
+                    highlightColor: AppColor.transparent,
                     child: SizedBox(
                       width: 40,
                       height: 40,

@@ -11,20 +11,18 @@ import 'edit_user_info.dart';
 import 'pick_location.dart';
 import 'search_location.dart';
 
-class QuickBook extends StatefulWidget {
+class NewBookContent extends StatefulWidget {
   final UserModel user;
-  final TaskModel task;
-  const QuickBook({
+  const NewBookContent({
     Key? key,
     required this.user,
-    required this.task,
   }) : super(key: key);
 
   @override
-  State<QuickBook> createState() => _QuickBookState();
+  State<NewBookContent> createState() => _NewBookContentState();
 }
 
-class _QuickBookState extends State<QuickBook> {
+class _NewBookContentState extends State<NewBookContent> {
   final _taskBloc = TaskBloc();
   final _serviceBloc = ServiceBloc();
   final _userBloc = UserBloc();
@@ -34,7 +32,7 @@ class _QuickBookState extends State<QuickBook> {
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
-  bool _isEditTask = false;
+  bool _isEditTask = true;
   bool _isOpenMap = false;
   bool _isPickLocation = false;
   bool _isEditCheckList = false;
@@ -43,7 +41,7 @@ class _QuickBookState extends State<QuickBook> {
   @override
   void initState() {
     _fetchDataOnPage();
-    _editTaskModel = EditTaskModel.fromModel(widget.task);
+    _editTaskModel = EditTaskModel.fromModel(null);
     _editUserModel = EditUserModel.fromModel(widget.user);
     if (_editTaskModel.checkList.isNotEmpty) {
       _isEditCheckList = true;
@@ -107,9 +105,6 @@ class _QuickBookState extends State<QuickBook> {
         goBack: (user) {
           setState(() {
             _isEditUser = false;
-            // if (user != null) {
-            //   _editUserModel = EditUserModel.fromModel(user);
-            // }
           });
         },
       );
@@ -150,23 +145,21 @@ class _QuickBookState extends State<QuickBook> {
                 ),
                 onPressed: () {
                   if (_isEditTask) {
+                    navigateTo(bookingRoute);
+                  } else {
                     setState(() {
-                      _isEditTask = false;
+                      _isEditTask = true;
                       if (_scrollController.hasClients &&
                           _scrollController.keepScrollOffset) {
                         _scrollController.jumpTo(0);
                       }
                     });
-                  } else {
-                    navigateTo(homeRoute);
                   }
                 },
               ),
               Center(
                 child: Text(
-                  _isEditTask
-                      ? 'Chỉnh sửa thông tin công việc'
-                      : 'Đăng việc nhanh',
+                  _isEditTask ? 'Dọn dẹp nhà cửa' : 'Xác nhận và thanh toán',
                   style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                 ),
               ),
@@ -185,6 +178,8 @@ class _QuickBookState extends State<QuickBook> {
               AsyncSnapshot<ApiResponse<ListServiceModel?>> snapshot) {
             if (snapshot.hasData) {
               final service = snapshot.data!.model!.records.first;
+              _editTaskModel.service = service;
+              _editTaskModel.selectedOption ??= service.options.first;
               return Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -254,21 +249,23 @@ class _QuickBookState extends State<QuickBook> {
                     ),
                   ],
                 ),
-              TaskTimePicker(
-                editModel: _editTaskModel,
-                onPressed: (day) {
-                  setState(() {
-                    _editTaskModel.date = day.millisecondsSinceEpoch;
-                  });
-                },
-              ),
+              if (_isEditTask)
+                TaskTimePicker(
+                  editModel: _editTaskModel,
+                  onPressed: (day) {
+                    setState(() {
+                      _editTaskModel.date = day.millisecondsSinceEpoch;
+                    });
+                  },
+                ),
               if (!_isEditTask)
                 Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Divider(),
-                    ),
+                    if (_isEditTask)
+                      const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Divider(),
+                      ),
                     _taskDetailField(
                       title: 'Thông tin công việc',
                       onPressed: () {
@@ -571,9 +568,6 @@ class _QuickBookState extends State<QuickBook> {
   }
 
   Widget _buildOptions(ServiceModel service) {
-    if (_editTaskModel.selectedOption!.id.isEmpty) {
-      _editTaskModel.selectedOption = service.options.first;
-    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

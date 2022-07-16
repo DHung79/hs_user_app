@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/user/user.dart';
 import '/main.dart';
 
-class Cost {
+class TradeHistory {
   final String name;
   final String money;
-  Cost({required this.name, required this.money});
+  TradeHistory({required this.name, required this.money});
 }
 
-class Payment extends StatefulWidget {
-  const Payment({Key? key}) : super(key: key);
+class PaymentScreen extends StatefulWidget {
+  const PaymentScreen({Key? key}) : super(key: key);
 
   @override
-  State<Payment> createState() => _PaymentState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentState extends State<Payment> {
-  final PageState _pageState = PageState();
+class _PaymentScreenState extends State<PaymentScreen> {
   TextEditingController controller = TextEditingController();
   int _selectIndex = 0;
   void _onItemTapped(int index) {
@@ -25,91 +23,48 @@ class _PaymentState extends State<Payment> {
     });
   }
 
-  List<Cost> listCost = [
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
-    Cost(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
-    Cost(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+  List<TradeHistory> listCost = [
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '+300.000 VND', name: 'Nạp tiền vào ví'),
+    TradeHistory(money: '-300.000 VND', name: 'Chi phí hủy dịch vụ'),
+    TradeHistory(money: '-400.000 VND', name: 'Chi phí hủy dịch vụ'),
   ];
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return PageTemplate(
-      pageState: _pageState,
-      onUserFetched: (user) => setState(() {}),
-      onFetch: () {
-        _fetchDataOnPage();
-      },
-      appBarHeight: 0,
-      child: FutureBuilder(
-        future: _pageState.currentUser,
-        builder: (context, AsyncSnapshot<UserModel> snapshot) {
-          return PageContent(
-            child: content(context), // child: content(context),
-            pageState: _pageState,
-            onFetch: () {
-              _fetchDataOnPage();
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Scaffold content(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.text2,
-      appBar: AppBar(
-        backgroundColor: AppColor.text2,
-        elevation: 0,
-        centerTitle: true,
-        leading: TextButton(
-          onPressed: () {
-            navigateTo(settingRoute);
-          },
-          child: SvgIcon(
-            SvgIcons.arrowBack,
-            size: 24,
-            color: AppColor.text1,
-          ),
-        ),
-        title: Text(
-          'Ví điện tử',
-          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-        ),
-      ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Container(
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
                 height: 52,
-                width: MediaQuery.of(context).size.width / 2,
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -137,16 +92,20 @@ class _PaymentState extends State<Payment> {
                           : AppTextTheme.normalText(AppColor.text3),
                     )),
               ),
-              Container(
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
                 height: 52,
-                width: MediaQuery.of(context).size.width / 2,
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: _selectIndex == 1
-                                ? AppColor.primary1
-                                : Colors.transparent,
-                            width: 4))),
+                  border: Border(
+                    bottom: BorderSide(
+                        color: _selectIndex == 1
+                            ? AppColor.primary1
+                            : Colors.transparent,
+                        width: 4),
+                  ),
+                ),
                 child: TextButton(
                     style: TextButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: () {
@@ -159,15 +118,15 @@ class _PaymentState extends State<Payment> {
                           : AppTextTheme.normalText(AppColor.text3),
                     )),
               ),
-            ],
-          ),
-          _selectIndex == 0 ? account() : transaction(),
-        ],
-      ),
+            ),
+          ],
+        ),
+        _selectIndex == 0 ? _accountInfo() : _filterField(),
+      ],
     );
   }
 
-  Expanded transaction() {
+  Widget _filterField() {
     return Expanded(
       child: Column(
         children: [
@@ -314,9 +273,10 @@ class _PaymentState extends State<Payment> {
           ),
           Expanded(
             child: ListView.builder(
+              shrinkWrap: true,
               itemCount: listCost.length,
               itemBuilder: (context, index) {
-                return cost(
+                return _tradeHistoryItem(
                   title: listCost[index].name,
                   money: listCost[index].money,
                   index: index,
@@ -329,8 +289,11 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Container cost(
-      {required String title, required String money, required int index}) {
+  Widget _tradeHistoryItem({
+    required String title,
+    required String money,
+    required int index,
+  }) {
     return Container(
       color: index % 2 == 0 ? AppColor.text2 : AppColor.shade1,
       padding: const EdgeInsets.all(16.0),
@@ -362,7 +325,7 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Padding account() {
+  Widget _accountInfo() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -479,5 +442,3 @@ class _PaymentState extends State<Payment> {
     );
   }
 }
-
-void _fetchDataOnPage() {}

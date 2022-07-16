@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../../../core/authentication/auth.dart';
 import '../../../../../core/user/user.dart';
 import '/main.dart';
-import 'edit_form.dart';
+import 'edit_profile_form.dart';
 
-class SettingEditProfile extends StatefulWidget {
-  const SettingEditProfile({Key? key}) : super(key: key);
+class EditProfile extends StatefulWidget {
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
-  State<SettingEditProfile> createState() => _SettingEditProfileState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _SettingEditProfileState extends State<SettingEditProfile> {
+class _EditProfileState extends State<EditProfile> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
 
@@ -76,7 +76,7 @@ class _SettingEditProfileState extends State<SettingEditProfile> {
         ),
         centerTitle: true,
       ),
-      body: EditForm(user: snapshot.data!),
+      body: EditProfileForm(user: snapshot.data!),
     );
   }
 

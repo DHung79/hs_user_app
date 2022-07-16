@@ -66,7 +66,7 @@ class _TaskBookedState extends State<TaskBooked> {
                   task: task,
                   onPressed: (model) {
                     value = index;
-                    navigateTo(taskDetailRoute);
+                    navigateTo(taskDetailRoute + '/${task.id}');
                   },
                 ),
               );

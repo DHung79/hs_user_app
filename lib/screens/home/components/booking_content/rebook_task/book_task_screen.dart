@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import '../../../../../core/task/task.dart';
 import '../../../../../core/user/user.dart';
 import '../../../../../main.dart';
-import 'components/quick_book.dart';
+import 'components/new_book_content.dart';
+import 'components/rebook_content.dart';
 
-class RebookTaskScreen extends StatefulWidget {
+class BookTaskScreen extends StatefulWidget {
   final String taskId;
-  const RebookTaskScreen({
+  const BookTaskScreen({
     Key? key,
-    required this.taskId,
+    this.taskId = '',
   }) : super(key: key);
 
   @override
-  State<RebookTaskScreen> createState() => _RebookTaskState();
+  State<BookTaskScreen> createState() => _RebookTaskState();
 }
 
-class _RebookTaskState extends State<RebookTaskScreen> {
+class _RebookTaskState extends State<BookTaskScreen> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
@@ -61,24 +62,30 @@ class _RebookTaskState extends State<RebookTaskScreen> {
   }
 
   _buildContent(UserModel user) {
-    return StreamBuilder(
-      stream: _taskBloc.taskData,
-      builder: (context, AsyncSnapshot<ApiResponse<TaskModel?>> snapshot) {
-        if (snapshot.hasData) {
-          final task = snapshot.data!.model!;
-          return QuickBook(
+    return widget.taskId.isNotEmpty
+        ? StreamBuilder(
+            stream: _taskBloc.taskData,
+            builder:
+                (context, AsyncSnapshot<ApiResponse<TaskModel?>> snapshot) {
+              if (snapshot.hasData) {
+                final task = snapshot.data!.model!;
+                return RebookContent(
+                  user: user,
+                  task: task,
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          )
+        : NewBookContent(
             user: user,
-            task: task,
           );
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
   }
 
   _fetchDataOnPage() {
-    // _userBloc.getProfile();
-    _taskBloc.fetchDataById(widget.taskId);
+    if (widget.taskId.isNotEmpty) {
+      _taskBloc.fetchDataById(widget.taskId);
+    }
   }
 }

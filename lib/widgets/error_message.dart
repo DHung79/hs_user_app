@@ -34,7 +34,7 @@ class _ErrorMessageState extends State<ErrorMessage> {
                     widget.errorMessage,
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColor.text1,
+                      color: AppColor.others1,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
