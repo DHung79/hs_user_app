@@ -34,6 +34,7 @@ class _RebookContentState extends State<RebookContent> {
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
+  final _now = DateTime.now();
   bool _isEditTask = false;
   bool _isOpenMap = false;
   bool _isPickLocation = false;
@@ -185,6 +186,9 @@ class _RebookContentState extends State<RebookContent> {
               AsyncSnapshot<ApiResponse<ListServiceModel?>> snapshot) {
             if (snapshot.hasData) {
               final service = snapshot.data!.model!.records.first;
+              if (_editTaskModel.selectedOption!.price == 0) {
+                _editTaskModel.selectedOption = service.options.first;
+              }
               return Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -259,6 +263,20 @@ class _RebookContentState extends State<RebookContent> {
                 onPressed: (day) {
                   setState(() {
                     _editTaskModel.date = day.millisecondsSinceEpoch;
+                    _editTaskModel.date = day.millisecondsSinceEpoch;
+                    final startTimeData = DateTime.fromMillisecondsSinceEpoch(
+                        _editTaskModel.startTime.toInt());
+                    final startTime = DateTime(
+                      day.year,
+                      day.month,
+                      day.day,
+                      startTimeData.hour,
+                      startTimeData.minute,
+                    );
+                    final endTime = startTime.add(Duration(
+                        hours: _editTaskModel.selectedOption!.quantity));
+                    _editTaskModel.startTime = startTime.millisecondsSinceEpoch;
+                    _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
                   });
                 },
               ),
@@ -282,7 +300,7 @@ class _RebookContentState extends State<RebookContent> {
                         children: [
                           _detailItem(
                             title:
-                                '${_editTaskModel.estimateTime} tiếng, $startTime - $endTime',
+                                '${_editTaskModel.selectedOption!.quantity} tiếng, $startTime - $endTime',
                             icon: SvgIcons.accessTime,
                           ),
                           _detailItem(
@@ -401,7 +419,7 @@ class _RebookContentState extends State<RebookContent> {
                     }
                   });
                 } else {
-                  _editTask();
+                  _createTask();
                 }
               },
             ),
@@ -571,7 +589,7 @@ class _RebookContentState extends State<RebookContent> {
   }
 
   Widget _buildOptions(ServiceModel service) {
-    if (_editTaskModel.selectedOption!.id.isEmpty) {
+    if (_editTaskModel.selectedOption!.price == 0) {
       _editTaskModel.selectedOption = service.options.first;
     }
     return Padding(
@@ -838,7 +856,29 @@ class _RebookContentState extends State<RebookContent> {
     _serviceBloc.fetchAllData(params: {});
   }
 
-  _editTask() {
+  _createTask() {
+    if (_editTaskModel.date < _now.millisecondsSinceEpoch) {
+      _editTaskModel.startTime = _now.millisecondsSinceEpoch;
+      _editTaskModel.date = DateTime(
+        _now.year,
+        _now.month,
+        _now.day,
+        0,
+        0,
+        0,
+      ).millisecondsSinceEpoch;
+    }
+    final startTime = formatFromInt(
+      displayedFormat: 'dd/MM/yyyy HH:mm',
+      value: _editTaskModel.startTime,
+      context: context,
+    );
+    final date = formatFromInt(
+      displayedFormat: 'dd/MM/yyyy',
+      value: _editTaskModel.date,
+      context: context,
+    );
+    logDebug('startTime: $startTime \n date: $date');
     // _taskBloc.createTask(editModel: _editTaskModel).then(
     //   (value) async {
     //     navigateTo(homeRoute);
