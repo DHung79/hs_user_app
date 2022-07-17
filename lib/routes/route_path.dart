@@ -59,7 +59,7 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.viewDetail()
-      : name = taskDetailRoute,
+      : name = taskBookedRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.postFast()
@@ -250,7 +250,7 @@ class AppRoutePath {
       return AppRoutePath.editProfile();
     }
 
-    if (name == taskDetailRoute) {
+    if (name == taskBookedRoute) {
       return AppRoutePath.viewDetail();
     }
 

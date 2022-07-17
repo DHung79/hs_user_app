@@ -4,7 +4,7 @@ import '../../rest/models/rest_api_response.dart';
 class RateModel extends BaseModel {
   final String __id;
   final List<MedalModel> _medals = [];
-  final List<CommentsModel> _comments = [];
+  final List<CommentModel> _comments = [];
 
   RateModel.fromJson(Map<String, dynamic> json) : __id = json['_id'] ?? '' {
     _medals.addAll(
@@ -14,7 +14,7 @@ class RateModel extends BaseModel {
       ),
     );
     _comments.addAll(
-      BaseModel.mapList<CommentsModel>(
+      BaseModel.mapList<CommentModel>(
         json: json,
         key: 'comments',
       ),
@@ -29,7 +29,7 @@ class RateModel extends BaseModel {
 
   String get id => __id;
   List<MedalModel> get medal => _medals;
-  List<CommentsModel> get comments => _comments;
+  List<CommentModel> get comments => _comments;
 }
 
 class MedalModel extends BaseModel {
@@ -53,13 +53,13 @@ class MedalModel extends BaseModel {
   int get total => _total;
 }
 
-class CommentsModel extends BaseModel {
+class CommentModel extends BaseModel {
   // final UserModel _user;
   final String _description;
   final double _rating;
   // final String __id;
 
-  CommentsModel.fromJson(Map<String, dynamic> json)
+  CommentModel.fromJson(Map<String, dynamic> json)
       // : _user = BaseModel.map<UserModel>(
       //     json: json,
       //     key: 'user',
@@ -84,7 +84,7 @@ class CommentsModel extends BaseModel {
 }
 
 class EditRateModel extends EditBaseModel {
-  List<CommentsModel> comments = [];
+  List<CommentModel> comments = [];
 
   EditRateModel.fromModel(RateModel? model) {
     comments = model?.comments ?? [];

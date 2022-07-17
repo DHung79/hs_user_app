@@ -54,7 +54,7 @@ class _TaskHistoryState extends State<TaskHistory> {
                     nameButton: 'Xem chi tiết',
                     task: task,
                     onPressed: (task) {
-                      navigateTo(taskDetailRoute);
+                      navigateTo(taskBookedRoute);
                     },
                   ),
                 );

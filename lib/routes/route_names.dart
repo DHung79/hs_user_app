@@ -33,4 +33,4 @@ const String promotionRoute = '/promotion/';
 
 const String confirmRoute = '/confirm-page';
 const String editProfileRoute = '/edit-profile';
-const String taskDetailRoute = '/view-detail';
+const String taskBookedRoute = '/view-detail';

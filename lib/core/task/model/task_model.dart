@@ -1,3 +1,4 @@
+import '../../rate/rate.dart';
 import '../../service/model/service_model.dart';
 import '/core/user/user.dart';
 import '../../base/models/common_model.dart';
@@ -150,7 +151,7 @@ class EditTaskModel extends EditBaseModel {
 
   Map<String, dynamic> toCreateJson() {
     Map<String, dynamic> params = {
-      'location_gps': locationGps!.toJson(),
+      'location_gps': locationGps?.toJson(),
       'service': service!.toJson(),
       'address': address,
       'estimate_time': estimateTime,
@@ -163,7 +164,7 @@ class EditTaskModel extends EditBaseModel {
       'totalPrice': totalPrice,
       'check_list': checkList.map((e) => e.toJson()).toList(),
       'address_title': addressTitle,
-      'selected_option': selectedOption!.toJson(),
+      'selected_option': selectedOption?.toJson(),
     };
     return params;
   }
@@ -284,6 +285,9 @@ class TaskerModel extends BaseModel {
   final int _receiveTime;
   final int _deleteTime;
   final bool _isDeleted;
+  final int _numReview;
+  final double _totalRating;
+  final List<CommentModel> _comments = [];
 
   TaskerModel.fromJson(Map<String, dynamic> json)
       : __id = json['_id'] ?? '',
@@ -294,7 +298,16 @@ class TaskerModel extends BaseModel {
         _receiveTime = json['receive_time'] ?? 0,
         _deleteTime = json['delete_time'] ?? 0,
         _isDeleted = json['is_deleted'] ?? false,
-        _avatar = json['avatar'] ?? '';
+        _avatar = json['avatar'] ?? '',
+        _numReview = json['num_review'] ?? 0,
+        _totalRating = json['total_rating'] is int
+            ? json['total_rating'].toDouble()
+            : json['total_rating'] ?? 0 {
+    _comments.addAll(BaseModel.mapList<CommentModel>(
+      json: json,
+      key: 'comments',
+    ));
+  }
 
   Map<String, dynamic> toJson() => {
         '_id': __id,
@@ -306,6 +319,9 @@ class TaskerModel extends BaseModel {
         'delete_time': _deleteTime,
         'is_deleted': _isDeleted,
         'avatar': _avatar,
+        'num_review': _numReview,
+        'total_rating': _totalRating,
+        'comments': _comments.map((e) => e.toJson()).toList(),
       };
   String get id => __id;
   String get name => _name;
@@ -316,6 +332,9 @@ class TaskerModel extends BaseModel {
   int get deleteTime => _deleteTime;
   bool get isDeleted => _isDeleted;
   String get avatar => _avatar;
+  int get numReview => _numReview;
+  double get totalRating => _totalRating;
+  List<CommentModel> get comments => _comments;
 }
 
 class AddServiceModel extends BaseModel {

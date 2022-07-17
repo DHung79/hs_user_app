@@ -50,7 +50,7 @@ class _ProfileTaskerState extends State<ProfileTasker> {
         ),
         leading: TextButton(
           onPressed: () {
-            navigateTo(taskDetailRoute);
+            navigateTo(taskBookedRoute);
           },
           child: SvgIcon(
             SvgIcons.arrowBack,

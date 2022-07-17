@@ -3,7 +3,7 @@ import '../../../../core/user/user.dart';
 import '/main.dart';
 import 'rebook_task/list_rebook_task.dart';
 import 'task_history/task_history.dart';
-import 'task_booked/task_booked.dart';
+import 'task_booked/list_task_booked.dart';
 
 class BookingContent extends StatefulWidget {
   final int tab;
@@ -125,7 +125,7 @@ class _BookingContentState extends State<BookingContent> {
 
   Widget _getContent() {
     if (_currentTab == 1) {
-      return TaskBooked(
+      return ListTaskBooked(
         user: widget.user,
       );
     } else if (_currentTab == 2) {

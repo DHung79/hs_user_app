@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../../../core/rate/rate.dart';
@@ -844,10 +845,8 @@ class _ViewDetailState extends State<ViewDetail> {
                         const SizedBox(
                           width: 4,
                         ),
-                        Transform(
-                          transform: Matrix4.identity()
-                            ..rotateZ(3.1415927 / 180 * 180),
-                          alignment: FractionalOffset.center,
+                        Transform.rotate(
+                          angle: 180 * pi / 180,
                           child: SvgIcon(
                             SvgIcons.arrowBack,
                             color: AppColor.primary2,
@@ -1204,7 +1203,7 @@ class _ViewDetailState extends State<ViewDetail> {
   _createRate() {
     setState(() {
       _editRateModel.comments = [
-        CommentsModel.fromJson(
+        CommentModel.fromJson(
             {'rating': rate, 'description': _controller.text})
       ];
     });

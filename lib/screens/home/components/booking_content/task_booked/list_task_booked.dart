@@ -4,18 +4,18 @@ import '../../../../../widgets/task_widget/task_widget.dart';
 import '/main.dart';
 import '/core/user/user.dart';
 
-class TaskBooked extends StatefulWidget {
+class ListTaskBooked extends StatefulWidget {
   final UserModel user;
-  const TaskBooked({
+  const ListTaskBooked({
     Key? key,
     required this.user,
   }) : super(key: key);
 
   @override
-  State<TaskBooked> createState() => _TaskBookedState();
+  State<ListTaskBooked> createState() => _ListTaskBookedState();
 }
 
-class _TaskBookedState extends State<TaskBooked> {
+class _ListTaskBookedState extends State<ListTaskBooked> {
   final _taskBloc = TaskBloc();
   int value = 0;
 
@@ -66,7 +66,7 @@ class _TaskBookedState extends State<TaskBooked> {
                   task: task,
                   onPressed: (model) {
                     value = index;
-                    navigateTo(taskDetailRoute + '/${task.id}');
+                    navigateTo(taskBookedRoute + '/${task.id}');
                   },
                 ),
               );

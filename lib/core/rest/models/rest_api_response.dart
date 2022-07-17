@@ -103,8 +103,8 @@ class BaseModel {
     if (T == OtpModel) {
       return OtpModel.fromJson(json) as T;
     }
-    if (T == CommentsModel) {
-      return CommentsModel.fromJson(json) as T;
+    if (T == CommentModel) {
+      return CommentModel.fromJson(json) as T;
     }
     if (T == MedalModel) {
       return MedalModel.fromJson(json) as T;

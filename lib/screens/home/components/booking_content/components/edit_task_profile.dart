@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/task/task.dart';
@@ -842,10 +843,8 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Transform(
-                      alignment: FractionalOffset.center,
-                      transform: Matrix4.identity()
-                        ..rotateZ(180 * 3.1415927 / 180),
+                    Transform.rotate(
+                      angle: 180 * pi / 180,
                       child: SvgIcon(
                         SvgIcons.arrowBackIos,
                         size: 24,

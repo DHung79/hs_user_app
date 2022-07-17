@@ -37,6 +37,7 @@ class _NewBookContentState extends State<NewBookContent> {
   bool _isPickLocation = false;
   bool _isEditCheckList = false;
   bool _isEditUser = false;
+  final _now = DateTime.now();
 
   @override
   void initState() {
@@ -46,6 +47,9 @@ class _NewBookContentState extends State<NewBookContent> {
     if (_editTaskModel.checkList.isNotEmpty) {
       _isEditCheckList = true;
     }
+    _editTaskModel.date = DateTime(_now.year, _now.month, _now.day, 0, 0, 0)
+        .millisecondsSinceEpoch;
+    _editTaskModel.startTime = _now.millisecondsSinceEpoch;
     _locationController.text = _editTaskModel.address;
     super.initState();
   }
@@ -180,6 +184,7 @@ class _NewBookContentState extends State<NewBookContent> {
               final service = snapshot.data!.model!.records.first;
               _editTaskModel.service = service;
               _editTaskModel.selectedOption ??= service.options.first;
+              _editTaskModel.totalPrice = _editTaskModel.selectedOption!.price;
               return Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,
@@ -218,7 +223,7 @@ class _NewBookContentState extends State<NewBookContent> {
       context: context,
     );
     final endTime = formatFromInt(
-      displayedFormat: 'HH:mm',
+      displayedFormat: '- HH:mm',
       value: _editTaskModel.endTime,
       context: context,
     );
@@ -279,7 +284,7 @@ class _NewBookContentState extends State<NewBookContent> {
                         children: [
                           _detailItem(
                             title:
-                                '${_editTaskModel.estimateTime} tiếng, $startTime - $endTime',
+                                '${_editTaskModel.estimateTime} tiếng, $startTime $endTime',
                             icon: SvgIcons.accessTime,
                           ),
                           _detailItem(

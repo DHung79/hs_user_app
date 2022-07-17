@@ -6,10 +6,10 @@ import '../screens/home/components/booking_content/components/edit_profile.dart'
 import '../screens/home/components/booking_content/components/edit_task_profile.dart';
 import '../screens/home/components/booking_content/components/gps_page.dart';
 import '../screens/home/components/booking_content/components/pick_type_home.dart';
-import '../screens/home/components/booking_content/components/post_task.dart';
 import '../screens/home/components/booking_content/components/profile_tasker.dart';
 import '../screens/home/components/booking_content/components/promotion.dart';
 import '../screens/home/components/booking_content/components/view_detail.dart';
+import '../screens/home/components/booking_content/task_booked/components/task_booked.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
 import '../screens/home/home_screen.dart';
 import '/screens/notification_screen/notification_screen.dart';
@@ -94,6 +94,14 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const HomeScreen(homeTab: 1);
     }
 
+    if (route.startsWith(taskBookedRoute)) {
+      if (route.length > taskBookedRoute.length) {
+        final id = route.substring(taskBookedRoute.length + 1, route.length);
+        if (id.isNotEmpty) return TaskBookedScreen(taskId: id);
+      }
+      return const HomeScreen(homeTab: 1, bookingTab: 1);
+    }
+
     if (route == profileTaskersRoute) {
       return const ProfileTasker();
     }
@@ -146,7 +154,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == editPostFastRoute) {
       return const EditProfile();
     }
-    if (route == taskDetailRoute) {
+    if (route == taskBookedRoute) {
       return const ViewDetail();
     }
 
