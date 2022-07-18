@@ -72,10 +72,7 @@ class _ListTaskBookedState extends State<ListTaskBooked> {
             },
           );
         }
-        return Center(
-            child: CircularProgressIndicator(
-          color: AppColor.primary2,
-        ));
+        return const JTIndicator();
       },
     );
   }

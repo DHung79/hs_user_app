@@ -53,7 +53,6 @@ class _TaskTabState extends State<TaskTab> {
         NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
     final optionType =
         getOptionType(widget.task.service.optionType).toLowerCase();
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -247,53 +246,16 @@ class _TaskTabState extends State<TaskTab> {
           padding:
               const EdgeInsets.only(top: 4, bottom: 4, right: 12, left: 12),
           child: Text(
-            getStatusName(),
+            getStatusName(widget.task),
             style: AppTextTheme.mediumBodyText(
               colorStatus(
                 index: widget.task.status,
               ),
             ),
           ),
-        )
+        ),
       ],
     );
-  }
-
-  Color colorStatus({required index}) {
-    Color color;
-    if (index == 0) {
-      color = AppColor.primary2;
-    } else if (index == 1) {
-      color = AppColor.shade9;
-    } else if (index == 2) {
-      color = AppColor.shade9;
-    } else if (index == 3) {
-      color = AppColor.others1;
-    } else {
-      color = AppColor.test1;
-    }
-    return color;
-  }
-
-  String getStatusName() {
-    switch (widget.task.status) {
-      case 0:
-        return 'Đang chờ nhận';
-      case 1:
-        final date = DateTime.fromMillisecondsSinceEpoch(widget.task.date);
-        if (date.difference(now).inDays <= 0 &&
-            widget.task.startTime <= now.millisecondsSinceEpoch) {
-          return 'Đã nhận';
-        } else {
-          return 'Đang làm';
-        }
-      case 2:
-        return 'Thành công';
-      case 3:
-        return 'Đã bị hủy';
-      default:
-        return '';
-    }
   }
 
   String _getWhoCancelTask() {
@@ -351,5 +313,43 @@ class _TaskTabState extends State<TaskTab> {
     } else {
       return const SizedBox(height: 12);
     }
+  }
+}
+
+Color colorStatus({required index}) {
+  Color color;
+  if (index == 0) {
+    color = AppColor.primary2;
+  } else if (index == 1) {
+    color = AppColor.shade9;
+  } else if (index == 2) {
+    color = AppColor.shade9;
+  } else if (index == 3) {
+    color = AppColor.others1;
+  } else {
+    color = AppColor.test1;
+  }
+  return color;
+}
+
+String getStatusName(TaskModel task) {
+  final now = DateTime.now();
+  switch (task.status) {
+    case 0:
+      return 'Đang chờ nhận';
+    case 1:
+      final date = DateTime.fromMillisecondsSinceEpoch(task.date);
+      if (date.difference(now).inDays <= 0 &&
+          task.startTime <= now.millisecondsSinceEpoch) {
+        return 'Đã nhận';
+      } else {
+        return 'Đang làm';
+      }
+    case 2:
+      return 'Thành công';
+    case 3:
+      return 'Đã bị hủy';
+    default:
+      return '';
   }
 }

@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../../../../../../core/task/task.dart';
 import '../../../../../../core/user/user.dart';
 import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
 
 class TaskDetailContent extends StatefulWidget {
@@ -96,8 +95,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                 if (widget.task.tasker.id.isNotEmpty) _profile(),
                 _userProfile(),
                 _detailTask(),
-                _payment(),
-                _buttonReview(),
+                _paymentField(),
               ],
             ),
           ),
@@ -475,11 +473,17 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                         children: [
                           Row(
                             children: [
-                              SvgIcon(
-                                SvgIcons.checkBoxOutlinedBlank,
-                                size: 24,
-                                color: AppColor.text3,
-                              ),
+                              checkItem.status
+                                  ? SvgIcon(
+                                      SvgIcons.checkBox,
+                                      size: 24,
+                                      color: AppColor.shade9,
+                                    )
+                                  : SvgIcon(
+                                      SvgIcons.checkBoxOutlinedBlank,
+                                      size: 24,
+                                      color: AppColor.others1,
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 12),
                                 child: Text(
@@ -597,7 +601,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
     );
   }
 
-  Widget _payment() {
+  Widget _paymentField() {
     final price =
         NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
     return Padding(
@@ -652,42 +656,6 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buttonReview() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      height: 52,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.all(16),
-          backgroundColor: AppColor.text2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-        child: Text(
-          'Hủy công việc',
-          style: AppTextTheme.headerTitle(AppColor.others1),
-        ),
-        onPressed: () {
-          _userCancelTask();
-        },
-      ),
-    );
-  }
-
-  _userCancelTask() {
-    _taskBloc.deleteTask(id: widget.task.id).then((value) {
-      navigateTo(taskBookedRoute);
-      JTToast.successToast(message: 'Đã huỷ');
-    }).onError((ApiError error, stackTrace) {
-      JTToast.errorToast(message: showError(error.errorCode, context));
-    }).catchError(
-      (error, stackTrace) {
-        logDebug('catchError: $error');
-      },
     );
   }
 }

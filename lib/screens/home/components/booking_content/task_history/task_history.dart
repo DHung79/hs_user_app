@@ -4,7 +4,6 @@ import '../../../../../widgets/task_widget/task_widget.dart';
 import '/main.dart';
 import '/core/user/user.dart';
 
-
 final taskHistoryKey = GlobalKey<_TaskHistoryState>();
 
 class TaskHistory extends StatefulWidget {
@@ -54,7 +53,7 @@ class _TaskHistoryState extends State<TaskHistory> {
                     nameButton: 'Xem chi tiết',
                     task: task,
                     onPressed: (task) {
-                      navigateTo(taskBookedRoute);
+                      navigateTo(taskHistoryRoute + '/${task!.id}');
                     },
                   ),
                 );
@@ -69,10 +68,7 @@ class _TaskHistoryState extends State<TaskHistory> {
             );
           }
         }
-        return Center(
-            child: CircularProgressIndicator(
-          color: AppColor.primary2,
-        ));
+        return const JTIndicator();
       },
     );
   }

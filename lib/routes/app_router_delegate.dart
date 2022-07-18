@@ -10,6 +10,7 @@ import '../screens/home/components/booking_content/components/profile_tasker.dar
 import '../screens/home/components/booking_content/components/promotion.dart';
 import '../screens/home/components/booking_content/components/view_detail.dart';
 import '../screens/home/components/booking_content/task_booked/components/task_booked.dart';
+import '../screens/home/components/booking_content/task_history/components/task_history.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
 import '../screens/home/home_screen.dart';
 import '/screens/notification_screen/notification_screen.dart';
@@ -100,6 +101,14 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
         if (id.isNotEmpty) return TaskBookedScreen(taskId: id);
       }
       return const HomeScreen(homeTab: 1, bookingTab: 1);
+    }
+
+    if (route.startsWith(taskHistoryRoute)) {
+      if (route.length > taskHistoryRoute.length) {
+        final id = route.substring(taskHistoryRoute.length + 1, route.length);
+        if (id.isNotEmpty) return TaskHistoryScreen(taskId: id);
+      }
+      return const HomeScreen(homeTab: 1, bookingTab: 2);
     }
 
     if (route == profileTaskersRoute) {
