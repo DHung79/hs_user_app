@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../../../../../../core/task/task.dart';
 import '../../../../../../core/user/user.dart';
 import '../../../../../../main.dart';
+import '../../../../../../theme/validator_text.dart';
+import '../../../../../../widgets/task_widget/task_widget.dart';
 
 class TaskDetailContent extends StatefulWidget {
   final TaskModel task;
@@ -22,6 +24,20 @@ class TaskDetailContent extends StatefulWidget {
 
 class _TaskDetailContentState extends State<TaskDetailContent> {
   bool _isShowCheckList = false;
+  final _taskBloc = TaskBloc();
+
+  @override
+  void initState() {
+    JTToast.init(context);
+    _isShowCheckList = widget.task.checkList.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _taskBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +323,9 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
         )
         .length;
     final double angle = _isShowCheckList ? 180 : 0;
-
+    final optionType =
+        getOptionType(widget.task.service.optionType).toLowerCase();
+    logDebug(widget.task.toJson());
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -356,7 +374,8 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
             ),
             _detailItem(
                 icon: SvgIcons.accessTime,
-                text: '${widget.task.estimateTime} tiếng, $startTime $endTime'),
+                text:
+                    '${widget.task.selectedOption.quantity} $optionType, $startTime $endTime'),
             const SizedBox(
               height: 10,
             ),
@@ -649,8 +668,23 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
           'Hủy công việc',
           style: AppTextTheme.headerTitle(AppColor.others1),
         ),
-        onPressed: () {},
+        onPressed: () {
+          _userCancelTask();
+        },
       ),
+    );
+  }
+
+  _userCancelTask() {
+    _taskBloc.deleteTask(id: widget.task.id).then((value) {
+      navigateTo(taskBookedRoute);
+      JTToast.successToast(message: 'Đã huỷ');
+    }).onError((ApiError error, stackTrace) {
+      JTToast.errorToast(message: showError(error.errorCode, context));
+    }).catchError(
+      (error, stackTrace) {
+        logDebug('catchError: $error');
+      },
     );
   }
 }

@@ -86,9 +86,9 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == editTaskProfileRoute) {
       return const EditTaskProfile();
     }
-    if (route.startsWith(rebookTaskRoute)) {
-      if (route.length > rebookTaskRoute.length) {
-        final id = route.substring(rebookTaskRoute.length + 1, route.length);
+    if (route.startsWith(bookTaskRoute)) {
+      if (route.length > bookTaskRoute.length) {
+        final id = route.substring(bookTaskRoute.length + 1, route.length);
         if (id.isNotEmpty) return BookTaskScreen(taskId: id);
       }
       return const HomeScreen(homeTab: 1);

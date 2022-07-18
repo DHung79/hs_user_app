@@ -3,6 +3,19 @@ import '../../core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
 
+String getOptionType(int type) {
+  switch (type) {
+    case 0:
+      return 'Giờ';
+    case 1:
+      return 'Phòng';
+    case 2:
+      return 'Khác';
+    default:
+      return 'Giờ';
+  }
+}
+
 class TaskTab extends StatefulWidget {
   final void Function(TaskModel?)? onPressed;
   final String nameButton;
@@ -31,19 +44,16 @@ class _TaskTabState extends State<TaskTab> {
       value: widget.task.startTime,
       context: context,
     );
-    final endTime = formatFromInt(
-      displayedFormat: 'HH:mm',
-      value: widget.task.endTime,
-      context: context,
-    );
     final date = formatFromInt(
       displayedFormat: 'E, dd/MM/yyyy',
       value: widget.task.date,
       context: context,
     );
-
     final price =
         NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
+    final optionType =
+        getOptionType(widget.task.service.optionType).toLowerCase();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -107,7 +117,8 @@ class _TaskTabState extends State<TaskTab> {
               ),
             ),
           _detailItem(
-            title: '${widget.task.estimateTime} tiếng, $startTime - $endTime',
+            title:
+                '${widget.task.selectedOption.quantity} $optionType, $startTime',
             icon: SvgIcon(
               SvgIcons.accessTime,
               size: 24,
@@ -123,7 +134,7 @@ class _TaskTabState extends State<TaskTab> {
             ),
           ),
           _detailItem(
-            title: widget.task.address,
+            title: widget.task.address.name,
             icon: SvgIcon(
               SvgIcons.epLocation,
               size: 24,

@@ -17,9 +17,8 @@ class ListTaskBooked extends StatefulWidget {
 
 class _ListTaskBookedState extends State<ListTaskBooked> {
   final _taskBloc = TaskBloc();
+  final _now = DateTime.now();
   int value = 0;
-
-  TaskModel? task;
 
   @override
   void initState() {
@@ -37,12 +36,12 @@ class _ListTaskBookedState extends State<ListTaskBooked> {
           final tasks = snapshot.data!.model!.records;
           final waitingTasks = tasks.where((e) => e.status == 0).toList();
           final acceptedTasks = tasks.where((e) {
-            return e.status == 1 &&
-                DateTime.now().isBefore(readTimestamp2(e.startTime));
+            final startTime = DateTime.fromMillisecondsSinceEpoch(e.startTime);
+            return e.status == 1 && _now.isBefore(startTime);
           }).toList();
           final inprocessTasks = tasks.where((e) {
-            return e.status == 1 &&
-                DateTime.now().isAfter(readTimestamp2(e.startTime));
+            final startTime = DateTime.fromMillisecondsSinceEpoch(e.startTime);
+            return e.status == 1 && _now.isBefore(startTime);
           }).toList();
           final userOrders = [
             inprocessTasks,
@@ -79,11 +78,6 @@ class _ListTaskBookedState extends State<ListTaskBooked> {
         ));
       },
     );
-  }
-
-  DateTime readTimestamp2(int timestamp) {
-    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return date;
   }
 
   void _fetchDataOnPage() {

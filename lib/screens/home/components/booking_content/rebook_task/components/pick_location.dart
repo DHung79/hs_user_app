@@ -11,12 +11,13 @@ class PickLocation extends StatefulWidget {
   final Function(String) changeLocation;
   final TextEditingController locationController;
   final Function() goBack;
-
+  final Function({String lat, String long}) selectedLocation;
   const PickLocation({
     Key? key,
     required this.changeLocation,
     required this.locationController,
     required this.goBack,
+    required this.selectedLocation,
   }) : super(key: key);
 
   @override
@@ -197,12 +198,14 @@ class _PickLocationState extends State<PickLocation> {
                     Position position = await _determinePosition();
                     final GoogleMapController controller =
                         await _mapController.future;
-                    controller.animateCamera(CameraUpdate.newCameraPosition(
-                      CameraPosition(
-                        target: LatLng(position.latitude, position.longitude),
-                        zoom: 14,
+                    controller.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: LatLng(position.latitude, position.longitude),
+                          zoom: 14,
+                        ),
                       ),
-                    ));
+                    );
                   },
                 ),
               ),
@@ -237,8 +240,11 @@ class _PickLocationState extends State<PickLocation> {
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             onPressed: () async {
-              setState(() {});
-              widget.goBack;
+              widget.selectedLocation(
+                lat: _location.target.latitude.toString(),
+                long: _location.target.latitude.toString(),
+              );
+              widget.goBack();
             },
             child: Text(
               'Chọn vị trí này',

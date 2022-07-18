@@ -28,7 +28,6 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
   @override
   void initState() {
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
-    _userBloc.getProfile();
     super.initState();
   }
 

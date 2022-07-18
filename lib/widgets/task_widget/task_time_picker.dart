@@ -5,11 +5,14 @@ import '../../main.dart';
 
 class TaskTimePicker extends StatefulWidget {
   final EditTaskModel editModel;
-  final Function(DateTime) onPressed;
+  final Function(DateTime) onChangeDate;
+  final Function(DateTime) onChangeTime;
+
   const TaskTimePicker({
     Key? key,
     required this.editModel,
-    required this.onPressed,
+    required this.onChangeDate,
+    required this.onChangeTime,
   }) : super(key: key);
 
   @override
@@ -75,7 +78,7 @@ class _TaskTimePickerState extends State<TaskTimePicker> {
                   date: day,
                   task: widget.editModel,
                   onPressed: () {
-                    widget.onPressed(day);
+                    widget.onChangeDate(day);
                   },
                 );
               },
@@ -142,11 +145,7 @@ class _TaskTimePickerState extends State<TaskTimePicker> {
 
   Widget _pickStartTime(EditTaskModel editTaskModel) {
     return StatefulBuilder(builder: (context, setState) {
-      final startTimeData =
-          editTaskModel.startTime > _now.millisecondsSinceEpoch
-              ? editTaskModel.startTime.toInt()
-              : _now.millisecondsSinceEpoch;
-
+      final startTimeData = editTaskModel.startTime.toInt();
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -214,10 +213,7 @@ class _TaskTimePickerState extends State<TaskTimePicker> {
                       pickTime.hour,
                       pickTime.minute,
                     );
-                    setState(() {
-                      editTaskModel.startTime =
-                          startTime.millisecondsSinceEpoch;
-                    });
+                    widget.onChangeTime(startTime);
                   }
                 },
                 child: Padding(

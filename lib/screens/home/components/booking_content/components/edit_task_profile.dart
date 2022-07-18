@@ -128,7 +128,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
         leading: BackButton(
             color: AppColor.text1,
             onPressed: () {
-              navigateTo(rebookTaskRoute);
+              navigateTo(bookTaskRoute);
             }),
         title: Text(
           'Chỉnh sửa thông tin công việc',
@@ -312,7 +312,7 @@ class _EditTaskProfileState extends State<EditTaskProfile> {
                               );
                             });
                       } else {
-                        navigateTo(rebookTaskRoute);
+                        navigateTo(bookTaskRoute);
                         quantity = listOptions![0].options[0].quantity;
                         name = listOptions![0].options[0].name;
                         note = listOptions![0].options[0].note;

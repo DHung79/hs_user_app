@@ -64,7 +64,7 @@ class _EditProfileState extends State<EditProfile> {
           child: SvgIcon(SvgIcons.arrowBack),
           onPressed: () {
             if (currentRoute == editPostFastRoute) {
-              navigateTo(rebookTaskRoute);
+              navigateTo(bookTaskRoute);
             } else {
               navigateTo(confirmRoute);
             }
@@ -148,7 +148,7 @@ class _EditProfileState extends State<EditProfile> {
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());
         if (currentRoute == editPostFastRoute) {
-          navigateTo(rebookTaskRoute);
+          navigateTo(bookTaskRoute);
         } else {
           navigateTo(confirmRoute);
         }

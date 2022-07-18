@@ -17,7 +17,7 @@ const String taskHistoryRoute = '/task-history';
 const String profileTaskersRoute = '/profile-taskers';
 
 const String bookNewTaskRoute = '/post-task';
-const String rebookTaskRoute = '/post-fast';
+const String bookTaskRoute = '/post-fast';
 const String editTaskProfileRoute = '/edit-task-profile';
 const String gpsPageRoute = '/gps-page';
 const String otpRegisterRoute = 'otp-register';

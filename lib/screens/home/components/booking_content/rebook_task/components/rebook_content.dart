@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../../../../core/service/service.dart';
+import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_time_picker.dart';
+import '../../../../../../widgets/task_widget/task_warning_dialog.dart';
+import '../../../../../../widgets/task_widget/task_widget.dart';
 import '/core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +37,6 @@ class _RebookContentState extends State<RebookContent> {
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
-  final _now = DateTime.now();
   bool _isEditTask = false;
   bool _isOpenMap = false;
   bool _isPickLocation = false;
@@ -43,13 +45,20 @@ class _RebookContentState extends State<RebookContent> {
 
   @override
   void initState() {
+    JTToast.init(context);
     _fetchDataOnPage();
     _editTaskModel = EditTaskModel.fromModel(widget.task);
     _editUserModel = EditUserModel.fromModel(widget.user);
     if (_editTaskModel.checkList.isNotEmpty) {
       _isEditCheckList = true;
     }
-    _locationController.text = _editTaskModel.address;
+    final _now = DateTime.now();
+    if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+      _editTaskModel.date = DateTime(_now.year, _now.month, _now.day, 0, 0, 0)
+          .millisecondsSinceEpoch;
+      _editTaskModel.startTime = _now.millisecondsSinceEpoch;
+    }
+    _locationController.text = _editTaskModel.address.name;
     super.initState();
   }
 
@@ -68,10 +77,16 @@ class _RebookContentState extends State<RebookContent> {
       if (_isPickLocation) {
         return PickLocation(
           locationController: _locationController,
+          selectedLocation: ({String lat = '', String long = ''}) {
+            setState(() {
+              _editTaskModel.address.lat = lat;
+              _editTaskModel.address.long = long;
+            });
+          },
           changeLocation: (location) {
             setState(() {
               _locationController.text = location;
-              _editTaskModel.address = location;
+              _editTaskModel.address.name = location;
             });
           },
           goBack: () {
@@ -86,7 +101,7 @@ class _RebookContentState extends State<RebookContent> {
           changeLocation: (location) {
             setState(() {
               _locationController.text = location;
-              _editTaskModel.address = location;
+              _editTaskModel.address.name = location;
             });
           },
           openPickLocation: () {
@@ -204,19 +219,6 @@ class _RebookContentState extends State<RebookContent> {
     );
   }
 
-  String _getOptionType(int type) {
-    switch (type) {
-      case 0:
-        return 'Giờ';
-      case 1:
-        return 'Phòng';
-      case 2:
-        return 'Khác';
-      default:
-        return 'Giờ';
-    }
-  }
-
   Widget _buildTaskInfo(ServiceModel service) {
     final price = NumberFormat('#,##0 VND', 'vi')
         .format(_editTaskModel.selectedOption!.price);
@@ -226,18 +228,18 @@ class _RebookContentState extends State<RebookContent> {
       value: _editTaskModel.startTime,
       context: context,
     );
-    final endTime = formatFromInt(
-      displayedFormat: 'HH:mm',
-      value: _editTaskModel.endTime,
-      context: context,
-    );
+    // final endTime = formatFromInt(
+    //   displayedFormat: '- HH:mm',
+    //   value: _editTaskModel.endTime,
+    //   context: context,
+    // );
     final date = formatFromInt(
       displayedFormat: 'E, dd/MM/yyyy',
       value: _editTaskModel.date,
       context: context,
     );
     final optionType =
-        _getOptionType(_editTaskModel.service!.optionType).toLowerCase();
+        getOptionType(_editTaskModel.service!.optionType).toLowerCase();
     return Container(
       constraints: BoxConstraints(
         minHeight: screenSize.height - 80,
@@ -260,22 +262,42 @@ class _RebookContentState extends State<RebookContent> {
                 ),
               TaskTimePicker(
                 editModel: _editTaskModel,
-                onPressed: (day) {
+                onChangeDate: (date) {
                   setState(() {
-                    _editTaskModel.date = day.millisecondsSinceEpoch;
-                    _editTaskModel.date = day.millisecondsSinceEpoch;
+                    _editTaskModel.date = date.millisecondsSinceEpoch;
                     final startTimeData = DateTime.fromMillisecondsSinceEpoch(
-                        _editTaskModel.startTime.toInt());
+                      _editTaskModel.startTime.toInt(),
+                    );
                     final startTime = DateTime(
-                      day.year,
-                      day.month,
-                      day.day,
+                      date.year,
+                      date.month,
+                      date.day,
                       startTimeData.hour,
                       startTimeData.minute,
                     );
-                    final endTime = startTime.add(Duration(
-                        hours: _editTaskModel.selectedOption!.quantity));
                     _editTaskModel.startTime = startTime.millisecondsSinceEpoch;
+                    final endTime = startTime.add(
+                      Duration(hours: _editTaskModel.selectedOption!.quantity),
+                    );
+                    _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
+                  });
+                },
+                onChangeTime: (time) {
+                  setState(() {
+                    final date = DateTime.fromMillisecondsSinceEpoch(
+                      _editTaskModel.date.toInt(),
+                    );
+                    final startTime = DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                      time.hour,
+                      time.minute,
+                    );
+                    _editTaskModel.startTime = startTime.millisecondsSinceEpoch;
+                    final endTime = startTime.add(
+                      Duration(hours: _editTaskModel.selectedOption!.quantity),
+                    );
                     _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
                   });
                 },
@@ -300,7 +322,7 @@ class _RebookContentState extends State<RebookContent> {
                         children: [
                           _detailItem(
                             title:
-                                '${_editTaskModel.selectedOption!.quantity} tiếng, $startTime - $endTime',
+                                '${_editTaskModel.selectedOption!.quantity} $optionType, $startTime',
                             icon: SvgIcons.accessTime,
                           ),
                           _detailItem(
@@ -313,7 +335,7 @@ class _RebookContentState extends State<RebookContent> {
                               icon: SvgIcons.clipboard1,
                             ),
                           _detailItem(
-                            title: _editTaskModel.address,
+                            title: _editTaskModel.address.name,
                             icon: SvgIcons.epLocation,
                           ),
                         ],
@@ -410,16 +432,41 @@ class _RebookContentState extends State<RebookContent> {
                       ),
                     ),
               onPressed: () {
-                if (_isEditTask) {
-                  setState(() {
-                    _isEditTask = false;
-                    if (_scrollController.hasClients &&
-                        _scrollController.keepScrollOffset) {
-                      _scrollController.jumpTo(0);
-                    }
-                  });
+                final _now = DateTime.now();
+                if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+                  showModalBottomSheet(
+                      isDismissible: false,
+                      context: context,
+                      backgroundColor: AppColor.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      builder: (context) {
+                        return const WarningDialog(
+                          title: 'Thời gian không hợp lệ',
+                          content: 'Vui lòng chọn lại thời gian bắt đầu',
+                        );
+                      });
+                } else if (_editTaskModel.address.name.isNotEmpty) {
+                  showModalBottomSheet(
+                      isDismissible: false,
+                      context: context,
+                      backgroundColor: AppColor.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      builder: (context) {
+                        return const WarningDialog(
+                          title: 'Địa chỉ không được để trống',
+                          content: 'Vui lòng chọn địa chỉ',
+                        );
+                      });
                 } else {
-                  _createTask();
+                  if (_isEditTask) {
+                    _editTask();
+                  } else {
+                    _createTask();
+                  }
                 }
               },
             ),
@@ -857,37 +904,26 @@ class _RebookContentState extends State<RebookContent> {
   }
 
   _createTask() {
-    if (_editTaskModel.date < _now.millisecondsSinceEpoch) {
-      _editTaskModel.startTime = _now.millisecondsSinceEpoch;
-      _editTaskModel.date = DateTime(
-        _now.year,
-        _now.month,
-        _now.day,
-        0,
-        0,
-        0,
-      ).millisecondsSinceEpoch;
-    }
-    final startTime = formatFromInt(
-      displayedFormat: 'dd/MM/yyyy HH:mm',
-      value: _editTaskModel.startTime,
-      context: context,
+    _taskBloc.createTask(editModel: _editTaskModel).then(
+      (value) async {
+        navigateTo(bookTaskRoute);
+        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+      },
+    ).onError((ApiError error, stackTrace) {
+      JTToast.errorToast(message: showError(error.errorCode, context));
+    }).catchError(
+      (error, stackTrace) {
+        logDebug('catchError: $error');
+      },
     );
-    final date = formatFromInt(
-      displayedFormat: 'dd/MM/yyyy',
-      value: _editTaskModel.date,
-      context: context,
-    );
-    logDebug('startTime: $startTime \n date: $date');
-    // _taskBloc.createTask(editModel: _editTaskModel).then(
-    //   (value) async {
-    //     navigateTo(homeRoute);
-    //     JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
-    //   },
-    // ).onError((ApiError error, stackTrace) {
-    //   setState(() {});
-    // }).catchError(
-    //   (error, stackTrace) {},
-    // );
+  }
+
+  _editTask() {
+    setState(() {
+      _isEditTask = false;
+      if (_scrollController.hasClients && _scrollController.keepScrollOffset) {
+        _scrollController.jumpTo(0);
+      }
+    });
   }
 }

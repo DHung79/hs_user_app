@@ -307,7 +307,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                     listOptions![0].options[value].price.toString(),
                     listOptions![0].options[value].name.toString(),
                     onPressed: () {
-                      if (_editModel?.address == '') {
+                      if (_editModel!.address.name.isEmpty) {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -453,7 +453,9 @@ class _ConfirmPageState extends State<ConfirmPage> {
                   _item(
                       text: '$note / $quantity phòng',
                       icon: SvgIcons.clipboard1),
-                  _item(text: _editModel?.address, icon: SvgIcons.epLocation),
+                  _item(
+                      text: _editModel?.address.name,
+                      icon: SvgIcons.epLocation),
                   _title(title: 'Hình thức thanh toán', onPressed: () {}),
                   yourProfile2(
                       money: money,
@@ -747,45 +749,48 @@ class _ConfirmPageState extends State<ConfirmPage> {
         child: Padding(
           padding:
               const EdgeInsets.only(top: 19, bottom: 19, right: 16, left: 16),
-          child: Row(children: [
-            SvgIcon(
-              SvgIcons.epLocation,
-              color: AppColor.primary1,
-              size: 24,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            if (_editModel?.address == '')
-              Text('Chọn địa chỉ',
-                  style: AppTextTheme.normalText(AppColor.text3)),
-            if (_editModel?.address != '')
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _editModel!.address,
-                        style: AppTextTheme.normalText(AppColor.primary1),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Transform.rotate(
-                      angle: 180 * pi / 180,
-                      child: SvgIcon(
-                        SvgIcons.arrowBackIos,
-                        size: 24,
-                        color: AppColor.text1,
-                      ),
-                    ),
-                  ],
-                ),
+          child: Row(
+            children: [
+              SvgIcon(
+                SvgIcons.epLocation,
+                color: AppColor.primary1,
+                size: 24,
               ),
-          ]),
+              const SizedBox(
+                width: 10,
+              ),
+              _editModel!.address.name.isNotEmpty
+                  ? Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _editModel!.address.name,
+                              style: AppTextTheme.normalText(AppColor.primary1),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Transform.rotate(
+                            angle: 180 * pi / 180,
+                            child: SvgIcon(
+                              SvgIcons.arrowBackIos,
+                              size: 24,
+                              color: AppColor.text1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text(
+                      'Chọn địa chỉ',
+                      style: AppTextTheme.normalText(AppColor.text3),
+                    ),
+            ],
+          ),
         ),
       ),
     );
@@ -820,7 +825,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
   }
 
   _createTask() {
-    _editModel?.locationGps = LocationGpsModel.fromJson(positionTask);
+    _editModel?.address = AddressModel.fromJson(positionTask);
     _editModel?.service = ServiceModel.fromJson({'id': serviceId});
     _editModel?.endTime =
         DateTime.fromMillisecondsSinceEpoch(_editModel!.startTime)

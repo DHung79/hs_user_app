@@ -5,12 +5,11 @@ import '../../base/models/common_model.dart';
 import '../../rest/models/rest_api_response.dart';
 
 class TaskModel extends BaseModel {
-  final LocationGpsModel _locationGps;
+  final AddressModel _address;
   final UserModel _user;
   final TaskerModel _tasker;
   final ServiceModel _service;
   final String __id;
-  final String _address;
   final String _estimateTime;
   final int _startTime;
   final int _endTime;
@@ -28,9 +27,9 @@ class TaskModel extends BaseModel {
   final OptionModel _selectedOption;
 
   TaskModel.fromJson(Map<String, dynamic> json)
-      : _locationGps = BaseModel.map<LocationGpsModel>(
+      : _address = BaseModel.map<AddressModel>(
           json: json,
-          key: 'locationGps',
+          key: 'address',
         ),
         _user = BaseModel.map<UserModel>(
           json: json,
@@ -49,7 +48,6 @@ class TaskModel extends BaseModel {
           key: 'selected_option',
         ),
         __id = json['_id'] ?? '',
-        _address = json['address'] ?? '',
         _estimateTime = json['estimate_time'] ?? '',
         _startTime = json['start_time'] ?? 0,
         _endTime = json['end_time'] ?? 0,
@@ -70,12 +68,11 @@ class TaskModel extends BaseModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'location_gps': _locationGps.toJson(),
+        'address': address.toJson(),
         'posted_user': _user.toJson(),
         'tasker': _tasker.toJson(),
         'service': _service.toJson(),
         '_id': __id,
-        'address': _address,
         'estimate_time': _estimateTime,
         'start_time': _startTime,
         'end_time': _endTime,
@@ -93,12 +90,11 @@ class TaskModel extends BaseModel {
         'selected_option': _selectedOption.toJson(),
       };
 
-  LocationGpsModel get locationGps => _locationGps;
+  AddressModel get address => _address;
   UserModel get user => _user;
   TaskerModel get tasker => _tasker;
   ServiceModel get service => _service;
   String get id => __id;
-  String get address => _address;
   String get estimateTime => _estimateTime;
   int get startTime => _startTime;
   int get endTime => _endTime;
@@ -117,10 +113,9 @@ class TaskModel extends BaseModel {
 }
 
 class EditTaskModel extends EditBaseModel {
-  LocationGpsModel? locationGps;
+  AddressModel address = AddressModel.fromJson({});
   ServiceModel? service;
   List<CheckListModel> checkList = [];
-  String address = '';
   String estimateTime = '';
   int startTime = 0;
   int endTime = 0;
@@ -133,9 +128,8 @@ class EditTaskModel extends EditBaseModel {
   OptionModel? selectedOption;
 
   EditTaskModel.fromModel(TaskModel? model) {
-    locationGps = model?.locationGps;
+    address = model?.address ?? AddressModel.fromJson({});
     service = model?.service;
-    address = model?.address ?? '';
     estimateTime = model?.estimateTime ?? '';
     startTime = model?.startTime ?? 0;
     endTime = model?.endTime ?? 0;
@@ -151,9 +145,8 @@ class EditTaskModel extends EditBaseModel {
 
   Map<String, dynamic> toCreateJson() {
     Map<String, dynamic> params = {
-      'location_gps': locationGps?.toJson(),
+      'address': address.toJson(),
       'service': service!.toJson(),
-      'address': address,
       'estimate_time': estimateTime,
       'start_time': startTime,
       'end_time': endTime,
@@ -171,9 +164,8 @@ class EditTaskModel extends EditBaseModel {
 
   Map<String, dynamic> toEditTaskJson() {
     Map<String, dynamic> params = {
-      'location_gps': locationGps!.toJson(),
+      'address': address.toJson(),
       'service': service!.toJson(),
-      'address': address,
       'estimate_time': estimateTime,
       'start_time': startTime,
       'end_time': endTime,
@@ -188,6 +180,26 @@ class EditTaskModel extends EditBaseModel {
     };
     return params;
   }
+}
+
+class AddressModel extends BaseModel {
+  String name;
+  String lat;
+  String long;
+  String location;
+
+  AddressModel.fromJson(Map<String, dynamic> json)
+      : name = json['name'] ?? '',
+        lat = json['lat'] ?? '',
+        long = json['long'] ?? '',
+        location = json['location'] ?? '';
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'lat': lat,
+        'long': long,
+        'location': location,
+      };
 }
 
 class ListTaskModel extends BaseModel {
@@ -206,23 +218,6 @@ class ListTaskModel extends BaseModel {
 
   List<TaskModel> get records => _data;
   Paging get meta => _metaData;
-}
-
-class LocationGpsModel extends BaseModel {
-  final String _lat;
-  final String _long;
-
-  LocationGpsModel.fromJson(Map<String, dynamic> json)
-      : _lat = json['lat'] ?? '',
-        _long = json['long'] ?? '';
-
-  Map<String, dynamic> toJson() => {
-        'lat': _lat,
-        'long': _long,
-      };
-
-  String get lat => _lat;
-  String get long => _long;
 }
 
 class CheckListModel extends BaseModel {

@@ -42,12 +42,6 @@ class ApiResponse<T> {
 class BaseModel {
   static T fromJson<T extends BaseModel>(Map<String, dynamic> json) {
     // Models
-    // if (T == AccountModel) {
-    //   return AccountModel.fromJson(json) as T;
-    // }
-    // if (T == AccountListModel) {
-    //   return AccountListModel.fromJson(json) as T;
-    // }
     if (T == Status) {
       return Status.fromJson(json) as T;
     }
@@ -63,19 +57,14 @@ class BaseModel {
     if (T == ListTaskModel) {
       return ListTaskModel.fromJson(json) as T;
     }
-
     if (T == PostedUserModel) {
       return PostedUserModel.fromJson(json) as T;
     }
-    if (T == LocationGpsModel) {
-      return LocationGpsModel.fromJson(json) as T;
+    if (T == AddressModel) {
+      return AddressModel.fromJson(json) as T;
     }
     if (T == TaskerModel) {
       return TaskerModel.fromJson(json) as T;
-    }
-
-    if (T == LocationGpsModel) {
-      return LocationGpsModel.fromJson(json) as T;
     }
     if (T == ServiceModel) {
       return ServiceModel.fromJson(json) as T;
@@ -159,6 +148,8 @@ class BaseModel {
         return BaseModel.fromJson<T>({defaultKey: _val});
       } else if (_val is Map<String, dynamic>) {
         return BaseModel.fromJson<T>(_val);
+      } else if (_val is List<dynamic> && _val.isNotEmpty) {
+        return BaseModel.fromJson<T>(_val[0]);
       }
     }
     return BaseModel.fromJson({});

@@ -342,7 +342,7 @@ class _PostTaskState extends State<PostTask> {
                                 .map((e) => CheckListModel.fromJson(
                                     {'name': e, 'status': false}))
                                 .toList();
-                            editModel.address = nameAddress!;
+                            editModel.address.name = nameAddress!;
                           });
                           navigateTo(confirmRoute);
                         }

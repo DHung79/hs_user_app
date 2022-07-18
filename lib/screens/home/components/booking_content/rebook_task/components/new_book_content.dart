@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../../../../core/service/service.dart';
+import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_time_picker.dart';
+import '../../../../../../widgets/task_widget/task_warning_dialog.dart';
+import '../../../../../../widgets/task_widget/task_widget.dart';
 import '/core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +35,7 @@ class _NewBookContentState extends State<NewBookContent> {
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
-  bool _isEditTask = true;
+  bool _isCreateTask = true;
   bool _isOpenMap = false;
   bool _isPickLocation = false;
   bool _isEditCheckList = false;
@@ -41,6 +44,7 @@ class _NewBookContentState extends State<NewBookContent> {
 
   @override
   void initState() {
+    JTToast.init(context);
     _fetchDataOnPage();
     _editTaskModel = EditTaskModel.fromModel(null);
     _editUserModel = EditUserModel.fromModel(widget.user);
@@ -50,7 +54,7 @@ class _NewBookContentState extends State<NewBookContent> {
     _editTaskModel.date = DateTime(_now.year, _now.month, _now.day, 0, 0, 0)
         .millisecondsSinceEpoch;
     _editTaskModel.startTime = _now.millisecondsSinceEpoch;
-    _locationController.text = _editTaskModel.address;
+    _locationController.text = _editTaskModel.address.name;
     super.initState();
   }
 
@@ -69,10 +73,16 @@ class _NewBookContentState extends State<NewBookContent> {
       if (_isPickLocation) {
         return PickLocation(
           locationController: _locationController,
+          selectedLocation: ({String lat = '', String long = ''}) {
+            setState(() {
+              _editTaskModel.address.lat = lat;
+              _editTaskModel.address.long = long;
+            });
+          },
           changeLocation: (location) {
             setState(() {
               _locationController.text = location;
-              _editTaskModel.address = location;
+              _editTaskModel.address.name = location;
             });
           },
           goBack: () {
@@ -87,7 +97,7 @@ class _NewBookContentState extends State<NewBookContent> {
           changeLocation: (location) {
             setState(() {
               _locationController.text = location;
-              _editTaskModel.address = location;
+              _editTaskModel.address.name = location;
             });
           },
           openPickLocation: () {
@@ -148,11 +158,11 @@ class _NewBookContentState extends State<NewBookContent> {
                   ),
                 ),
                 onPressed: () {
-                  if (_isEditTask) {
+                  if (_isCreateTask) {
                     navigateTo(bookingRoute);
                   } else {
                     setState(() {
-                      _isEditTask = true;
+                      _isCreateTask = true;
                       if (_scrollController.hasClients &&
                           _scrollController.keepScrollOffset) {
                         _scrollController.jumpTo(0);
@@ -163,7 +173,7 @@ class _NewBookContentState extends State<NewBookContent> {
               ),
               Center(
                 child: Text(
-                  _isEditTask ? 'Dọn dẹp nhà cửa' : 'Xác nhận và thanh toán',
+                  _isCreateTask ? 'Dọn dẹp nhà cửa' : 'Xác nhận và thanh toán',
                   style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                 ),
               ),
@@ -200,19 +210,6 @@ class _NewBookContentState extends State<NewBookContent> {
     );
   }
 
-  String _getOptionType(int type) {
-    switch (type) {
-      case 0:
-        return 'Giờ';
-      case 1:
-        return 'Phòng';
-      case 2:
-        return 'Khác';
-      default:
-        return 'Giờ';
-    }
-  }
-
   Widget _buildTaskInfo(ServiceModel service) {
     final price = NumberFormat('#,##0 VND', 'vi')
         .format(_editTaskModel.selectedOption!.price);
@@ -233,7 +230,7 @@ class _NewBookContentState extends State<NewBookContent> {
       context: context,
     );
     final optionType =
-        _getOptionType(_editTaskModel.service!.optionType).toLowerCase();
+        getOptionType(_editTaskModel.service!.optionType).toLowerCase();
     return Container(
       constraints: BoxConstraints(
         minHeight: screenSize.height - 80,
@@ -244,7 +241,7 @@ class _NewBookContentState extends State<NewBookContent> {
         children: [
           Column(
             children: [
-              if (_isEditTask)
+              if (_isCreateTask)
                 Column(
                   children: [
                     _location(),
@@ -254,19 +251,57 @@ class _NewBookContentState extends State<NewBookContent> {
                     ),
                   ],
                 ),
-              if (_isEditTask)
+              if (_isCreateTask)
                 TaskTimePicker(
                   editModel: _editTaskModel,
-                  onPressed: (day) {
+                  onChangeDate: (date) {
                     setState(() {
-                      _editTaskModel.date = day.millisecondsSinceEpoch;
+                      _editTaskModel.date = date.millisecondsSinceEpoch;
+                      final startTimeData = DateTime.fromMillisecondsSinceEpoch(
+                        _editTaskModel.startTime.toInt(),
+                      );
+                      final startTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        startTimeData.hour,
+                        startTimeData.minute,
+                      );
+                      _editTaskModel.startTime =
+                          startTime.millisecondsSinceEpoch;
+                      final endTime = startTime.add(
+                        Duration(
+                            hours: _editTaskModel.selectedOption!.quantity),
+                      );
+                      _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
+                    });
+                  },
+                  onChangeTime: (time) {
+                    setState(() {
+                      final date = DateTime.fromMillisecondsSinceEpoch(
+                        _editTaskModel.date.toInt(),
+                      );
+                      final startTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        time.hour,
+                        time.minute,
+                      );
+                      _editTaskModel.startTime =
+                          startTime.millisecondsSinceEpoch;
+                      final endTime = startTime.add(
+                        Duration(
+                            hours: _editTaskModel.selectedOption!.quantity),
+                      );
+                      _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
                     });
                   },
                 ),
-              if (!_isEditTask)
+              if (!_isCreateTask)
                 Column(
                   children: [
-                    if (_isEditTask)
+                    if (_isCreateTask)
                       const Padding(
                         padding: EdgeInsets.all(8),
                         child: Divider(),
@@ -275,7 +310,7 @@ class _NewBookContentState extends State<NewBookContent> {
                       title: 'Thông tin công việc',
                       onPressed: () {
                         setState(() {
-                          _isEditTask = true;
+                          _isCreateTask = true;
                         });
                       },
                       child: Wrap(
@@ -284,7 +319,7 @@ class _NewBookContentState extends State<NewBookContent> {
                         children: [
                           _detailItem(
                             title:
-                                '${_editTaskModel.estimateTime} tiếng, $startTime $endTime',
+                                '${_editTaskModel.estimateTime} $optionType, $startTime $endTime',
                             icon: SvgIcons.accessTime,
                           ),
                           _detailItem(
@@ -297,7 +332,7 @@ class _NewBookContentState extends State<NewBookContent> {
                               icon: SvgIcons.clipboard1,
                             ),
                           _detailItem(
-                            title: _editTaskModel.address,
+                            title: _editTaskModel.address.name,
                             icon: SvgIcons.epLocation,
                           ),
                         ],
@@ -352,7 +387,7 @@ class _NewBookContentState extends State<NewBookContent> {
                     ),
                   ],
                 ),
-              if (_isEditTask)
+              if (_isCreateTask)
                 Column(
                   children: [
                     _noteForTasker(),
@@ -367,7 +402,7 @@ class _NewBookContentState extends State<NewBookContent> {
               constraints: const BoxConstraints(minHeight: 52),
               color: AppColor.shade9,
               borderRadius: BorderRadius.circular(4),
-              child: _isEditTask
+              child: _isCreateTask
                   ? Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -394,16 +429,41 @@ class _NewBookContentState extends State<NewBookContent> {
                       ),
                     ),
               onPressed: () {
-                if (_isEditTask) {
-                  setState(() {
-                    _isEditTask = false;
-                    if (_scrollController.hasClients &&
-                        _scrollController.keepScrollOffset) {
-                      _scrollController.jumpTo(0);
-                    }
-                  });
+                final _now = DateTime.now();
+                if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+                  showModalBottomSheet(
+                      isDismissible: false,
+                      context: context,
+                      backgroundColor: AppColor.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      builder: (context) {
+                        return const WarningDialog(
+                          title: 'Thời gian không hợp lệ',
+                          content: 'Vui lòng chọn lại thời gian bắt đầu',
+                        );
+                      });
+                } else if (_editTaskModel.address.name.isEmpty) {
+                  showModalBottomSheet(
+                      isDismissible: false,
+                      context: context,
+                      backgroundColor: AppColor.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      builder: (context) {
+                        return const WarningDialog(
+                          title: 'Địa chỉ không được để trống',
+                          content: 'Vui lòng chọn địa chỉ',
+                        );
+                      });
                 } else {
-                  _editTask();
+                  if (_isCreateTask) {
+                    _goToCreateTask();
+                  } else {
+                    _createTask();
+                  }
                 }
               },
             ),
@@ -765,8 +825,6 @@ class _NewBookContentState extends State<NewBookContent> {
                           ),
                           InkWell(
                             onTap: () {
-                              // final index =
-                              //     _editTaskModel.checkList.indexOf(item);
                               setState(() {
                                 _editTaskModel.checkList.remove(item);
                               });
@@ -837,16 +895,27 @@ class _NewBookContentState extends State<NewBookContent> {
     _serviceBloc.fetchAllData(params: {});
   }
 
-  _editTask() {
-    // _taskBloc.createTask(editModel: _editTaskModel).then(
-    //   (value) async {
-    //     navigateTo(homeRoute);
-    //     JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
-    //   },
-    // ).onError((ApiError error, stackTrace) {
-    //   setState(() {});
-    // }).catchError(
-    //   (error, stackTrace) {},
-    // );
+  _goToCreateTask() {
+    setState(() {
+      _isCreateTask = false;
+      if (_scrollController.hasClients && _scrollController.keepScrollOffset) {
+        _scrollController.jumpTo(0);
+      }
+    });
+  }
+
+  _createTask() {
+    _taskBloc.createTask(editModel: _editTaskModel).then(
+      (value) async {
+        navigateTo(bookTaskRoute);
+        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+      },
+    ).onError((ApiError error, stackTrace) {
+      JTToast.errorToast(message: showError(error.errorCode, context));
+    }).catchError(
+      (error, stackTrace) {
+        logDebug('catchError: $error');
+      },
+    );
   }
 }

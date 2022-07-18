@@ -63,7 +63,7 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.postFast()
-      : name = rebookTaskRoute,
+      : name = bookTaskRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.settingProfile()
@@ -189,7 +189,7 @@ class AppRoutePath {
     if (name == profileUserRoute) {
       return AppRoutePath.profileUser();
     }
-    if (name == rebookTaskRoute) {
+    if (name == bookTaskRoute) {
       return AppRoutePath.postFast();
     }
     if (name == paymentRoute) {
