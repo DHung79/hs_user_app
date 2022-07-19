@@ -5,6 +5,7 @@ import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
 import '../../rate/model/rate_model.dart';
+import '../../tasker/model/tasker_model.dart';
 
 class ApiError implements Exception {
   String _errorCode = '';
@@ -70,10 +71,12 @@ class BaseModel {
     if (T == LocationGpsModel) {
       return LocationGpsModel.fromJson(json) as T;
     }
-    if (T == TaskerModel) {
-      return TaskerModel.fromJson(json) as T;
+    if (T == AddressModel) {
+      return AddressModel.fromJson(json) as T;
     }
-
+    if (T == OptionModel) {
+      return OptionModel.fromJson(json) as T;
+    }
     if (T == LocationGpsModel) {
       return LocationGpsModel.fromJson(json) as T;
     }
@@ -115,6 +118,13 @@ class BaseModel {
     if (T == ListRateModel) {
       return ListRateModel.fromJson(json) as T;
     }
+    if (T == TaskerTaskModel) {
+      return TaskerTaskModel.fromJson(json) as T;
+    }
+    if (T == TaskerModel) {
+      return TaskerModel.fromJson(json) as T;
+    }
+  
     logError("Unknown BaseModel class: $T");
     throw Exception("Unknown BaseModel class: $T");
   }
@@ -223,9 +233,9 @@ class EditBaseModel {
     return {};
   }
 
-  static Map<String, dynamic> toCreateRateJson(EditBaseModel model) {
-    if (model is EditRateModel) {
-      return model.toCreateJson();
+  static Map<String, dynamic> toEditCommentJson(EditBaseModel model) {
+    if (model is EditCommentsModel) {
+      return model.sendReview();
     }
     return {};
   }

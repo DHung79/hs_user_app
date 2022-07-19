@@ -39,8 +39,10 @@ class RateRepository {
   Future<ApiResponse<T?>>
       createRate<T extends BaseModel, K extends EditBaseModel>({
     K? editModel,
+    String? id,
   }) =>
           _provider.createRate<T, K>(
             editModel: editModel,
+            id: id,
           );
 }

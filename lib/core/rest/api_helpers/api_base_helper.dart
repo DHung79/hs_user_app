@@ -246,7 +246,7 @@ class ApiBaseHelper {
   }
 
   ApiResponse<T> _returnResponse<T extends BaseModel>(http.Response response) {
-    logDebug(response.body);
+    logDebug('body: ${response.body}');
     if (response.statusCode == 200 || response.statusCode == 201) {
       var responseJson = json.decode(response.body.toString());
       if (responseJson is Map<String, dynamic>) {

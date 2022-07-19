@@ -162,12 +162,14 @@ class TaskBloc {
   Future<TaskModel> createTask({EditTaskModel? editModel}) async {
     try {
       // Await response from server.
+      logDebug(editModel?.address?.lat);
       final SharedPreferences sharedPreferences = await prefs;
       serviceId = sharedPreferences.getString('id') ?? '';
       editModel?.service = ServiceModel.fromJson({'_id': serviceId});
       final data = await _repository.createTask<TaskModel, EditTaskModel>(
         editModel: editModel,
       );
+      logDebug(data);
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);
@@ -199,7 +201,6 @@ class TaskBloc {
         return Future.value(data.model);
       }
     } on AppException catch (e) {
-
       return Future.error(e);
     }
   }

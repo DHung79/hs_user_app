@@ -16,7 +16,6 @@ class TaskApiProvider {
       params.forEach((key, value) => queries.add('$key=$value'));
       path += '?' + queries.join('&');
     }
-    logDebug('path: $path');
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.getData<T>(
       path: path,
@@ -48,7 +47,6 @@ class TaskApiProvider {
         ApiConstants.tasks +
         ApiConstants.user +
         '/$id';
-    logDebug('path: $path');
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.deleteData<T>(
       path: path,
@@ -63,8 +61,10 @@ class TaskApiProvider {
   }) async {
     final path =
         ApiConstants.apiDomain + ApiConstants.apiVersion + ApiConstants.tasks;
+    logDebug('path: $path');
     final body = convert.jsonEncode(EditBaseModel.toCreateJson(editModel!));
-    logDebug('path: $path\nbody: $body');
+    logDebug('body: $body');
+
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.postData<T>(
       path: path,
@@ -86,7 +86,6 @@ class TaskApiProvider {
         '/$id';
     final body = convert.jsonEncode(EditBaseModel.toEditTaskJson(editModel!));
     final token = await ApiHelper.getUserToken();
-    logDebug('path: $path\nbody: $body');
     final response = await RestApiHandlerData.putData<T>(
       path: path,
       body: body,

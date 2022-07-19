@@ -26,6 +26,7 @@ class RestApiHandlerData {
       body: body,
       headers: headers,
     );
+    logDebug('1');
     logDebug('token: ${response.model.toString()}');
     return response;
   }

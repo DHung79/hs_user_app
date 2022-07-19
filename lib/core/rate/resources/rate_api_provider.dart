@@ -28,23 +28,25 @@ class RateApiProvider {
   Future<ApiResponse<T?>>
       createRate<T extends BaseModel, K extends EditBaseModel>({
     K? editModel,
+    String? id
   }) async {
-    final path =
-        ApiConstants.apiDomain + ApiConstants.apiVersion + ApiConstants.rates;
-    final body = convert.jsonEncode(EditBaseModel.toCreateRateJson(editModel!));
+    final path = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.rates +
+        ApiConstants.task +
+        '/$id';
+    final body =
+        convert.jsonEncode(EditBaseModel.toEditCommentJson(editModel!));
     logDebug('path: $path\nbody: $body');
     final token = await ApiHelper.getUserToken();
-    final response = await RestApiHandlerData.postData<T>(
+    final response = await RestApiHandlerData.putData<T>(
       path: path,
       body: body,
       headers: ApiHelper.headers(token),
     );
-  
+
     return response;
-
   }
-
-
 
   Future<ApiResponse<T?>>
       editProfile<T extends BaseModel, K extends EditBaseModel>({

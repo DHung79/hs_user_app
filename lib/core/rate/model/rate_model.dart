@@ -63,7 +63,7 @@ class CommentsModel extends BaseModel {
   CommentsModel.fromJson(Map<String, dynamic> json)
       : _description = json['description'] ?? '',
         _rating = double.tryParse(json['rating'].toString()) ?? 0,
-        __id = json['id'] ?? '',
+        __id = json['_id'] ?? '',
         _user = BaseModel.map<UserModel>(json: json, key: 'user');
 
   Map<String, dynamic> toJson() => {
@@ -77,6 +77,24 @@ class CommentsModel extends BaseModel {
   String get description => _description;
   double get rating => _rating;
   String get id => __id;
+}
+
+class EditCommentsModel extends EditBaseModel {
+  String description = '';
+  double rating = 0;
+
+  EditCommentsModel.fromModel(CommentsModel? model) {
+    description = model?.description ?? '';
+    rating = model?.rating ?? 0;
+  }
+
+  Map<String, dynamic> sendReview() {
+    Map<String, dynamic> params = {
+      'description': description,
+      'rating': rating,
+    };
+    return params;
+  }
 }
 
 class EditRateModel extends EditBaseModel {

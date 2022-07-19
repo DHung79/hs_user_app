@@ -40,12 +40,13 @@ class RateBloc {
     _isFetching = false;
   }
 
-  Future<RateModel> createRate({EditRateModel? editModel}) async {
+  Future<CommentsModel> createRate({EditCommentsModel? editModel, String? id}) async {
     logDebug('data: $editModel');
     try {
       // Await response from server.
-      final data = await _repository.createRate<RateModel, EditRateModel>(
+      final data = await _repository.createRate<CommentsModel, EditCommentsModel>(
         editModel: editModel,
+        id: id
       );
       if (data.error != null) {
         // Error exist
