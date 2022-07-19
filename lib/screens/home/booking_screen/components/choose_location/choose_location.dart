@@ -28,6 +28,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
   late GoogleMapController _mapController;
   late TaskModel task;
   String nameAddressChoose = '';
+  AddressModel? address;
   bool mapButton = false;
   final LocationSettings locationSettings = const LocationSettings(
       accuracy: LocationAccuracy.best, distanceFilter: 0);
@@ -48,27 +49,27 @@ class _ChooseLocationState extends State<ChooseLocation> {
       mapButton = googleSearchPlacesApiKey.currentState!.mapButton;
     }
     if (mapButton) {
-    _debounce.debounce(
-      afterDuration: () async {
-        await placemarkFromCoordinates(
-          _selectedPlate.position.latitude,
-          _selectedPlate.position.longitude,
-        ).then(
-          (placemarks) {
-            if (placemarks.isNotEmpty) {
-              final dataLocation = '${placemarks[0].street}'
-                  ', ${placemarks[0].locality}'
-                  ', ${placemarks[0].administrativeArea}';
-              setState(() {
-                nameAddressChoose = dataLocation;
-              });
-            }
-          },
-        );
-      },
+      _debounce.debounce(
+        afterDuration: () async {
+          await placemarkFromCoordinates(
+            _selectedPlate.position.latitude,
+            _selectedPlate.position.longitude,
+          ).then(
+            (placemarks) {
+              if (placemarks.isNotEmpty) {
+                final dataLocation = '${placemarks[0].street}'
+                    ', ${placemarks[0].locality}'
+                    ', ${placemarks[0].administrativeArea}';
+                setState(() {
+                  nameAddressChoose = dataLocation;
+                });
+              }
+            },
+          );
+        },
       );
     }
-    
+
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
 
     _selectedPlate = Marker(
@@ -243,10 +244,11 @@ class _ChooseLocationState extends State<ChooseLocation> {
             ),
             onPressed: () async {
               setState(() {
-                positionTask = {
+                address = AddressModel.fromJson({
                   'lat': _selectedPlate.position.latitude.toString(),
                   'long': _selectedPlate.position.longitude.toString(),
-                };
+                  'name': nameAddressChoose,
+                });
               });
               navigateTo(pickTypeHomeRoute);
             },

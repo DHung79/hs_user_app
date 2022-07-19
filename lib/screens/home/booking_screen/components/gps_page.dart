@@ -40,7 +40,6 @@ class _GoogleSearchPlacesApiState extends State<GoogleSearchPlacesApi> {
       String request = '$baseURL?input=$input&key=$kPLACESAPIKEY';
       var response = await http.get(Uri.parse(request));
 
-      logDebug('response :${response.body}');
       if (response.statusCode == 200) {
         setState(() {
           _placeList = json.decode(response.body)['predictions'];

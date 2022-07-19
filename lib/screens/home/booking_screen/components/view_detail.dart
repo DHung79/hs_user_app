@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hs_user_app/core/rate/model/rate_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/task_history.dart';
@@ -9,9 +8,11 @@ import 'package:hs_user_app/theme/svg_constants.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/authentication/bloc/authentication/authentication_event.dart';
-import '../../../../core/rate/bloc/rate_bloc.dart';
+import '../../../../core/rate/rate.dart';
 import '../../../../core/task/bloc/task_bloc.dart';
 import '../../../../core/task/model/task_model.dart';
+import '../../../../core/tasker/bloc/tasker_bloc.dart';
+import '../../../../core/tasker/model/tasker_model.dart';
 import '../../../../core/user/bloc/user_bloc.dart';
 import '../../../../core/user/model/user_model.dart';
 import '../../../../widgets/jt_toast.dart';
@@ -29,12 +30,15 @@ class _ViewDetailState extends State<ViewDetail> {
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
   final _rateBloc = RateBloc();
+  final _taskerBloc = TaskerBloc();
   bool _mainPage = true;
+  final EditCommentsModel _editCommentsModel =
+      EditCommentsModel.fromModel(null);
   TaskModel? _editModel;
-  List<TaskModel>? editModel;
-  final EditRateModel _editRateModel = EditRateModel.fromModel(null);
+  TaskModel? editModel;
+  late List<CommentsModel>? comments;
   int? value;
-  String rate = '';
+  double rate = 0;
   final TextEditingController _controller = TextEditingController();
 
   Color getColor(Set<MaterialState> states) {
@@ -58,8 +62,8 @@ class _ViewDetailState extends State<ViewDetail> {
   void initState() {
     _editModel = taskHistoryKey.currentState?.task;
 
-    editModel = taskNowKey.currentState?.statuses;
-    logDebug('_editModel :${editModel?[0].toJson()}');
+    editModel = taskNowKey.currentState?.task;
+    logDebug('_editModel :${editModel?.toJson()}');
 
     value = taskNowKey.currentState?.value;
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
@@ -100,169 +104,199 @@ class _ViewDetailState extends State<ViewDetail> {
 
   Widget content(AsyncSnapshot<UserModel> snapshot) {
     final user = snapshot.data;
-    final comments = _editModel?.tasker.comments;
-
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
-          elevation: 16,
-          title: Text(
-            _mainPage ? 'Chi tiết công việc' : 'Thông tin người làm',
-            style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-          ),
-          centerTitle: true,
-          leading: TextButton(
-            onPressed: () {
-              setState(() {
-                _mainPage ? navigateTo(bookingRoute) : _mainPage = !_mainPage;
-              });
-            },
-            child: SvgIcon(
-              SvgIcons.arrowBack,
-              color: AppColor.text1,
-              size: 24,
-            ),
-          ),
-        ),
-        body: _mainPage
-            ? Column(
-                children: [
-                  editModel?[value!].tasker.avatar != ''
-                      ? profile()
-                      : const SizedBox(),
-                  Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
+    logDebug('${editModel?.tasker.toJson()}');
+    int _count = 0;
+    logDebug('_count: $_count');
+    return FutureBuilder<TaskerModel>(
+        future: _taskerBloc
+            .fetchDataById(_editModel?.tasker.id ?? editModel?.tasker.id ?? ''),
+        builder: (context, AsyncSnapshot<TaskerModel> snapshotTasker) {
+          final tasker = snapshotTasker.data;
+          logDebug('tasker: ${tasker?.toJson()}');
+          return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                shadowColor: const Color.fromRGBO(79, 117, 140, 0.16),
+                elevation: 16,
+                title: Text(
+                  _mainPage ? 'Chi tiết công việc' : 'Thông tin người làm',
+                  style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                ),
+                centerTitle: true,
+                leading: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _mainPage
+                          ? navigateTo(bookingRoute)
+                          : _mainPage = !_mainPage;
+                    });
+                  },
+                  child: SvgIcon(
+                    SvgIcons.arrowBack,
+                    color: AppColor.text1,
+                    size: 24,
+                  ),
+                ),
+              ),
+              body: _mainPage
+                  ? Column(
                       children: [
-                        yourProfile(user!),
-                        detailTask(),
-                        payment(context),
-                        buttonReview()
-                      ],
-                    ),
-                  )
-                ],
-              )
-            : SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(_editModel?.tasker.avatar ?? ''),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Text(
-                        _editModel?.tasker.name ?? '',
-                        style: AppTextTheme.mediumBigText(AppColor.text3),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: 183,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        tasker?.name != null
+                            ? profile(tasker)
+                            : const SizedBox(),
+                        Expanded(
+                          child: ListView(
+                            shrinkWrap: true,
                             children: [
-                              RatingBarIndicator(
-                                rating: _editModel?.tasker.totalRating ?? 0,
-                                itemCount: 5,
-                                itemPadding: const EdgeInsets.all(2),
-                                itemSize: 24.0,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, _) => SvgIcon(
-                                  SvgIcons.star,
-                                  color: Colors.amber,
-                                ),
-                              ),
-                              Text(
-                                _editModel?.tasker.totalRating.toString() ?? '',
-                                style: AppTextTheme.normalHeaderTitle(
-                                    AppColor.text1),
-                              )
+                              yourProfile(user!),
+                              detailTask(),
+                              payment(context),
+                              buttonReview()
                             ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-                          child: Text(
-                            '(${_editModel?.tasker.numReview} đánh giá)',
-                            style: AppTextTheme.normalText(AppColor.text1),
                           ),
                         )
                       ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0, vertical: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          profileTasker(
-                              title: 'Tham gia từ', profile: '3/2019'),
-                          linevertical(context),
-                          profileTasker(title: 'Công việc', profile: '320'),
-                          linevertical(context),
-                          profileTasker(
-                              title: 'Đánh giá tích cực', profile: '90%'),
-                        ],
-                      ),
-                    ),
-                    titleMedal(),
-                    listmedal(),
-                    const SizedBox(
-                      height: 28,
-                    ),
-                    Expanded(
+                    )
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 16),
-                            child: Text(
-                              'Đánh giá tiêu biểu',
-                              style: AppTextTheme.mediumHeaderTitle(
-                                  AppColor.text1),
+                            padding: const EdgeInsets.all(16.0),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: tasker?.avatar == ''
+                                  ? const CircleAvatar(
+                                      backgroundColor: Colors.purple)
+                                  : CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(tasker?.avatar ?? ''),
+                                    ),
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              tasker?.name ?? '',
+                              style: AppTextTheme.mediumBigText(AppColor.text3),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 183,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    RatingBarIndicator(
+                                      rating: tasker?.totalRating ?? 0,
+                                      itemCount: 5,
+                                      itemPadding: const EdgeInsets.all(2),
+                                      itemSize: 24.0,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, _) => SvgIcon(
+                                        SvgIcons.star,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                    Text(
+                                      tasker?.totalRating.toString() ?? '',
+                                      style: AppTextTheme.normalHeaderTitle(
+                                          AppColor.text1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 4.0, bottom: 16),
+                                child: Text(
+                                  '(${tasker?.numReview} đánh giá)',
+                                  style:
+                                      AppTextTheme.normalText(AppColor.text1),
+                                ),
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 25.0, vertical: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                profileTasker(
+                                    title: 'Tham gia từ', profile: '3/2019'),
+                                linevertical(context),
+                                profileTasker(
+                                    title: 'Công việc', profile: '320'),
+                                linevertical(context),
+                                profileTasker(
+                                    title: 'Đánh giá tích cực',
+                                    profile: _count != 0
+                                        ? positiveReview(
+                                            _count, tasker!.comments.length)
+                                        : 0.toString()),
+                              ],
+                            ),
+                          ),
+                          titleMedal(),
+                          listmedal(),
+                          const SizedBox(
+                            height: 28,
                           ),
                           Expanded(
-                            child: Container(
-                              constraints: const BoxConstraints(
-                                  minHeight: 400, maxHeight: 600),
-                              width: MediaQuery.of(context).size.width,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: comments?.length,
-                                itemBuilder: (context, index) {
-                                  return review(
-                                    comment: comments?[index].description ?? '',
-                                    user: comments?[index].user.name ?? '',
-                                    rate: comments?[index].rating.toString() ??
-                                        '',
-                                  );
-                                },
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 16),
+                                  child: Text(
+                                    'Đánh giá tiêu biểu',
+                                    style: AppTextTheme.mediumHeaderTitle(
+                                        AppColor.text1),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                        minHeight: 400, maxHeight: 600),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: tasker?.comments.length,
+                                      itemBuilder: (context, index) {
+                                        if (tasker!.comments[index].rating >=
+                                            2.5) {
+                                          _count++;
+                                        }
+                                        return review(
+                                            comment: tasker
+                                                .comments[index].description,
+                                            user: tasker
+                                                .comments[index].user.name,
+                                            rate: tasker.comments[index].rating
+                                                .toString());
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ));
+                    ));
+        });
+  }
+
+  String positiveReview(int count, int comment) {
+    return (count / comment * 100).toStringAsFixed(2) + ' %';
   }
 
   Widget buttonReview() {
@@ -280,7 +314,7 @@ class _ViewDetailState extends State<ViewDetail> {
               ),
               onPressed: () {
                 setState(() {
-                  rate = 0.toString();
+                  rate = 0;
                   _controller.text = '';
                 });
                 _showMaterialDialog();
@@ -309,7 +343,7 @@ class _ViewDetailState extends State<ViewDetail> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4))),
               onPressed: () {
-                _taskBloc.deleteTask(id: editModel?[value!].id).then(
+                _taskBloc.deleteTask(id: editModel?.id).then(
                   (value) async {
                     AuthenticationBlocController()
                         .authenticationBloc
@@ -440,21 +474,19 @@ class _ViewDetailState extends State<ViewDetail> {
             icontitle(
                 icon: SvgIcons.accessTime,
                 text:
-                    '${_editModel?.estimateTime ?? editModel?[value!].estimateTime} tiếng, ${readTimestamp(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} - ${readTimestampEnd(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} '),
+                    '${_editModel?.estimateTime ?? editModel?.estimateTime} tiếng, ${readTimestamp(_editModel?.startTime ?? editModel?.startTime ?? 0)} - ${readTimestampEnd(_editModel?.startTime ?? editModel?.startTime ?? 0)} '),
             const SizedBox(
               height: 10,
             ),
             icontitle(
                 icon: SvgIcons.calenderToday,
-                text: readTimestamp2(
-                    _editModel?.date ?? editModel?[value!].date)),
+                text: readTimestamp2(_editModel?.date ?? editModel?.date)),
             const SizedBox(
               height: 10,
             ),
             icontitle(
                 icon: SvgIcons.dollar1,
-                text:
-                    '${_editModel?.totalPrice ?? editModel?[value!].totalPrice}'),
+                text: '${_editModel?.totalPrice ?? editModel?.totalPrice}'),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width,
@@ -476,7 +508,7 @@ class _ViewDetailState extends State<ViewDetail> {
               ),
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                _editModel?.note ?? editModel?[value!].note ?? '',
+                _editModel?.note ?? editModel?.note ?? '',
                 style: AppTextTheme.normalText(AppColor.text1),
               ),
             ),
@@ -498,7 +530,7 @@ class _ViewDetailState extends State<ViewDetail> {
                   children: [
                     Text(
                       count.toString() +
-                          ' / ${_editModel?.checkList.length ?? editModel?[value!].checkList.length}',
+                          ' / ${_editModel?.checkList.length ?? editModel?.checkList.length}',
                       style: AppTextTheme.normalText(AppColor.text3),
                     ),
                     TextButton(
@@ -536,14 +568,14 @@ class _ViewDetailState extends State<ViewDetail> {
                       itemBuilder: (context, index) {
                         return checkbox(
                           isCheck: _editModel?.checkList[index].status ??
-                              editModel?[value!].checkList[index].status ??
+                              editModel?.checkList[index].status ??
                               false,
                           name: _editModel?.checkList[index].name ??
-                              editModel![value!].checkList[index].name,
+                              editModel!.checkList[index].name,
                         );
                       },
                       itemCount: _editModel?.checkList.length ??
-                          editModel?[value!].checkList.length,
+                          editModel?.checkList.length,
                     ),
                   ),
             if (_editModel != null)
@@ -743,7 +775,7 @@ class _ViewDetailState extends State<ViewDetail> {
     );
   }
 
-  Widget profile() {
+  Widget profile(TaskerModel? tasker) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -757,12 +789,13 @@ class _ViewDetailState extends State<ViewDetail> {
               SizedBox(
                 width: 80,
                 height: 80,
-                child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(
-                          _editModel?.tasker.avatar ??
-                          ''),
-                ),
+                child: tasker?.avatar == ''
+                    ? const CircleAvatar(
+                        backgroundColor: Colors.purple,
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(tasker?.avatar ?? ''),
+                      ),
               ),
               const SizedBox(
                 width: 16,
@@ -772,8 +805,7 @@ class _ViewDetailState extends State<ViewDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                        _editModel?.tasker.name ??
-                        '',
+                    tasker?.name ?? '',
                     style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                   ),
                   const SizedBox(
@@ -839,7 +871,7 @@ class _ViewDetailState extends State<ViewDetail> {
                   width: 8,
                 ),
                 Text(
-                  '5.0',
+                  tasker?.totalRating.toString() ?? '0',
                   style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                 )
               ],
@@ -873,9 +905,8 @@ class _ViewDetailState extends State<ViewDetail> {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp!);
     var time = '';
     time = format.format(date.add(Duration(
-        hours: int.parse(_editModel?.estimateTime ??
-            editModel?[value!].estimateTime ??
-            '0'))));
+        hours: int.parse(
+            _editModel?.estimateTime ?? editModel?.estimateTime ?? '0'))));
 
     return time;
   }
@@ -1050,17 +1081,19 @@ class _ViewDetailState extends State<ViewDetail> {
                     SizedBox(
                       width: 100,
                       height: 100,
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(_editModel?.tasker.avatar ?? ''),
-                      ),
+                      child: _editModel?.tasker.avatar == ''
+                          ? const CircleAvatar(
+                              backgroundColor: Colors.purple,
+                            )
+                          : CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(_editModel!.tasker.avatar),
+                            ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
-                        
-                            _editModel?.tasker.name ??
-                            '',
+                        _editModel?.tasker.name ?? '',
                         style: AppTextTheme.mediumBigText(AppColor.text1),
                       ),
                     ),
@@ -1083,14 +1116,14 @@ class _ViewDetailState extends State<ViewDetail> {
                               const EdgeInsets.symmetric(horizontal: 4.0),
                           onRatingUpdate: (rating) {
                             setState(() {
-                              rate = rating.toString();
+                              rate = rating;
                             });
                           },
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),
                           child: Text(
-                            rate,
+                            rate.toString(),
                             style:
                                 AppTextTheme.normalHeaderTitle(AppColor.text1),
                           ),
@@ -1154,12 +1187,12 @@ class _ViewDetailState extends State<ViewDetail> {
 
   _createRate() {
     setState(() {
-      _editRateModel.comments = [
-        CommentsModel.fromJson(
-            {'rating': rate, 'description': _controller.text})
-      ];
+      _editCommentsModel.description = _controller.text;
+      _editCommentsModel.rating = rate;
     });
-    _rateBloc.createRate(editModel: _editRateModel).then(
+    _rateBloc
+        .createRate(editModel: _editCommentsModel, id: _editModel?.id)
+        .then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());
         Navigator.pop(context);
@@ -1178,6 +1211,8 @@ class _ViewDetailState extends State<ViewDetail> {
   _fetchDataOnPage() {
     _userBloc.getProfile();
     _taskBloc.fetchAllData(params: {});
-    _rateBloc.fetchAllData(params: {});
+    if (_editModel?.tasker.id != '' || editModel?.tasker.name != '') {
+      _taskerBloc.fetchDataById(_editModel?.tasker.id ?? editModel!.tasker.id);
+    }
   }
 }

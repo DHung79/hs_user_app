@@ -98,6 +98,7 @@ class _TasksWidgetState extends State<TasksWidget> {
                   ],
                 ),
               ),
+            if (widget.task?.estimateTime != '')
             _item(
                 task:
                     '${widget.task?.estimateTime} tiếng, ${readTimestamp(widget.task!.startTime)} - ${readTimestampEnd(widget.task!.startTime)}',
@@ -114,7 +115,7 @@ class _TasksWidgetState extends State<TasksWidget> {
                   color: AppColor.shade5,
                 )),
             _item(
-                task: widget.task?.address,
+                task: widget.task?.address.name,
                 icon: SvgIcon(
                   SvgIcons.epLocation,
                   size: 24,
@@ -215,9 +216,7 @@ class _TasksWidgetState extends State<TasksWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                widget.task!.createdTime < widget.task!.updatedTime
-                    ? convertToAgo(widget.task!.updatedTime)
-                    : convertToAgo(widget.task!.createdTime),
+                convertToAgo(widget.task!.createdTime),
                 style: AppTextTheme.normalText(AppColor.text7),
               ),
             ),
@@ -246,7 +245,7 @@ class _TasksWidgetState extends State<TasksWidget> {
 
   String convertToAgo(int input) {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(input);
-
+    logDebug('_input: $input');
     Duration diff = DateTime.now().difference(date);
 
     if (diff.inDays >= 1) {
@@ -304,7 +303,11 @@ class _TasksWidgetState extends State<TasksWidget> {
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: Row(
         children: [
-          CircleAvatar(backgroundImage: NetworkImage(url)),
+          url == ''
+              ? const CircleAvatar(
+                  backgroundColor: Colors.purple,
+                )
+              : CircleAvatar(backgroundImage: NetworkImage(url)),
           const SizedBox(
             width: 12,
           ),

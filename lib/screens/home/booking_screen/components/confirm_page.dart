@@ -57,6 +57,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
   TextEditingController noteForTasker = TextEditingController();
   bool _mainPage = true;
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
+  DateTime today = DateTime.now();
 
   _saveList(list) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -91,6 +92,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
       note = postTaskKey.currentState?.note;
       quantity = postTaskKey.currentState?.quantity;
     }
+
+    logDebug('_postTask: ${_editModel?.address?.toJson()}');
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -196,9 +199,9 @@ class _ConfirmPageState extends State<ConfirmPage> {
                         ]),
                   ),
                   listWeek(),
-                  // const SizedBox(
-                  //   height: 12,
-                  // ),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   noteUser(),
                   contentSwitch(),
                   isSwitched == false
@@ -313,7 +316,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                     listOptions![0].options[value].price.toString(),
                     listOptions![0].options[value].name.toString(),
                     onPressed: () {
-                      if (_editModel?.address == '') {
+                      if (_editModel?.address?.name == '') {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -454,12 +457,14 @@ class _ConfirmPageState extends State<ConfirmPage> {
                           '${_editModel?.estimateTime} tiếng, ${readTimestamp(_editModel?.startTime)} đến ${readTimestampEnd(_editModel?.startTime)}',
                       icon: SvgIcons.accessTime),
                   _item(
-                      text: readTimestamp2(_editModel?.date),
+                      text: readTimestamp3(_editModel?.date),
                       icon: SvgIcons.calenderToday),
                   _item(
                       text: '$note / $quantity phòng',
                       icon: SvgIcons.clipboard1),
-                  _item(text: _editModel?.address, icon: SvgIcons.epLocation),
+                  _item(
+                      text: _editModel?.address?.name,
+                      icon: SvgIcons.epLocation),
                   _title(title: 'Hình thức thanh toán', onPressed: () {}),
                   yourProfile2(
                       money: money,
@@ -756,16 +761,16 @@ class _ConfirmPageState extends State<ConfirmPage> {
             const SizedBox(
               width: 10,
             ),
-            if (_editModel?.address == '')
+            if (_editModel?.address?.name == '')
               Text('Chọn địa chỉ',
                   style: AppTextTheme.normalText(AppColor.text3)),
-            if (_editModel?.address != '')
+            if (_editModel?.address?.name != '')
               Expanded(
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        _editModel!.address,
+                        _editModel?.address?.name ?? 'đssdsd',
                         style: AppTextTheme.normalText(AppColor.primary1),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -813,6 +818,15 @@ class _ConfirmPageState extends State<ConfirmPage> {
   }
 
   String readTimestamp2(int? timestamp) {
+    var format = DateFormat('dd');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp! * 1000);
+    var time = '';
+    time = format.format(date);
+
+    return time;
+  }
+
+  String readTimestamp3(int? timestamp) {
     var format = DateFormat('E, dd/MM/yyyy');
     var date = DateTime.fromMicrosecondsSinceEpoch(timestamp! * 1000);
     var time = '';
@@ -822,13 +836,15 @@ class _ConfirmPageState extends State<ConfirmPage> {
   }
 
   _createTask() {
-    _editModel?.locationGps = LocationGpsModel.fromJson(positionTask);
     _editModel?.service = ServiceModel.fromJson({'id': serviceId});
+    _editModel?.selectedOption =
+        OptionModel.fromJson({'id': '62d626ae0ad419c46a233ea8'});
+    logDebug('_editModel.service: ${_editModel?.service?.toJson()}');
     _editModel?.endTime =
         DateTime.fromMillisecondsSinceEpoch(_editModel!.startTime)
             .add(Duration(hours: int.parse(_editModel!.estimateTime)))
             .millisecondsSinceEpoch;
-    logDebug('create task: ${_editModel?.toCreateJson()}');
+    logDebug(_editModel?.endTime);
     _taskBloc.createTask(editModel: _editModel).then(
       (value) async {
         AuthenticationBlocController().authenticationBloc.add(GetUserData());
@@ -1036,70 +1052,41 @@ class _ConfirmPageState extends State<ConfirmPage> {
     );
   }
 
-  SingleChildScrollView listWeek() {
-    final List<Widget> dates = [];
-    List weeks = [
-      'MON',
-      'TUE',
-      'WED',
-      'THU',
-      'FRI',
-      'SAT',
-      'SUN',
+  Widget listWeek() {
+    List<DateTime> dateTimes = [
+      today,
+      today.add(const Duration(days: 1)),
+      today.add(const Duration(days: 2)),
+      today.add(const Duration(days: 3)),
+      today.add(const Duration(days: 4)),
+      today.add(const Duration(days: 5)),
+      today.add(const Duration(days: 6)),
     ];
 
-    for (int i = 0; i <= 6; i++) {
-      int day = selectedDate.add(Duration(days: i)).day;
-      int dayOfWeek = selectedDate.add(Duration(days: i)).weekday;
-      switch (dayOfWeek) {
-        case 1:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[0], i));
-          }
-          break;
-        case 2:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[1], i));
-          }
-          break;
-        case 3:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[2], i));
-          }
-          break;
-        case 4:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[3], i));
-          }
-          break;
-        case 5:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[4], i));
-          }
-          break;
-        case 6:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[5], i));
-          }
-          break;
-        case 7:
-          {
-            dates.add(pickTimeWork(day.toString(), weeks[6], i));
-          }
-          break;
-        default:
-          {}
-          break;
-      }
-    }
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 24, bottom: 24, left: 16),
-        child: Row(children: dates),
+    return SizedBox(
+      height: 90,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: dateTimes.length,
+        itemBuilder: (context, index) {
+          return pickTimeWork(
+            readTimestamp2(dateTimes[index].millisecondsSinceEpoch),
+            readDayOfWeek(dateTimes[index].millisecondsSinceEpoch),
+            index,
+            dateTimes[index],
+          );
+        },
       ),
     );
+  }
+
+  String readDayOfWeek(int timestamp) {
+    var format = DateFormat('E');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
+    var time = '';
+    time = format.format(date);
+
+    return time;
   }
 
   Widget noteUser() {
@@ -1298,26 +1285,33 @@ class _ConfirmPageState extends State<ConfirmPage> {
         });
   }
 
-  Widget pickTimeWork(String title, String content, int index) {
+  Widget pickTimeWork(
+      String title, String content, int index, DateTime datePick) {
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: TextButton(
         onPressed: () {
           setState(() {
-            valueWeek = index;
-            if (valueWeek == index) {
+            _editModel?.date = datePick.millisecondsSinceEpoch;
+            dateActive = _editModel!.date;
+
+            if (readTimestamp2(_editModel!.date) == datePick.day.toString()) {
               selectedDate = DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day + index);
+
+              _editModel?.date = selectedDate.millisecondsSinceEpoch;
             }
           });
         },
         style: TextButton.styleFrom(
           backgroundColor:
-              valueWeek == index ? AppColor.primary2 : AppColor.text2,
+              readTimestamp2(_editModel!.date) == datePick.day.toString()
+                  ? AppColor.primary2
+                  : AppColor.text2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
-          side: valueWeek == index
+          side: readTimestamp2(_editModel!.date) == datePick.day.toString()
               ? const BorderSide(color: Colors.transparent, width: 1)
               : BorderSide(color: AppColor.primary2),
         ),
@@ -1327,7 +1321,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               title,
-              style: valueWeek == index
+              style: readTimestamp2(_editModel!.date) == datePick.day.toString()
                   ? AppTextTheme.mediumHeaderTitle(AppColor.text2)
                   : AppTextTheme.mediumHeaderTitle(AppColor.text1),
             ),
@@ -1336,7 +1330,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
             ),
             Text(
               content.toString(),
-              style: valueWeek == index
+              style: readTimestamp2(_editModel!.date) == datePick.day.toString()
                   ? AppTextTheme.mediumHeaderTitle(AppColor.text2)
                   : AppTextTheme.mediumHeaderTitle(AppColor.text1),
             ),

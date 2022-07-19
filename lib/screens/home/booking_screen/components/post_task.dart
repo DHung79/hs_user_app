@@ -91,10 +91,11 @@ class _PostTaskState extends State<PostTask> {
   @override
   void initState() {
     if (pickTypeHomeKey.currentState != null) {
-      nameAddress = pickTypeHomeKey.currentState?.nameAddress;
+      editModel.address = pickTypeHomeKey.currentState?.address;
       editModel.typeHome = pickTypeHomeKey.currentState!.typeHome;
       editModel.addressTitle = pickTypeHomeKey.currentState!.addressTitle.text;
     }
+    logDebug('_editModel.address ${editModel.address?.toJson()}');
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     super.initState();
     _getSavedList();
@@ -316,7 +317,7 @@ class _PostTaskState extends State<PostTask> {
                       onPressed: () {
                         logDebug(
                             readTimestamp2(timePick.millisecondsSinceEpoch));
-                        if (nameAddress == null) {
+                        if (editModel.address?.name == '') {
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -349,7 +350,6 @@ class _PostTaskState extends State<PostTask> {
                                 .map((e) => CheckListModel.fromJson(
                                     {'name': e, 'status': false}))
                                 .toList();
-                            editModel.address = nameAddress!;
                           });
                           navigateTo(confirmRoute);
                         }
@@ -860,16 +860,16 @@ class _PostTaskState extends State<PostTask> {
             const SizedBox(
               width: 10,
             ),
-            if (nameAddress == null)
+            if (editModel.address?.name == null)
               Text('Chọn địa chỉ',
                   style: AppTextTheme.normalText(AppColor.text3)),
-            if (nameAddress != null)
+            if (editModel.address?.name != '')
               Expanded(
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        nameAddress!,
+                        editModel.address?.name ?? '',
                         style: AppTextTheme.normalText(AppColor.primary1),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

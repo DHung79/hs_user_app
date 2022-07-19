@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/core/task/model/task_model.dart';
 import 'package:hs_user_app/main.dart';
 import 'package:hs_user_app/routes/route_names.dart';
 import 'package:hs_user_app/screens/home/booking_screen/components/choose_location/choose_location.dart';
@@ -21,9 +22,11 @@ class _PickTypeHomeState extends State<PickTypeHome> {
   int _index = 0;
   int typeHome = 0;
   String? nameAddress;
+  AddressModel? address;
   @override
   void initState() {
-    nameAddress = chooseLocationKey.currentState?.nameAddressChoose;
+    address = chooseLocationKey.currentState?.address;
+    logDebug('_address: ${address?.toJson()}');
     super.initState();
   }
 
@@ -150,6 +153,12 @@ class _PickTypeHomeState extends State<PickTypeHome> {
                   ),
                   onPressed: () {
                     typeHome = _index;
+                    address = AddressModel.fromJson({
+                      'name': address?.name,
+                      'location': addressTitle.text,
+                      'lat': address?.lat,
+                      'long': address?.long
+                    });
                     navigateTo(posttaskRoute);
                   },
                   child: Padding(

@@ -82,7 +82,7 @@ class _TaskNowState extends State<TaskNow> {
                   DateTime.now().isAfter(readTimestamp2(e.startTime));
             }).toList();
             logDebug(
-                'inprocess ${inprocess.length}\n accepteds ${accepteds.length}');
+                'inprocess ${inprocess.length}\n accepteds ${accepteds.length}\n waitings ${waitings.length}');
             statuses = [
               inprocess,
               accepteds,
@@ -100,6 +100,7 @@ class _TaskNowState extends State<TaskNow> {
                   onPressed: (model) {
                     value = index;
                     navigateTo(viewDetailRoute);
+                    task = model;
                   },
                 );
               },
@@ -118,7 +119,6 @@ class _TaskNowState extends State<TaskNow> {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     return date;
   }
-
 
   void _fetchDataOnPage({UserModel? user}) {
     _taskBloc.fetchAllData(params: {'user': user?.id});

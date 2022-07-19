@@ -70,6 +70,7 @@ class _TaskHistoryState extends State<TaskHistory> {
                       setState(() {
                         task = callBackTask;
                         callBackTask?.startTime;
+                        callBackTask?.id;
                         callBackTask?.endTime;
                         callBackTask?.date;
                         callBackTask?.address;

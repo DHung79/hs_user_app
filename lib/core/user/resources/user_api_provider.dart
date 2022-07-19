@@ -64,7 +64,6 @@ class UserApiProvider {
         ApiConstants.me;
     final body =
         convert.jsonEncode(EditBaseModel.toEditProfileJson(editModel!));
-    logDebug('path: $path\nbody: $body');
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.putData<T>(
       path: path,
@@ -120,7 +119,6 @@ class UserApiProvider {
     final token = await ApiHelper.getUserToken();
     final body =
         convert.jsonEncode(EditBaseModel.toChangePasswordJson(editModel!));
-    logDebug('path: $path\nbody: $body');
     final response = await RestApiHandlerData.putData<T>(
       path: path,
       body: body,

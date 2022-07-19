@@ -31,7 +31,6 @@ String email = '';
 Map<String, dynamic> positionTask = {};
 int startTime = 0;
 int endTime = 0;
-String address = '';
 int date = 0;
 String noteTasker = '';
 int dateActive = 0;

@@ -100,7 +100,6 @@ class _PostFastState extends State<PostFast> {
   @override
   void initState() {
     editModel = EditTaskModel.fromModel(taskPageKey.currentState?.task);
-    logDebug('editModel: ${editModel?.toCreateJson()}');
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     _userBloc.getProfile();
     super.initState();
@@ -453,7 +452,7 @@ class _PostFastState extends State<PostFast> {
                                       '${editModel?.service?.options.first.name}  / ${editModel?.service?.options.first.note} phòng',
                                   icon: SvgIcons.clipboard1),
                             _item(
-                                text: editModel!.address,
+                                text: editModel!.address!.name,
                                 icon: SvgIcons.epLocation),
                             _title(
                                 title: 'Hình thức thanh toán',
@@ -967,7 +966,6 @@ class _PostFastState extends State<PostFast> {
     // editModel?.typeHome = 'apartment';
 
     // logDebug(editModel!.toEditTaskJson());
-    editModel?.locationGps = editModel?.locationGps;
     editModel?.status = 0;
     editModel?.endTime =
         DateTime.fromMillisecondsSinceEpoch(editModel!.startTime)
