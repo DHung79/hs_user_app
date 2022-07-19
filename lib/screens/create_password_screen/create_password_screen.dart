@@ -14,6 +14,11 @@ class CreatePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
   AuthenticationState? state;
+  @override
+  void initState() {
+    JTToast.init(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,38 +30,46 @@ class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 145,
-            decoration: BoxDecoration(
+          InkWell(
+            child: Container(
+              width: 145,
+              height: 44,
+              decoration: BoxDecoration(
                 color: AppColor.secondary1,
-                borderRadius: BorderRadius.circular(22)),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  child: IconButton(
-                    icon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: SvgIcon(
-                        SvgIcons.arrowBack,
-                        color: AppColor.primary2,
-                        size: 18,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                children: [
+                  ClipOval(
+                    child: Container(
+                      height: 44,
+                      width: 44,
+                      color: AppColor.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Center(
+                          child: SvgIcon(
+                            SvgIcons.arrowBack,
+                            color: AppColor.black,
+                            size: 24,
+                          ),
+                        ),
                       ),
                     ),
-                    onPressed: () {
-                      navigateTo(otpRoute);
-                    },
                   ),
-                  backgroundColor: Colors.white,
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Text(
-                  'Nhập OTP',
-                  style: AppTextTheme.normalText(AppColor.text2),
-                )
-              ],
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                    'Nhập OTP',
+                    style: AppTextTheme.normalText(AppColor.text2),
+                  )
+                ],
+              ),
             ),
+            onTap: () {
+              navigateTo(otpRegisterRoute);
+            },
           ),
           Expanded(
               child: Column(
@@ -64,7 +77,7 @@ class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Tạo mật khẩu mới',
+                'Tạo mật khẩu',
                 style: AppTextTheme.bigText(AppColor.text2),
               ),
               const SizedBox(

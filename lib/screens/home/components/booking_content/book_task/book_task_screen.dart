@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../../core/task/task.dart';
 import '../../../../../core/user/user.dart';
 import '../../../../../main.dart';
-import 'components/new_book_content.dart';
-import 'components/rebook_content.dart';
+import 'tabs/book_new_task.dart';
+import 'tabs/rebook_task.dart';
 
 class BookTaskScreen extends StatefulWidget {
   final String taskId;
@@ -69,7 +69,7 @@ class _RebookTaskState extends State<BookTaskScreen> {
                 (context, AsyncSnapshot<ApiResponse<TaskModel?>> snapshot) {
               if (snapshot.hasData) {
                 final task = snapshot.data!.model!;
-                return RebookContent(
+                return RebookTask(
                   user: user,
                   task: task,
                 );
@@ -78,7 +78,7 @@ class _RebookTaskState extends State<BookTaskScreen> {
               }
             },
           )
-        : NewBookContent(
+        : BookNewTaskContent(
             user: user,
           );
   }

@@ -5,42 +5,41 @@ import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_time_picker.dart';
 import '../../../../../../widgets/task_widget/task_warning_dialog.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
+import '../components/address_input.dart';
 import '/core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
 import '/core/user/user.dart';
-import 'create_to_do_dialog.dart';
-import 'edit_user_info.dart';
-import 'pick_location.dart';
-import 'search_location.dart';
+import '../components/create_to_do_dialog.dart';
+import '../components/edit_user_info.dart';
+import '../components/pick_location.dart';
+import '../components/search_location.dart';
 
-class NewBookContent extends StatefulWidget {
+class BookNewTaskContent extends StatefulWidget {
   final UserModel user;
-  const NewBookContent({
+  const BookNewTaskContent({
     Key? key,
     required this.user,
   }) : super(key: key);
 
   @override
-  State<NewBookContent> createState() => _NewBookContentState();
+  State<BookNewTaskContent> createState() => _BookNewTaskContentState();
 }
 
-class _NewBookContentState extends State<NewBookContent> {
+class _BookNewTaskContentState extends State<BookNewTaskContent> {
   final _taskBloc = TaskBloc();
   final _serviceBloc = ServiceBloc();
   final _userBloc = UserBloc();
   final _scrollController = ScrollController();
-
   late final EditTaskModel _editTaskModel;
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _subNameController = TextEditingController();
   bool _isCreateTask = true;
-  bool _isOpenMap = false;
-  bool _isPickLocation = false;
   bool _isEditCheckList = false;
-  bool _isEditUser = false;
-  final _now = DateTime.now();
+  int _tab = 0;
 
   @override
   void initState() {
@@ -51,6 +50,7 @@ class _NewBookContentState extends State<NewBookContent> {
     if (_editTaskModel.checkList.isNotEmpty) {
       _isEditCheckList = true;
     }
+    final _now = DateTime.now();
     _editTaskModel.date = DateTime(_now.year, _now.month, _now.day, 0, 0, 0)
         .millisecondsSinceEpoch;
     _editTaskModel.startTime = _now.millisecondsSinceEpoch;
@@ -69,59 +69,83 @@ class _NewBookContentState extends State<NewBookContent> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    if (_isOpenMap) {
-      if (_isPickLocation) {
-        return PickLocation(
-          locationController: _locationController,
-          selectedLocation: ({String lat = '', String long = ''}) {
-            setState(() {
-              _editTaskModel.address.lat = lat;
-              _editTaskModel.address.long = long;
-            });
-          },
-          changeLocation: (location) {
-            setState(() {
-              _locationController.text = location;
-              _editTaskModel.address.name = location;
-            });
-          },
-          goBack: () {
-            setState(() {
-              _isPickLocation = false;
-            });
-          },
-        );
-      } else {
-        return SearchLocation(
-          locationController: _locationController,
-          changeLocation: (location) {
-            setState(() {
-              _locationController.text = location;
-              _editTaskModel.address.name = location;
-            });
-          },
-          openPickLocation: () {
-            setState(() {
-              _isPickLocation = true;
-            });
-          },
-          goBack: () {
-            setState(() {
-              _isOpenMap = false;
-            });
-          },
-        );
-      }
-    } else if (_isEditUser) {
+    if (_tab == 1) {
       return EditUserInfo(
         editUserModel: _editUserModel,
         userBloc: _userBloc,
         goBack: (user) {
           setState(() {
-            _isEditUser = false;
+            _tab = 0;
           });
         },
       );
+    } else if (_tab == 2) {
+      return SearchLocation(
+        locationController: _locationController,
+        changeLocation: (location) {
+          setState(() {
+            _locationController.text = location;
+            _editTaskModel.address.name = location;
+          });
+        },
+        openPickLocation: () {
+          setState(() {
+            _tab = 3;
+          });
+        },
+        goBack: () {
+          setState(() {
+            _tab = 0;
+          });
+        },
+      );
+    } else if (_tab == 3) {
+      return PickLocation(
+        locationController: _locationController,
+        selectedLocation: ({String lat = '', String long = ''}) {
+          setState(() {
+            _editTaskModel.address.lat = lat;
+            _editTaskModel.address.long = long;
+          });
+        },
+        changeLocation: (location) {
+          setState(() {
+            _locationController.text = location;
+            _editTaskModel.address.name = location;
+          });
+        },
+        goBack: () {
+          setState(() {
+            _tab = 2;
+          });
+        },
+        goNext: () {
+          setState(() {
+            _tab = 4;
+          });
+        },
+      );
+    } else if (_tab == 4) {
+      return AddressInput(
+          subNameController: _subNameController,
+          addressController: _addressController,
+          editTaskModel: _editTaskModel,
+          goBack: () {
+            setState(() {
+              _tab = 3;
+            });
+          },
+          selectedHomeType: (type) {
+            setState(() {
+              _editTaskModel.typeHome = type;
+            });
+          },
+          onPressed: () {
+            setState(() {
+              _editTaskModel.address.location = _addressController.text;
+              _tab = 0;
+            });
+          });
     } else {
       return _buildTaskPage();
     }
@@ -159,7 +183,7 @@ class _NewBookContentState extends State<NewBookContent> {
                 ),
                 onPressed: () {
                   if (_isCreateTask) {
-                    navigateTo(bookingRoute);
+                    navigateTo(bookTaskRoute);
                   } else {
                     setState(() {
                       _isCreateTask = true;
@@ -342,7 +366,7 @@ class _NewBookContentState extends State<NewBookContent> {
                       title: 'Thông tin của bạn',
                       onPressed: () {
                         setState(() {
-                          _isEditUser = true;
+                          _tab = 1;
                         });
                       },
                       child: Wrap(
@@ -561,7 +585,7 @@ class _NewBookContentState extends State<NewBookContent> {
           child: InkWell(
             onTap: () {
               setState(() {
-                _isOpenMap = true;
+                _tab = 2;
               });
             },
             child: Container(
@@ -644,78 +668,78 @@ class _NewBookContentState extends State<NewBookContent> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
-            child: Column(
-              children: <Widget>[
-                for (var option in service.options)
-                  LayoutBuilder(builder: (context, constraints) {
-                    final isSelected = _editTaskModel.selectedOption == option;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          setState(() {
-                            _editTaskModel.selectedOption = option;
-                            _editTaskModel.totalPrice = option.price;
-                            if (service.optionType == 0) {
-                              _editTaskModel.estimateTime =
-                                  '${option.quantity}';
-                              _editTaskModel.endTime =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                          _editTaskModel.startTime)
-                                      .add(Duration(hours: option.quantity))
-                                      .millisecondsSinceEpoch;
-                            }
-                          });
-                        },
-                        child: Center(
-                          child: Container(
-                            constraints: const BoxConstraints(minHeight: 40),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.shadow.withOpacity(0.24),
-                                  blurStyle: BlurStyle.outer,
-                                  blurRadius: 16,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: service.options.length,
+              itemBuilder: (BuildContext context, int index) {
+                final option = service.options[index];
+                final isSelected = _editTaskModel.selectedOption == option;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      setState(() {
+                        _editTaskModel.selectedOption = option;
+                        _editTaskModel.totalPrice = option.price;
+                        if (service.optionType == 0) {
+                          _editTaskModel.estimateTime = '${option.quantity}';
+                          _editTaskModel.endTime =
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      _editTaskModel.startTime)
+                                  .add(Duration(hours: option.quantity))
+                                  .millisecondsSinceEpoch;
+                        }
+                      });
+                    },
+                    child: Center(
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: 40),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.shadow.withOpacity(0.24),
+                              blurStyle: BlurStyle.outer,
+                              blurRadius: 16,
+                            ),
+                          ],
+                          border: Border.all(
+                            width: 2,
+                            color: isSelected
+                                ? AppColor.primary2
+                                : AppColor.transparent,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                option.name,
+                                style: AppTextTheme.normalHeaderTitle(
+                                  AppColor.primary1,
                                 ),
-                              ],
-                              border: Border.all(
-                                width: 2,
-                                color: isSelected
-                                    ? AppColor.primary2
-                                    : AppColor.transparent,
                               ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Text(
-                                    option.name,
-                                    style: AppTextTheme.normalHeaderTitle(
-                                      AppColor.primary1,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      option.note,
-                                      style: AppTextTheme.normalText(
-                                          AppColor.text7),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text(
+                                  option.note,
+                                  style:
+                                      AppTextTheme.normalText(AppColor.text7),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  }),
-              ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -748,7 +772,7 @@ class _NewBookContentState extends State<NewBookContent> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

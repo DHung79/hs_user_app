@@ -70,11 +70,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 onTap: () {
                                   navigateTo(authenticationRoute);
                                 },
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: SvgIcon(SvgIcons.close),
+                                child: ClipOval(
+                                  child: Container(
+                                    height: 44,
+                                    width: 44,
+                                    color: AppColor.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: SvgIcon(
+                                        SvgIcons.close,
+                                        size: 24,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -90,7 +97,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     style: AppTextTheme.bigText(Colors.white),
                                   ),
                                 ),
-                                _buildErrorMessage(),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 24),
+                                  child: Center(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: AppTextTheme.normalHeaderTitle(
+                                          AppColor.others1),
+                                    ),
+                                  ),
+                                ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 12),
@@ -164,7 +180,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       loginGoogle = false;
     });
 
-    
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(
@@ -177,20 +192,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _autovalidate = AutovalidateMode.onUserInteraction;
       });
     }
-  }
-
-Widget _buildErrorMessage() {
-    return _errorMessage != null && _errorMessage!.isNotEmpty
-        ? Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Center(
-              child: Text(
-                _errorMessage!,
-                style: AppTextTheme.normalHeaderTitle(AppColor.others1),
-              ),
-            ),
-          )
-        : const SizedBox();
   }
 
   _showError(String errorCode) async {

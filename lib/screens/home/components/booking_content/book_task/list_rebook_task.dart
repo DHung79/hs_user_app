@@ -89,7 +89,7 @@ class _ListRebookTaskState extends State<ListRebookTask> {
                             nameButton: 'Đăng lại',
                             task: task,
                             onPressed: (task) {
-                              navigateTo(bookTaskRoute + '/${task!.id}');
+                              navigateTo(rebookTaskRoute + '/${task!.id}');
                             },
                           ),
                         );

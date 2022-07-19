@@ -184,18 +184,21 @@ class EditTaskModel extends EditBaseModel {
 
 class AddressModel extends BaseModel {
   String name;
+  String subName;
   String lat;
   String long;
   String location;
 
   AddressModel.fromJson(Map<String, dynamic> json)
       : name = json['name'] ?? '',
+        subName = json['sub_name'] ?? '',
         lat = json['lat'] ?? '',
         long = json['long'] ?? '',
         location = json['location'] ?? '';
 
   Map<String, dynamic> toJson() => {
         'name': name,
+        'sub_name': subName,
         'lat': lat,
         'long': long,
         'location': location,

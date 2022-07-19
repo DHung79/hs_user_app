@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hs_user_app/screens/home/components/booking_content/rebook_task/book_task_screen.dart';
+import '../screens/home/components/booking_content/book_task/book_task_screen.dart';
 import '../screens/home/components/booking_content/components/choose_location/choose_location.dart';
 import '../screens/home/components/booking_content/components/confirm_page.dart';
 import '../screens/home/components/booking_content/components/edit_profile.dart';
-import '../screens/home/components/booking_content/components/edit_task_profile.dart';
 import '../screens/home/components/booking_content/components/gps_page.dart';
 import '../screens/home/components/booking_content/components/pick_type_home.dart';
 import '../screens/home/components/booking_content/components/profile_tasker.dart';
@@ -71,25 +70,15 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const HomeScreen();
     }
 
-    if (route == notificationRoute) {
-      return const NotificationScreen();
-    }
-
-    if (route == bookingRoute) {
+    if (route == bookTaskRoute) {
       return const HomeScreen(homeTab: 1);
     }
     if (route == bookNewTaskRoute) {
       return const BookTaskScreen();
     }
-    if (route == promotionRoute) {
-      return const Promotion();
-    }
-    if (route == editTaskProfileRoute) {
-      return const EditTaskProfile();
-    }
-    if (route.startsWith(bookTaskRoute)) {
-      if (route.length > bookTaskRoute.length) {
-        final id = route.substring(bookTaskRoute.length + 1, route.length);
+    if (route.startsWith(rebookTaskRoute)) {
+      if (route.length > rebookTaskRoute.length) {
+        final id = route.substring(rebookTaskRoute.length + 1, route.length);
         if (id.isNotEmpty) return BookTaskScreen(taskId: id);
       }
       return const HomeScreen(homeTab: 1);
@@ -143,6 +132,14 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       );
     }
 
+    if (route == notificationRoute) {
+      return const NotificationScreen();
+    }
+
+    if (route == promotionRoute) {
+      return const Promotion();
+    }
+
     if (route == gpsPageRoute) {
       return GoogleSearchPlacesApi(
         key: googleSearchPlacesApiKey,
@@ -187,7 +184,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       return const OtpScreen();
     }
     if (route == otpRegisterRoute) {
-      return const OtpScreen();
+      return const OtpScreen(isRegister: true);
     }
 
     if (route == pickTypeHomeRoute) {

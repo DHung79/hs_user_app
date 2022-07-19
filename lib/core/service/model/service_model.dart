@@ -6,20 +6,18 @@ class ServiceModel extends BaseModel {
   final String _name;
   final List<TranslationModel> _translations = [];
   final String _image;
-  final bool _isValid;
+  final bool _isActive;
   final List<OptionModel> _options = [];
-  final List<PaymentsModel> _payments = [];
+  final List<PaymentModel> _payments = [];
   final int _createdTime;
   final int _updatedTime;
   final int _optionType;
-  final String _code;
 
   ServiceModel.fromJson(Map<String, dynamic> json)
       : __id = json['_id'] ?? '',
         _name = json['name'] ?? '',
-        _code = json['code'] ?? '',
         _image = json['image'] ?? '',
-        _isValid = json['isValid'] ?? false,
+        _isActive = json['is_active'] ?? false,
         _createdTime = json['created_time'] ?? 0,
         _updatedTime = json['updated_time'] ?? 0,
         _optionType = json['option_type'] ?? 0 {
@@ -27,7 +25,7 @@ class ServiceModel extends BaseModel {
       json: json,
       key: 'translation',
     ));
-    _payments.addAll(BaseModel.mapList<PaymentsModel>(
+    _payments.addAll(BaseModel.mapList<PaymentModel>(
       json: json,
       key: 'payments',
     ));
@@ -40,9 +38,8 @@ class ServiceModel extends BaseModel {
   Map<String, dynamic> toJson() => {
         '_id': __id,
         'name': _name,
-        'code': _code,
         'image': _image,
-        'isValid': _isValid,
+        'is_active': _isActive,
         'created_time': _createdTime,
         'updated_time': _updatedTime,
         'option_type': _optionType,
@@ -53,24 +50,21 @@ class ServiceModel extends BaseModel {
 
   String get id => __id;
   String get name => _name;
-  String get code => _code;
   String get image => _image;
-  bool get isValid => _isValid;
+  bool get isActive => _isActive;
   int get createdTime => _createdTime;
   int get updatedTime => _updatedTime;
   int get optionType => _optionType;
   List<TranslationModel> get translations => _translations;
   List<OptionModel> get options => _options;
-  List<PaymentsModel> get payments => _payments;
+  List<PaymentModel> get payments => _payments;
 }
 
 class EditServiceModel extends EditBaseModel {
   String id = ''; // For editing
   String name = '';
-  String code = '';
   String image = '';
-  bool isValid = false;
-  CategoryModel? categoryModel;
+  bool isActive = false;
   int createdTime = 0;
   int updatedTime = 0;
   List<TranslationModel> translations = [];
@@ -80,9 +74,8 @@ class EditServiceModel extends EditBaseModel {
   EditServiceModel.fromModel(ServiceModel? model) {
     id = model?.id ?? '';
     name = model?.name ?? '';
-    code = model?.code ?? '';
     image = model?.image ?? '';
-    isValid = model?.isValid ?? false;
+    isActive = model?.isActive ?? false;
     createdTime = model?.createdTime ?? 0;
     updatedTime = model?.updatedTime ?? 0;
     translations = model?.translations ?? [];
@@ -92,10 +85,8 @@ class EditServiceModel extends EditBaseModel {
   Map<String, dynamic> toCreateJson() {
     Map<String, dynamic> params = {
       'name': name,
-      'code': code,
       'image': image,
-      'isValid': isValid,
-      'categoryModel': categoryModel,
+      'is_active': isActive,
       'translations': translations,
       'options': options,
       'payments': payments,
@@ -108,10 +99,8 @@ class EditServiceModel extends EditBaseModel {
     Map<String, dynamic> params = {
       'id': id,
       'name': name,
-      'code': code,
       'image': image,
-      'isValid': isValid,
-      'categoryModel': categoryModel,
+      'is_active': isActive,
       'translations': translations,
       'options': options,
       'payments': payments,
@@ -136,23 +125,6 @@ class ListServiceModel extends BaseModel {
 
   List<ServiceModel> get records => _data;
   Paging get meta => _metaData;
-}
-
-class CategoryModel extends BaseModel {
-  final List _translation;
-  final List _unit;
-
-  CategoryModel.fromJson(Map<String, dynamic> json)
-      : _translation = json['translation'] ?? [],
-        _unit = json['unit'] ?? [];
-
-  Map<String, dynamic> toJson() => {
-        'translation': _translation,
-        'unit': _unit,
-      };
-
-  List get translation => _translation;
-  List get unit => _unit;
 }
 
 class TranslationModel extends BaseModel {
@@ -204,12 +176,12 @@ class OptionModel extends BaseModel {
   String get id => __id;
 }
 
-class PaymentsModel extends BaseModel {
+class PaymentModel extends BaseModel {
   final String _name;
   final bool _isActive;
   final String __id;
 
-  PaymentsModel.fromJson(Map<String, dynamic> json)
+  PaymentModel.fromJson(Map<String, dynamic> json)
       : _name = json['name'] ?? '',
         _isActive = json['is_active'],
         __id = json['_id'] ?? '';
@@ -222,24 +194,4 @@ class PaymentsModel extends BaseModel {
   String get name => _name;
   bool get isActive => _isActive;
   String get id => __id;
-}
-
-class UnitModel extends BaseModel {
-  final String _name;
-  final List<TranslationModel> _translations = [];
-
-  UnitModel.fromJson(Map<String, dynamic> json) : _name = json['name'] ?? '' {
-    _translations.addAll(BaseModel.mapList<TranslationModel>(
-      json: json,
-      key: 'translation',
-    ));
-  }
-
-  Map<String, dynamic> toJson() => {
-        'name': _name,
-        'translation': _translations.map((e) => e.toJson()).toList(),
-      };
-
-  String get name => _name;
-  List<TranslationModel> get translations => _translations;
 }

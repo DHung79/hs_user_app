@@ -6,7 +6,7 @@ class WarningDialog extends StatefulWidget {
   final String content;
   const WarningDialog({
     Key? key,
-    required this.title,
+    this.title = '',
     required this.content,
   }) : super(key: key);
 
@@ -97,14 +97,16 @@ class _WarningDialogState extends State<WarningDialog> {
   _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: Text(
-            widget.title,
-            style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+        if (widget.title.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text(
+              widget.title,
+              style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
+            ),
           ),
-        ),
         Text(
           widget.content,
           style: AppTextTheme.normalText(AppColor.black),

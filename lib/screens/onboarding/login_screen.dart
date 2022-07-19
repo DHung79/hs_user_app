@@ -25,7 +25,7 @@ class _LoginFormState extends State<LoginForm> {
   bool? _isKeepSession = false;
   bool _passwordSecure = true;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -70,7 +70,16 @@ class _LoginFormState extends State<LoginForm> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildErrorMessage(),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: Center(
+                          child: Text(
+                            _errorMessage!,
+                            style: AppTextTheme.normalHeaderTitle(
+                                AppColor.others1),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: JTTextFormField(
@@ -257,20 +266,6 @@ class _LoginFormState extends State<LoginForm> {
         _autovalidate = AutovalidateMode.onUserInteraction;
       });
     }
-  }
-
-  Widget _buildErrorMessage() {
-    return _errorMessage != null && _errorMessage!.isNotEmpty
-        ? Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Center(
-              child: Text(
-                _errorMessage!,
-                style: AppTextTheme.normalHeaderTitle(AppColor.others1),
-              ),
-            ),
-          )
-        : const SizedBox();
   }
 
   _showError(String errorCode) async {

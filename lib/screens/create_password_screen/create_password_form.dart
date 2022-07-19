@@ -51,19 +51,29 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
                   constraints: BoxConstraints(maxWidth: size.maxWidth),
                   child: Column(
                     children: [
-                      _buildErrorMessage(),
                       Form(
                         autovalidateMode: _autovalidate,
                         key: _key,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildErrorMessage(),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 24),
+                              child: Center(
+                                child: Text(
+                                  _errorMessage!,
+                                  style: AppTextTheme.normalHeaderTitle(
+                                      AppColor.others1),
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: JTTextFormField(
                                 hintText: 'NHẬP MẬT KHẨU MỚI',
                                 controller: passwordController,
+                                obscureText: _newPasswordSecure,
+                                isPassword: true,
                                 passwordIconOnPressed: () {
                                   setState(() {
                                     _newPasswordSecure = !_newPasswordSecure;
@@ -106,6 +116,8 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
                               child: JTTextFormField(
                                 hintText: 'NHẬP LẠI',
                                 controller: setPasswordController,
+                                obscureText: _checkNewPasswordSecure,
+                                isPassword: true,
                                 passwordIconOnPressed: () {
                                   setState(() {
                                     _checkNewPasswordSecure =
@@ -178,39 +190,6 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
         _autovalidate = AutovalidateMode.always;
       });
     }
-  }
-
-  _buildErrorMessage() {
-    return _errorMessage != null && _errorMessage!.isNotEmpty
-        ? Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: double.infinity,
-                minHeight: 24,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  border: Border.all(
-                    color: Theme.of(context).errorColor,
-                    width: 1,
-                  ),
-                ),
-                child: Padding(
-                  child: Text(
-                    _errorMessage!,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).errorColor),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
-                ),
-              ),
-            ),
-          )
-        : const SizedBox();
   }
 
   _showError(String errorCode) async {

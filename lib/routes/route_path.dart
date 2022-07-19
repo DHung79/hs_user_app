@@ -21,7 +21,7 @@ class AppRoutePath {
         isUnknown = false;
 
   AppRoutePath.booking()
-      : name = bookingRoute,
+      : name = bookTaskRoute,
         routeId = '',
         isUnknown = false;
   AppRoutePath.notification()
@@ -108,7 +108,6 @@ class AppRoutePath {
       : name = paymentRoute,
         routeId = '',
         isUnknown = false;
-      
 
   AppRoutePath.forgotPassword()
       : name = forgotPasswordRoute,
@@ -135,11 +134,8 @@ class AppRoutePath {
       : name = registerRoute,
         routeId = '',
         isUnknown = false;
-  AppRoutePath.otp()
-      : name = otpRoute,
-        routeId = '',
-        isUnknown = false;
-          AppRoutePath.pickTypeHome()
+
+  AppRoutePath.pickTypeHome()
       : name = pickTypeHomeRoute,
         routeId = '',
         isUnknown = false;
@@ -237,7 +233,7 @@ class AppRoutePath {
       return AppRoutePath.chooseLocation();
     }
 
-    if (name == bookingRoute) {
+    if (name == bookTaskRoute) {
       return AppRoutePath.booking();
     }
     if (name == bookNewTaskRoute) {
@@ -257,13 +253,8 @@ class AppRoutePath {
     if (name == forgotPasswordRoute) {
       return AppRoutePath.forgotPassword();
     }
-
     if (name == registerRoute) {
       return AppRoutePath.register();
-    }
-
-    if (name == otpRoute) {
-      return AppRoutePath.otp();
     }
     if (name == pickTypeHomeRoute) {
       return AppRoutePath.pickTypeHome();

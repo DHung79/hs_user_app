@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/main.dart';
 import '../../core/user/model/user_model.dart';
-import 'components/booking_content/booking_content.dart';
+import 'components/booking_content/book_task_content.dart';
 import 'components/home_content/home_content.dart';
 import 'components/setting_content/setting_content.dart';
 
@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   isActive: widget.homeTab == 1,
                   paddingActiveColor: AppColor.shade4,
                   onPressed: () {
-                    navigateTo(bookingRoute);
+                    navigateTo(bookTaskRoute);
                   },
                 ),
                 _navigaButton(

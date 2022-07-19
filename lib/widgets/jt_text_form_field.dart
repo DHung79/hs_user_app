@@ -41,8 +41,8 @@ class _JTTextFormFieldState extends State<JTTextFormField> {
           suffixIcon: widget.isPassword
               ? TextButton(
                   child: widget.obscureText
-                      ? const Icon(
-                          Icons.remove_red_eye,
+                      ? SvgIcon(
+                          SvgIcons.removeredEye,
                           color: Colors.white,
                         )
                       : SvgIcon(

@@ -100,7 +100,7 @@ class _ViewDetailState extends State<ViewDetail> {
         leading: TextButton(
           onPressed: () {
             setState(() {
-              _mainPage ? navigateTo(bookingRoute) : _mainPage = !_mainPage;
+              _mainPage ? navigateTo(bookTaskRoute) : _mainPage = !_mainPage;
             });
           },
           child: SvgIcon(

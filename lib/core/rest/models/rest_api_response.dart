@@ -78,8 +78,8 @@ class BaseModel {
     if (T == OptionModel) {
       return OptionModel.fromJson(json) as T;
     }
-    if (T == PaymentsModel) {
-      return PaymentsModel.fromJson(json) as T;
+    if (T == PaymentModel) {
+      return PaymentModel.fromJson(json) as T;
     }
 
     if (T == CheckListModel) {

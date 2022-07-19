@@ -247,7 +247,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               ),
             ),
             Text(
-              'Địa chỉ không tên 1',
+              widget.task.address.subName,
               style: AppTextTheme.normalText(AppColor.text1),
             ),
             const SizedBox(
@@ -255,14 +255,14 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
             ),
             _detailItem(
               icon: SvgIcons.epLocation,
-              text: widget.user.address,
+              text: widget.task.address.name,
             ),
             const SizedBox(
               height: 12,
             ),
             _detailItem(
               icon: SvgIcons.viewDetails,
-              text: widget.user.address,
+              text: widget.task.address.location,
             ),
             const SizedBox(
               height: 12,

@@ -12,12 +12,14 @@ class PickLocation extends StatefulWidget {
   final TextEditingController locationController;
   final Function() goBack;
   final Function({String lat, String long}) selectedLocation;
+  final Function() goNext;
   const PickLocation({
     Key? key,
     required this.changeLocation,
     required this.locationController,
     required this.goBack,
     required this.selectedLocation,
+    required this.goNext,
   }) : super(key: key);
 
   @override
@@ -229,28 +231,30 @@ class _PickLocationState extends State<PickLocation> {
 
   Widget _actions() {
     return LayoutBuilder(builder: (context, size) {
-      return Container(
-        width: size.maxWidth,
-        color: AppColor.text2,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: AppColor.primary2,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            onPressed: () async {
-              widget.selectedLocation(
-                lat: _location.target.latitude.toString(),
-                long: _location.target.latitude.toString(),
-              );
-              widget.goBack();
-            },
-            child: Text(
-              'Chọn vị trí này',
-              style: AppTextTheme.headerTitle(AppColor.text2),
-            ),
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: AppButtonTheme.fillRounded(
+          constraints: BoxConstraints(
+            minHeight: 52,
+            minWidth: size.maxWidth - 32,
           ),
+          color: widget.locationController.text.isNotEmpty
+              ? AppColor.primary2
+              : AppColor.inactive1,
+          borderRadius: BorderRadius.circular(4),
+          child: Text(
+            'Chọn vị trí này',
+            style: AppTextTheme.headerTitle(AppColor.text2),
+          ),
+          onPressed: widget.locationController.text.isNotEmpty
+              ? () {
+                  widget.selectedLocation(
+                    lat: _location.target.latitude.toString(),
+                    long: _location.target.latitude.toString(),
+                  );
+                  widget.goNext();
+                }
+              : null,
         ),
       );
     });
@@ -266,23 +270,17 @@ class _PickLocationState extends State<PickLocation> {
 
   Future<Position> _determinePosition() async {
     LocationPermission permission;
-
     permission = await Geolocator.checkPermission();
-
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-
       if (permission == LocationPermission.denied) {
         return Future.error("Location permission denied");
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied');
     }
-
     Position position = await Geolocator.getCurrentPosition();
-
     return position;
   }
 }

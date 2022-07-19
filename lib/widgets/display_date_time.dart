@@ -38,15 +38,12 @@ String formatFromInt({
 
 String timeAgoFromNow(dynamic value, BuildContext context) {
   ScreenUtil.init(context);
-  late DateTime _dateTime;
   late DateTime _dateTimeLocal;
   if (value is int) {
-    if (value != 0) {
-      final _dateTime = DateTime.fromMillisecondsSinceEpoch(value.toInt());
-      _dateTimeLocal = _dateTime.toLocal();
-    }
+    final _dateTime = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+    _dateTimeLocal = _dateTime.toLocal();
   } else if (value is String) {
-    _dateTime = DateTime.tryParse(value)!;
+    final _dateTime = DateTime.tryParse(value)!;
     _dateTimeLocal = _dateTime.toLocal();
   }
   final difference = DateTime.now().difference(_dateTimeLocal);

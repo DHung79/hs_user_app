@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:hs_user_app/screens/home/components/booking_content/book_task/components/address_input.dart';
 import '../../../../../../core/service/service.dart';
 import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_time_picker.dart';
@@ -9,25 +10,25 @@ import '/core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
 import '/core/user/user.dart';
-import 'create_to_do_dialog.dart';
-import 'edit_user_info.dart';
-import 'pick_location.dart';
-import 'search_location.dart';
+import '../components/create_to_do_dialog.dart';
+import '../components/edit_user_info.dart';
+import '../components/pick_location.dart';
+import '../components/search_location.dart';
 
-class RebookContent extends StatefulWidget {
+class RebookTask extends StatefulWidget {
   final UserModel user;
   final TaskModel task;
-  const RebookContent({
+  const RebookTask({
     Key? key,
     required this.user,
     required this.task,
   }) : super(key: key);
 
   @override
-  State<RebookContent> createState() => _RebookContentState();
+  State<RebookTask> createState() => _RebookTaskState();
 }
 
-class _RebookContentState extends State<RebookContent> {
+class _RebookTaskState extends State<RebookTask> {
   final _taskBloc = TaskBloc();
   final _serviceBloc = ServiceBloc();
   final _userBloc = UserBloc();
@@ -37,11 +38,11 @@ class _RebookContentState extends State<RebookContent> {
   late final EditUserModel _editUserModel;
   final _locationController = TextEditingController();
   final _noteController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _subNameController = TextEditingController();
   bool _isEditTask = false;
-  bool _isOpenMap = false;
-  bool _isPickLocation = false;
   bool _isEditCheckList = false;
-  bool _isEditUser = false;
+  int _tab = 0;
 
   @override
   void initState() {
@@ -59,6 +60,8 @@ class _RebookContentState extends State<RebookContent> {
       _editTaskModel.startTime = _now.millisecondsSinceEpoch;
     }
     _locationController.text = _editTaskModel.address.name;
+    _addressController.text = _editTaskModel.address.location;
+    _subNameController.text = _editTaskModel.address.subName;
     super.initState();
   }
 
@@ -73,62 +76,87 @@ class _RebookContentState extends State<RebookContent> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    if (_isOpenMap) {
-      if (_isPickLocation) {
-        return PickLocation(
-          locationController: _locationController,
-          selectedLocation: ({String lat = '', String long = ''}) {
-            setState(() {
-              _editTaskModel.address.lat = lat;
-              _editTaskModel.address.long = long;
-            });
-          },
-          changeLocation: (location) {
-            setState(() {
-              _locationController.text = location;
-              _editTaskModel.address.name = location;
-            });
-          },
-          goBack: () {
-            setState(() {
-              _isPickLocation = false;
-            });
-          },
-        );
-      } else {
-        return SearchLocation(
-          locationController: _locationController,
-          changeLocation: (location) {
-            setState(() {
-              _locationController.text = location;
-              _editTaskModel.address.name = location;
-            });
-          },
-          openPickLocation: () {
-            setState(() {
-              _isPickLocation = true;
-            });
-          },
-          goBack: () {
-            setState(() {
-              _isOpenMap = false;
-            });
-          },
-        );
-      }
-    } else if (_isEditUser) {
+    return _buildContent();
+  }
+
+  Widget _buildContent() {
+    if (_tab == 1) {
       return EditUserInfo(
         editUserModel: _editUserModel,
         userBloc: _userBloc,
         goBack: (user) {
           setState(() {
-            _isEditUser = false;
-            // if (user != null) {
-            //   _editUserModel = EditUserModel.fromModel(user);
-            // }
+            _tab = 0;
           });
         },
       );
+    } else if (_tab == 2) {
+      return SearchLocation(
+        locationController: _locationController,
+        changeLocation: (location) {
+          setState(() {
+            _locationController.text = location;
+            _editTaskModel.address.name = location;
+          });
+        },
+        openPickLocation: () {
+          setState(() {
+            _tab = 3;
+          });
+        },
+        goBack: () {
+          setState(() {
+            _tab = 0;
+          });
+        },
+      );
+    } else if (_tab == 3) {
+      return PickLocation(
+        locationController: _locationController,
+        selectedLocation: ({String lat = '', String long = ''}) {
+          setState(() {
+            _editTaskModel.address.lat = lat;
+            _editTaskModel.address.long = long;
+          });
+        },
+        changeLocation: (location) {
+          setState(() {
+            _locationController.text = location;
+            _editTaskModel.address.name = location;
+          });
+        },
+        goBack: () {
+          setState(() {
+            _tab = 2;
+          });
+        },
+        goNext: () {
+          setState(() {
+            _tab = 4;
+          });
+        },
+      );
+    } else if (_tab == 4) {
+      return AddressInput(
+          subNameController: _subNameController,
+          addressController: _addressController,
+          editTaskModel: _editTaskModel,
+          goBack: () {
+            setState(() {
+              _tab = 3;
+            });
+          },
+          selectedHomeType: (type) {
+            setState(() {
+              _editTaskModel.typeHome = type;
+            });
+          },
+          onPressed: () {
+            setState(() {
+              _editTaskModel.address.location = _addressController.text;
+              _tab = 0;
+            });
+          });
     } else {
       return _buildTaskPage();
     }
@@ -174,7 +202,7 @@ class _RebookContentState extends State<RebookContent> {
                       }
                     });
                   } else {
-                    navigateTo(bookingRoute);
+                    navigateTo(bookTaskRoute);
                   }
                 },
               ),
@@ -220,8 +248,6 @@ class _RebookContentState extends State<RebookContent> {
   }
 
   Widget _buildTaskInfo(ServiceModel service) {
-    final price = NumberFormat('#,##0 VND', 'vi')
-        .format(_editTaskModel.selectedOption!.price);
     final screenSize = MediaQuery.of(context).size;
     final startTime = formatFromInt(
       displayedFormat: 'HH:mm',
@@ -238,8 +264,12 @@ class _RebookContentState extends State<RebookContent> {
       value: _editTaskModel.date,
       context: context,
     );
+    final price = NumberFormat('#,##0 VND', 'vi')
+        .format(_editTaskModel.selectedOption!.price);
     final optionType =
         getOptionType(_editTaskModel.service!.optionType).toLowerCase();
+    final startTimeContent =
+        '${_editTaskModel.selectedOption!.quantity} $optionType, $startTime';
     return Container(
       constraints: BoxConstraints(
         minHeight: screenSize.height - 80,
@@ -321,8 +351,7 @@ class _RebookContentState extends State<RebookContent> {
                         runSpacing: 16,
                         children: [
                           _detailItem(
-                            title:
-                                '${_editTaskModel.selectedOption!.quantity} $optionType, $startTime',
+                            title: startTimeContent,
                             icon: SvgIcons.accessTime,
                           ),
                           _detailItem(
@@ -345,7 +374,7 @@ class _RebookContentState extends State<RebookContent> {
                       title: 'Thông tin của bạn',
                       onPressed: () {
                         setState(() {
-                          _isEditUser = true;
+                          _tab = 1;
                         });
                       },
                       child: Wrap(
@@ -401,75 +430,7 @@ class _RebookContentState extends State<RebookContent> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 26, 16, 34),
-            child: AppButtonTheme.fillRounded(
-              constraints: const BoxConstraints(minHeight: 52),
-              color: AppColor.shade9,
-              borderRadius: BorderRadius.circular(4),
-              child: _isEditTask
-                  ? Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 250),
-                            child: Text(
-                              '$price/${_editTaskModel.selectedOption?.quantity} $optionType',
-                              style: AppTextTheme.headerTitle(AppColor.text2),
-                            ),
-                          ),
-                          Text(
-                            'TIẾP THEO',
-                            style: AppTextTheme.headerTitle(AppColor.text2),
-                          )
-                        ],
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        'ĐĂNG VIỆC',
-                        style: AppTextTheme.headerTitle(AppColor.text2),
-                      ),
-                    ),
-              onPressed: () {
-                final _now = DateTime.now();
-                if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
-                  showModalBottomSheet(
-                      isDismissible: false,
-                      context: context,
-                      backgroundColor: AppColor.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      builder: (context) {
-                        return const WarningDialog(
-                          title: 'Thời gian không hợp lệ',
-                          content: 'Vui lòng chọn lại thời gian bắt đầu',
-                        );
-                      });
-                } else if (_editTaskModel.address.name.isNotEmpty) {
-                  showModalBottomSheet(
-                      isDismissible: false,
-                      context: context,
-                      backgroundColor: AppColor.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      builder: (context) {
-                        return const WarningDialog(
-                          title: 'Địa chỉ không được để trống',
-                          content: 'Vui lòng chọn địa chỉ',
-                        );
-                      });
-                } else {
-                  if (_isEditTask) {
-                    _editTask();
-                  } else {
-                    _createTask();
-                  }
-                }
-              },
-            ),
+            child: _buildButton(),
           ),
         ],
       ),
@@ -564,7 +525,7 @@ class _RebookContentState extends State<RebookContent> {
           child: InkWell(
             onTap: () {
               setState(() {
-                _isOpenMap = true;
+                _tab = 2;
               });
             },
             child: Container(
@@ -896,6 +857,84 @@ class _RebookContentState extends State<RebookContent> {
             ),
         ],
       ),
+    );
+  }
+
+  _buildButton() {
+    final price = NumberFormat('#,##0 VND', 'vi')
+        .format(_editTaskModel.selectedOption!.price);
+    final optionType =
+        getOptionType(_editTaskModel.service!.optionType).toLowerCase();
+    final title =
+        '$price/${_editTaskModel.selectedOption?.quantity} $optionType';
+    return AppButtonTheme.fillRounded(
+      constraints: const BoxConstraints(minHeight: 52),
+      color: AppColor.shade9,
+      borderRadius: BorderRadius.circular(4),
+      child: _isEditTask
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 250),
+                    child: Text(
+                      title,
+                      style: AppTextTheme.headerTitle(AppColor.text2),
+                    ),
+                  ),
+                  Text(
+                    'TIẾP THEO',
+                    style: AppTextTheme.headerTitle(AppColor.text2),
+                  )
+                ],
+              ),
+            )
+          : Center(
+              child: Text(
+                'ĐĂNG VIỆC',
+                style: AppTextTheme.headerTitle(AppColor.text2),
+              ),
+            ),
+      onPressed: () {
+        final _now = DateTime.now();
+        if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+          showModalBottomSheet(
+              isDismissible: false,
+              context: context,
+              backgroundColor: AppColor.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              builder: (context) {
+                return const WarningDialog(
+                  title: 'Thời gian không hợp lệ',
+                  content: 'Vui lòng chọn lại thời gian bắt đầu',
+                );
+              });
+        } else if (_editTaskModel.address.name.isEmpty) {
+          showModalBottomSheet(
+              isDismissible: false,
+              context: context,
+              backgroundColor: AppColor.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              builder: (context) {
+                return const WarningDialog(
+                  title: 'Địa chỉ không được để trống',
+                  content: 'Vui lòng chọn địa chỉ',
+                );
+              });
+        } else {
+          if (_isEditTask) {
+            _editTask();
+          } else {
+            _createTask();
+          }
+        }
+      },
     );
   }
 

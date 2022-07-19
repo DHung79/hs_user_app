@@ -10,7 +10,11 @@ import '/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key}) : super(key: key);
+  final bool isRegister;
+  const OtpScreen({
+    Key? key,
+    this.isRegister = false,
+  }) : super(key: key);
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -41,15 +45,13 @@ class _OtpScreenState extends State<OtpScreen> {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
         listener: (context, state) async {
-  
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is CheckOTPDoneState) {
-
-            if (currentRoute == otpForgotPassWordRoute) {
-              navigateTo(resetPasswordRoute);
-            } else {
+            if (widget.isRegister) {
               navigateTo(createPasswordRoute);
+            } else {
+              navigateTo(resetPasswordRoute);
             }
           }
         },
@@ -60,47 +62,50 @@ class _OtpScreenState extends State<OtpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 151,
-                decoration: BoxDecoration(
+              InkWell(
+                child: Container(
+                  width: 155,
+                  height: 44,
+                  decoration: BoxDecoration(
                     color: AppColor.secondary1,
-                    borderRadius: BorderRadius.circular(22)),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      child: IconButton(
-                        icon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: SvgIcon(
-                            SvgIcons.keyboardBackspace,
-                            color: AppColor.primary1,
-                            size: 24,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Row(
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          height: 44,
+                          width: 44,
+                          color: AppColor.white,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Center(
+                              child: SvgIcon(
+                                SvgIcons.arrowBack,
+                                color: AppColor.black,
+                                size: 24,
+                              ),
+                            ),
                           ),
                         ),
-                        onPressed: () {
-                          if (currentRoute == otpForgotPassWordRoute) {
-                     
-                            navigateTo(forgotPasswordRoute);
-                          } else {
-      
-                            navigateTo(registerRoute);
-                          }
-                        },
                       ),
-                      backgroundColor: Colors.white,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 13,
-                        horizontal: 16,
+                      const SizedBox(
+                        width: 16,
                       ),
-                      child: Text(
+                      Text(
                         'Nhập email',
                         style: AppTextTheme.normalText(AppColor.text2),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
+                onTap: () {
+                  if (currentRoute == otpForgotPassWordRoute) {
+                    navigateTo(forgotPasswordRoute);
+                  } else {
+                    navigateTo(registerRoute);
+                  }
+                },
               ),
               Expanded(
                 child: Column(
@@ -113,7 +118,12 @@ class _OtpScreenState extends State<OtpScreen> {
                     const SizedBox(
                       height: 24,
                     ),
-                    _buildErrorMessage(),
+                    Center(
+                      child: Text(
+                        _errorMessage,
+                        style: AppTextTheme.normalHeaderTitle(AppColor.others1),
+                      ),
+                    ),
                     const SizedBox(
                       height: 5,
                     ),
@@ -128,10 +138,11 @@ class _OtpScreenState extends State<OtpScreen> {
                             appContext: context,
                             autoDismissKeyboard: false,
                             pastedTextStyle: const TextStyle(
-                              // color: Colors.green.shade600,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
+                            enablePinAutofill: false,
+                            enableActiveFill: false,
                             autoFocus: true,
                             showCursor: true,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -152,8 +163,6 @@ class _OtpScreenState extends State<OtpScreen> {
                             animationDuration:
                                 const Duration(milliseconds: 300),
                             textStyle: AppTextTheme.bigText(AppColor.text2),
-                            enableActiveFill: true,
-                            // errorAnimationController: errorController,
                             controller: _otpController,
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
@@ -232,17 +241,6 @@ class _OtpScreenState extends State<OtpScreen> {
         _autovalidate = AutovalidateMode.always;
       });
     }
-  }
-
-  Widget _buildErrorMessage() {
-    return _errorMessage.isNotEmpty
-        ? Center(
-            child: Text(
-              _errorMessage,
-              style: AppTextTheme.normalHeaderTitle(AppColor.others1),
-            ),
-          )
-        : const SizedBox();
   }
 
   _showError(String errorCode) {
