@@ -60,7 +60,7 @@ class _EditProfileState extends State<EditProfile> {
       appBar: AppBar(
         leading: TextButton(
             onPressed: () {
-              navigateTo(profileUserRoute);
+              navigateTo(userProfileRoute);
             },
             child: SvgIcon(
               SvgIcons.arrowBack,

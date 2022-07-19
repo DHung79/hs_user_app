@@ -328,7 +328,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
     _userBloc.uploadImage(image: _images.first).then((value) async {
       AuthenticationBlocController().authenticationBloc.add(GetUserData());
       await Future.delayed(const Duration(milliseconds: 400));
-      navigateTo(profileUserRoute);
+      navigateTo(userProfileRoute);
       JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
     }).onError((ApiError error, stackTrace) {
       setState(() {

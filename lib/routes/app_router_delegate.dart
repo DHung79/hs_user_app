@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/home/components/booking_content/book_task/book_task_screen.dart';
-import '../screens/home/components/booking_content/components/choose_location/choose_location.dart';
-import '../screens/home/components/booking_content/components/confirm_page.dart';
-import '../screens/home/components/booking_content/components/edit_profile.dart';
-import '../screens/home/components/booking_content/components/gps_page.dart';
-import '../screens/home/components/booking_content/components/pick_type_home.dart';
-import '../screens/home/components/booking_content/components/profile_tasker.dart';
 import '../screens/home/components/booking_content/components/promotion.dart';
-import '../screens/home/components/booking_content/components/view_detail.dart';
 import '../screens/home/components/booking_content/task_booked/components/task_booked.dart';
 import '../screens/home/components/booking_content/task_history/components/task_history.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
@@ -65,7 +58,26 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
     if (route == initialRoute || route == authenticationRoute) {
       return const AuthenticationScreen();
     }
-    //authentication
+
+    if (route == registerRoute) {
+      return const RegisterScreen();
+    }
+    if (route == otpRegisterRoute) {
+      return const OtpScreen(isRegister: true);
+    }
+    if (route == createPasswordRoute) {
+      return const CreatePasswordScreen();
+    }
+
+    if (route == forgotPasswordRoute) {
+      return const ForgotPasswordScreen();
+    }
+    if (route == otpForgotPassWordRoute) {
+      return const OtpScreen();
+    }
+    if (route == resetPasswordRoute) {
+      return const ResetPasswordScreen();
+    }
     if (route == homeRoute) {
       return const HomeScreen();
     }
@@ -83,7 +95,6 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       }
       return const HomeScreen(homeTab: 1);
     }
-
     if (route.startsWith(taskBookedRoute)) {
       if (route.length > taskBookedRoute.length) {
         final id = route.substring(taskBookedRoute.length + 1, route.length);
@@ -91,17 +102,12 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
       }
       return const HomeScreen(homeTab: 1, bookingTab: 1);
     }
-
     if (route.startsWith(taskHistoryRoute)) {
       if (route.length > taskHistoryRoute.length) {
         final id = route.substring(taskHistoryRoute.length + 1, route.length);
         if (id.isNotEmpty) return TaskHistoryScreen(taskId: id);
       }
       return const HomeScreen(homeTab: 1, bookingTab: 2);
-    }
-
-    if (route == profileTaskersRoute) {
-      return const ProfileTasker();
     }
 
     if (route == settingRoute) {
@@ -138,59 +144,6 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
 
     if (route == promotionRoute) {
       return const Promotion();
-    }
-
-    if (route == gpsPageRoute) {
-      return GoogleSearchPlacesApi(
-        key: googleSearchPlacesApiKey,
-      );
-    }
-
-    if (route == chooseLocationRoute) {
-      return ChooseLocation(
-        key: chooseLocationKey,
-      );
-    }
-    if (route == confirmRoute) {
-      return const ConfirmPage();
-    }
-    if (route == editConfirmRoute) {
-      return const EditProfile();
-    }
-    if (route == editPostFastRoute) {
-      return const EditProfile();
-    }
-    if (route == taskBookedRoute) {
-      return const ViewDetail();
-    }
-
-    if (route == forgotPasswordRoute) {
-      return const ForgotPasswordScreen();
-    }
-
-    if (route == resetPasswordRoute) {
-      return const ResetPasswordScreen();
-    }
-
-    if (route == createPasswordRoute) {
-      return const CreatePasswordScreen();
-    }
-
-    if (route == registerRoute) {
-      return const RegisterScreen();
-    }
-
-    if (route == otpForgotPassWordRoute) {
-      return const OtpScreen();
-    }
-    if (route == otpRegisterRoute) {
-      return const OtpScreen(isRegister: true);
-    }
-
-    if (route == pickTypeHomeRoute) {
-      return PickTypeHome(
-        key: pickTypeHomeKey,
-      );
     }
 
     return PageNotFoundScreen(route);
