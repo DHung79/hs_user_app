@@ -4,7 +4,7 @@ class ApiConstants {
   static String tasks = '/tasks';
   static String users = '/users';
   static String user = '/user';
-
+  static String task = '/task';
   static String rates = '/rates';
   static String otp = '/verify-otp';
   static String me = '/me';
@@ -18,4 +18,6 @@ class ApiConstants {
   static String read = '/read';
   static String all = '/all';
   static String unreadTotal = '/unread-total';
+  static String taskers = '/taskers';
+  
 }
