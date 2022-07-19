@@ -2,18 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../../../../core/service/service.dart';
 import '../../../../../../theme/validator_text.dart';
-import '../../../../../../widgets/task_widget/task_time_picker.dart';
-import '../../../../../../widgets/task_widget/task_warning_dialog.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
-import '../components/address_input.dart';
+import '../components/components.dart';
 import '/core/task/task.dart';
 import '/main.dart';
 import 'package:intl/intl.dart';
 import '/core/user/user.dart';
-import '../components/create_to_do_dialog.dart';
-import '../components/edit_user_info.dart';
-import '../components/pick_location.dart';
-import '../components/search_location.dart';
 
 class BookNewTaskContent extends StatefulWidget {
   final UserModel user;
@@ -455,33 +449,17 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
               onPressed: () {
                 final _now = DateTime.now();
                 if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
-                  showModalBottomSheet(
-                      isDismissible: false,
-                      context: context,
-                      backgroundColor: AppColor.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      builder: (context) {
-                        return const WarningDialog(
-                          title: 'Thời gian không hợp lệ',
-                          content: 'Vui lòng chọn lại thời gian bắt đầu',
-                        );
-                      });
+                  bottomDialog(
+                    context,
+                    title: 'Thời gian không hợp lệ',
+                    content: 'Vui lòng chọn lại thời gian bắt đầu',
+                  );
                 } else if (_editTaskModel.address.name.isEmpty) {
-                  showModalBottomSheet(
-                      isDismissible: false,
-                      context: context,
-                      backgroundColor: AppColor.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      builder: (context) {
-                        return const WarningDialog(
-                          title: 'Địa chỉ không được để trống',
-                          content: 'Vui lòng chọn địa chỉ',
-                        );
-                      });
+                  bottomDialog(
+                    context,
+                    title: 'Địa chỉ không được để trống',
+                    content: 'Vui lòng chọn địa chỉ',
+                  );
                 } else {
                   if (_isCreateTask) {
                     _goToCreateTask();
