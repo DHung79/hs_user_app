@@ -4,7 +4,7 @@ import '../../../../../../core/task/task.dart';
 import '/main.dart';
 import '/core/user/user.dart';
 import '/core/authentication/auth.dart';
-import 'task_detail_content.dart';
+import 'task_booked_detail.dart';
 
 class TaskBookedScreen extends StatefulWidget {
   final String taskId;
@@ -70,20 +70,22 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
       builder: (context, AsyncSnapshot<ApiResponse<TaskModel?>> snapshot) {
         if (snapshot.hasData) {
           final task = snapshot.data!.model!;
-          return _isTaskerInfo
-              ? _buildDetail(
-                  user: user,
-                  task: task,
-                )
-              : TaskDetailContent(
-                  user: user,
-                  task: task,
-                  onChangeContent: () {
-                    setState(() {
-                      _isTaskerInfo = !_isTaskerInfo;
-                    });
-                  },
-                );
+          return
+              // _isTaskerInfo
+              //     ? _buildDetail(
+              //         user: user,
+              //         task: task,
+              //       )
+              //     :
+              TaskBookedDetail(
+            user: user,
+            task: task,
+            onChangeContent: () {
+              setState(() {
+                _isTaskerInfo = !_isTaskerInfo;
+              });
+            },
+          );
         } else {
           return const SizedBox();
         }
@@ -190,22 +192,22 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SvgIcon(
-                            SvgIcons.star,
+                            SvgIcons.starSticker,
                             color: AppColor.primary2,
                             size: 24,
                           ),
                           SvgIcon(
-                            SvgIcons.star,
+                            SvgIcons.starSticker,
                             color: AppColor.primary2,
                             size: 24,
                           ),
                           SvgIcon(
-                            SvgIcons.star,
+                            SvgIcons.starSticker,
                             color: AppColor.primary2,
                             size: 24,
                           ),
                           SvgIcon(
-                            SvgIcons.star,
+                            SvgIcons.starSticker,
                             color: AppColor.primary2,
                             size: 24,
                           ),
@@ -443,7 +445,7 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
           Row(
             children: [
               SvgIcon(
-                SvgIcons.star,
+                SvgIcons.starSticker,
                 color: AppColor.primary2,
                 size: 24,
               ),

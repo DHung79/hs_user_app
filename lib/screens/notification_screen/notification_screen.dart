@@ -51,7 +51,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           TextButton(
             onPressed: () {},
             child: SvgIcon(
-              SvgIcons.rotateRight1,
+              SvgIcons.refresh,
               color: AppColor.text1,
               size: 24,
             ),

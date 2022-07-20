@@ -89,22 +89,22 @@ class _ProfileTaskerState extends State<ProfileTasker> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SvgIcon(
-                        SvgIcons.star,
+                        SvgIcons.starSticker,
                         color: AppColor.primary2,
                         size: 24,
                       ),
                       SvgIcon(
-                        SvgIcons.star,
+                        SvgIcons.starSticker,
                         color: AppColor.primary2,
                         size: 24,
                       ),
                       SvgIcon(
-                        SvgIcons.star,
+                        SvgIcons.starSticker,
                         color: AppColor.primary2,
                         size: 24,
                       ),
                       SvgIcon(
-                        SvgIcons.star,
+                        SvgIcons.starSticker,
                         color: AppColor.primary2,
                         size: 24,
                       ),
@@ -264,7 +264,7 @@ class _ProfileTaskerState extends State<ProfileTasker> {
           Row(
             children: [
               SvgIcon(
-                SvgIcons.star,
+                SvgIcons.starSticker,
                 color: AppColor.primary2,
                 size: 24,
               ),

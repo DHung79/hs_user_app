@@ -4,6 +4,8 @@ class ApiConstants {
   static String tasks = '/tasks';
   static String users = '/users';
   static String user = '/user';
+  static String taskers = '/taskers';
+  static String tasker = '/tasker';
 
   static String rates = '/rates';
   static String otp = '/verify-otp';

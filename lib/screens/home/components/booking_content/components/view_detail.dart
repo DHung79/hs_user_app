@@ -174,22 +174,22 @@ class _ViewDetailState extends State<ViewDetail> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 SvgIcon(
-                                  SvgIcons.star,
+                                  SvgIcons.starSticker,
                                   color: AppColor.primary2,
                                   size: 24,
                                 ),
                                 SvgIcon(
-                                  SvgIcons.star,
+                                  SvgIcons.starSticker,
                                   color: AppColor.primary2,
                                   size: 24,
                                 ),
                                 SvgIcon(
-                                  SvgIcons.star,
+                                  SvgIcons.starSticker,
                                   color: AppColor.primary2,
                                   size: 24,
                                 ),
                                 SvgIcon(
-                                  SvgIcons.star,
+                                  SvgIcons.starSticker,
                                   color: AppColor.primary2,
                                   size: 24,
                                 ),
@@ -403,15 +403,15 @@ class _ViewDetailState extends State<ViewDetail> {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(vertical: 12),
             ),
-            icontitle(icon: SvgIcons.wallet1, text: 'MOMO, *******756'),
+            icontitle(icon: SvgIcons.wallet, text: 'MOMO, *******756'),
             const SizedBox(
               height: 12,
             ),
-            icontitle(icon: SvgIcons.dollar1, text: '210,000 VND'),
+            icontitle(icon: SvgIcons.dollar, text: '210,000 VND'),
             const SizedBox(
               height: 12,
             ),
-            icontitle(icon: SvgIcons.tag1, text: 'JOYTECH07'),
+            icontitle(icon: SvgIcons.tag, text: 'JOYTECH07'),
           ],
         ),
       ),
@@ -465,21 +465,21 @@ class _ViewDetailState extends State<ViewDetail> {
               margin: const EdgeInsets.symmetric(vertical: 12),
             ),
             icontitle(
-                icon: SvgIcons.accessTime,
+                icon: SvgIcons.time,
                 text:
                     '${_editModel?.estimateTime ?? editModel?[value!].estimateTime} tiếng, ${readTimestamp(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} - ${readTimestampEnd(_editModel?.startTime ?? editModel?[value!].startTime ?? 0)} '),
             const SizedBox(
               height: 10,
             ),
             icontitle(
-                icon: SvgIcons.calenderToday,
+                icon: SvgIcons.calendar,
                 text: readTimestamp2(
                     _editModel?.date ?? editModel?[value!].date)),
             const SizedBox(
               height: 10,
             ),
             icontitle(
-                icon: SvgIcons.dollar1,
+                icon: SvgIcons.dollar,
                 text:
                     '${_editModel?.totalPrice ?? editModel?[value!].totalPrice}'),
             Container(
@@ -691,7 +691,7 @@ class _ViewDetailState extends State<ViewDetail> {
                   size: 24,
                   color: AppColor.shade9,
                 )
-              : SvgIcon(SvgIcons.checkBoxOutlinedBlank,
+              : SvgIcon(SvgIcons.checkBoxOutlineBlank,
                   size: 24, color: AppColor.others1),
           const SizedBox(
             width: 15,
@@ -742,7 +742,7 @@ class _ViewDetailState extends State<ViewDetail> {
               height: 12,
             ),
             icontitle(
-              icon: SvgIcons.epLocation,
+              icon: SvgIcons.locationOutline,
               text: user.address,
             ),
             const SizedBox(
@@ -756,7 +756,7 @@ class _ViewDetailState extends State<ViewDetail> {
               height: 12,
             ),
             icontitle(
-              icon: SvgIcons.telephone1,
+              icon: SvgIcons.telephone,
               text: user.phoneNumber,
             ),
           ],
@@ -876,7 +876,7 @@ class _ViewDetailState extends State<ViewDetail> {
             child: Row(
               children: [
                 SvgIcon(
-                  SvgIcons.star1,
+                  SvgIcons.starSticker,
                   size: 24,
                 ),
                 const SizedBox(
@@ -1061,7 +1061,7 @@ class _ViewDetailState extends State<ViewDetail> {
           Row(
             children: [
               SvgIcon(
-                SvgIcons.star,
+                SvgIcons.starSticker,
                 color: AppColor.primary2,
                 size: 24,
               ),
@@ -1119,9 +1119,9 @@ class _ViewDetailState extends State<ViewDetail> {
                           allowHalfRating: true,
                           itemCount: 5,
                           ratingWidget: RatingWidget(
-                            full: SvgIcon(SvgIcons.starReview,
+                            full: SvgIcon(SvgIcons.star,
                                 size: 12, color: AppColor.primary2),
-                            half: SvgIcon(SvgIcons.starHalfReview, size: 12),
+                            half: SvgIcon(SvgIcons.starHalf, size: 12),
                             empty: const Icon(
                               Icons.star_outline_outlined,
                               size: 12,

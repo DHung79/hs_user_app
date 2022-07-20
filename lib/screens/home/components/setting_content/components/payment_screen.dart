@@ -175,7 +175,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: SvgIcon(
-                    SvgIcons.filter1,
+                    SvgIcons.filter,
                     size: 24,
                     color: AppColor.text7,
                   ),
@@ -361,7 +361,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Row(
                           children: [
                             SvgIcon(
-                              SvgIcons.dollar1,
+                              SvgIcons.dollar,
                               size: 24,
                               color: AppColor.primary2,
                             ),
@@ -383,7 +383,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           onPressed: () {},
                           child: SvgIcon(
-                            SvgIcons.removeredEye,
+                            SvgIcons.removeRedEye,
                             size: 24,
                             color: AppColor.text7,
                           ),
@@ -394,7 +394,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Row(
                     children: [
                       SvgIcon(
-                        SvgIcons.trophy1,
+                        SvgIcons.trophy,
                         size: 24,
                         color: AppColor.primary2,
                       ),

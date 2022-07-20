@@ -250,7 +250,7 @@ class _HomeContentState extends State<HomeContent> {
           child: Row(
             children: [
               SvgIcon(
-                SvgIcons.notificationsOne,
+                SvgIcons.notifications,
                 color: AppColor.text1,
                 size: 24,
               ),

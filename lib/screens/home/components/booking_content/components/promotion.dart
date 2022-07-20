@@ -124,7 +124,7 @@ class _PromotionState extends State<Promotion> {
                 child: Row(
                   children: [
                     SvgIcon(
-                      SvgIcons.dailyTask,
+                      SvgIcons.clipboardCheck,
                       size: 40,
                       color: AppColor.text1,
                     ),

@@ -338,20 +338,20 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                           _detailItem(
                             title:
                                 '${_editTaskModel.estimateTime} $optionType, $startTime $endTime',
-                            icon: SvgIcons.accessTime,
+                            icon: SvgIcons.time,
                           ),
                           _detailItem(
                             title: date,
-                            icon: SvgIcons.calenderToday,
+                            icon: SvgIcons.calendar,
                           ),
                           if (_editTaskModel.service != null)
                             _detailItem(
                               title: _editTaskModel.selectedOption!.note,
-                              icon: SvgIcons.clipboard1,
+                              icon: SvgIcons.clipboard,
                             ),
                           _detailItem(
                             title: _editTaskModel.address.name,
-                            icon: SvgIcons.epLocation,
+                            icon: SvgIcons.locationOutline,
                           ),
                         ],
                       ),
@@ -369,11 +369,11 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                         children: [
                           _detailItem(
                             title: _editUserModel.name,
-                            icon: SvgIcons.user1,
+                            icon: SvgIcons.user,
                           ),
                           _detailItem(
                             title: _editUserModel.phoneNumber,
-                            icon: SvgIcons.telephone1,
+                            icon: SvgIcons.telephone,
                           ),
                         ],
                       ),
@@ -383,7 +383,7 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                       onPressed: () {},
                       child: _detailItem(
                         title: 'Thanh toán tiền mặt',
-                        icon: SvgIcons.wallet1,
+                        icon: SvgIcons.wallet,
                       ),
                     ),
                     Padding(
@@ -811,7 +811,7 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                           Row(
                             children: [
                               SvgIcon(
-                                SvgIcons.dragindicator,
+                                SvgIcons.dragIndicator,
                                 size: 24,
                                 color: AppColor.text1,
                               ),
@@ -834,7 +834,7 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SvgIcon(
-                                SvgIcons.bxTrashAlt,
+                                SvgIcons.delete,
                                 size: 24,
                                 color: AppColor.text1,
                               ),

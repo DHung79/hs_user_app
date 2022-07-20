@@ -168,7 +168,7 @@ class _TaskTimePickerState extends State<TaskTimePicker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgIcon(
-                      SvgIcons.accessTime,
+                      SvgIcons.time,
                       color: AppColor.primary1,
                       size: 24,
                     ),

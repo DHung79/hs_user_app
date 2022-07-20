@@ -25,6 +25,8 @@ class TaskModel extends BaseModel {
   final List<CheckListModel> _checkList = [];
   final String _addressTitle;
   final OptionModel _selectedOption;
+  final List<String> _listPicturesBefore = [];
+  final List<String> _listPicturesAfter = [];
 
   TaskModel.fromJson(Map<String, dynamic> json)
       : _address = BaseModel.map<AddressModel>(
@@ -65,6 +67,26 @@ class TaskModel extends BaseModel {
       json: json,
       key: 'check_list',
     ));
+    if (json['list_pictures_before'] != null) {
+      final jsons = json['list_pictures_before'];
+      if (jsons is List<dynamic>) {
+        for (var item in jsons) {
+          if (item is String) {
+            _listPicturesBefore.add(item);
+          }
+        }
+      }
+    }
+    if (json['list_pictures_after'] != null) {
+      final jsons = json['list_pictures_after'];
+      if (jsons is List<dynamic>) {
+        for (var item in jsons) {
+          if (item is String) {
+            _listPicturesAfter.add(item);
+          }
+        }
+      }
+    }
   }
 
   Map<String, dynamic> toJson() => {
@@ -88,6 +110,8 @@ class TaskModel extends BaseModel {
         'check_list': _checkList,
         'address_title': _addressTitle,
         'selected_option': _selectedOption.toJson(),
+        'list_pictures_before': _listPicturesBefore,
+        'list_pictures_after': _listPicturesAfter,
       };
 
   AddressModel get address => _address;
@@ -110,6 +134,8 @@ class TaskModel extends BaseModel {
   List<CheckListModel> get checkList => _checkList;
   String get addressTitle => _addressTitle;
   OptionModel get selectedOption => _selectedOption;
+  List<String> get listPicturesBefore => _listPicturesBefore;
+  List<String> get listPicturesAfter => _listPicturesAfter;
 }
 
 class EditTaskModel extends EditBaseModel {

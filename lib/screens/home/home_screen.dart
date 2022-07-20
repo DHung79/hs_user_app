@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 _navigaButton(
-                  icon: SvgIcons.dailyTask,
+                  icon: SvgIcons.clipboardCheck,
                   name: 'Đặt lịch',
                   activeColor: AppColor.primary2,
                   isActive: widget.homeTab == 1,
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 _navigaButton(
-                  icon: SvgIcons.user1,
+                  icon: SvgIcons.user,
                   name: 'Cài đặt',
                   activeColor: AppColor.shade6,
                   isActive: widget.homeTab == 2,

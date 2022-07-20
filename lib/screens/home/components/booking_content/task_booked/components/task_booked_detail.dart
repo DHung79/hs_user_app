@@ -7,11 +7,11 @@ import '../../../../../../main.dart';
 import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
 
-class TaskDetailContent extends StatefulWidget {
+class TaskBookedDetail extends StatefulWidget {
   final TaskModel task;
   final UserModel user;
   final Function()? onChangeContent;
-  const TaskDetailContent({
+  const TaskBookedDetail({
     Key? key,
     required this.task,
     required this.user,
@@ -19,10 +19,10 @@ class TaskDetailContent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TaskDetailContent> createState() => _TaskDetailContentState();
+  State<TaskBookedDetail> createState() => _TaskBookedDetailState();
 }
 
-class _TaskDetailContentState extends State<TaskDetailContent> {
+class _TaskBookedDetailState extends State<TaskBookedDetail> {
   bool _isShowCheckList = false;
   final _taskBloc = TaskBloc();
 
@@ -41,6 +41,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
 
   @override
   Widget build(BuildContext context) {
+    final _now = DateTime.now();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -96,8 +97,9 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                 if (widget.task.tasker.id.isNotEmpty) _profile(),
                 _userProfile(),
                 _detailTask(),
-                _payment(),
-                _buttonReview(),
+                _paymentMethod(),
+                if (widget.task.startTime > _now.millisecondsSinceEpoch)
+                  _actions(),
               ],
             ),
           ),
@@ -196,7 +198,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgIcon(
-                      SvgIcons.star1,
+                      SvgIcons.starSticker,
                       size: 24,
                     ),
                     Padding(
@@ -254,7 +256,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.epLocation,
+              icon: SvgIcons.locationOutline,
               text: widget.task.address.name,
             ),
             const SizedBox(
@@ -268,7 +270,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.telephone1,
+              icon: SvgIcons.telephone,
               text: widget.user.phoneNumber,
             ),
           ],
@@ -375,21 +377,21 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               ),
             ),
             _detailItem(
-                icon: SvgIcons.accessTime,
+                icon: SvgIcons.time,
                 text:
                     '${widget.task.selectedOption.quantity} $optionType, $startTime $endTime'),
             const SizedBox(
               height: 10,
             ),
             _detailItem(
-              icon: SvgIcons.calenderToday,
+              icon: SvgIcons.calendar,
               text: date,
             ),
             const SizedBox(
               height: 10,
             ),
             _detailItem(
-              icon: SvgIcons.dollar1,
+              icon: SvgIcons.dollar,
               text: price,
             ),
             Padding(
@@ -476,7 +478,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                           Row(
                             children: [
                               SvgIcon(
-                                SvgIcons.checkBoxOutlinedBlank,
+                                SvgIcons.checkBoxOutlineBlank,
                                 size: 24,
                                 color: AppColor.text3,
                               ),
@@ -597,7 +599,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
     );
   }
 
-  Widget _payment() {
+  Widget _paymentMethod() {
     final price =
         NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
     return Padding(
@@ -632,21 +634,21 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               ),
             ),
             _detailItem(
-              icon: SvgIcons.wallet1,
+              icon: SvgIcons.wallet,
               text: 'MOMO, *******756',
             ),
             const SizedBox(
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.dollar1,
+              icon: SvgIcons.dollar,
               text: price,
             ),
             const SizedBox(
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.tag1,
+              icon: SvgIcons.tag,
               text: 'JOYTECH07',
             ),
           ],
@@ -655,7 +657,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
     );
   }
 
-  Widget _buttonReview() {
+  Widget _actions() {
     return Container(
       margin: const EdgeInsets.all(16),
       height: 52,

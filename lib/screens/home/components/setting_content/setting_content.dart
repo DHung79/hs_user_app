@@ -249,7 +249,7 @@ class _SettingContentState extends State<SettingContent> {
     final settingMenu = [
       SettingMenuItem(
         name: 'Payment',
-        icon: SvgIcons.wallet1,
+        icon: SvgIcons.wallet,
         onTap: () {
           navigateTo(paymentRoute);
         },
@@ -362,11 +362,11 @@ class _SettingContentState extends State<SettingContent> {
                 title: widget.user.email,
               ),
               _buildProfileDetail(
-                icon: SvgIcons.telephone1,
+                icon: SvgIcons.telephone,
                 title: widget.user.phoneNumber,
               ),
               _buildProfileDetail(
-                icon: SvgIcons.epLocation,
+                icon: SvgIcons.locationOutline,
                 title: widget.user.address,
               ),
             ],
@@ -385,7 +385,7 @@ class _SettingContentState extends State<SettingContent> {
                   child: Row(
                     children: [
                       SvgIcon(
-                        SvgIcons.dollar1,
+                        SvgIcons.dollar,
                         color: AppColor.shade5,
                         size: 24,
                       ),
@@ -507,7 +507,7 @@ class _SettingContentState extends State<SettingContent> {
                       height: 40,
                       child: Center(
                         child: SvgIcon(
-                          SvgIcons.antDesignEditOutlined,
+                          SvgIcons.editOutline,
                           color: AppColor.text7,
                           size: 24,
                         ),

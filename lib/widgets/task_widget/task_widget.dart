@@ -121,7 +121,7 @@ class _TaskTabState extends State<TaskTab> {
             title:
                 '${widget.task.selectedOption.quantity} $optionType, $startTime',
             icon: SvgIcon(
-              SvgIcons.accessTime,
+              SvgIcons.time,
               size: 24,
               color: AppColor.shade5,
             ),
@@ -129,7 +129,7 @@ class _TaskTabState extends State<TaskTab> {
           _detailItem(
             title: date,
             icon: SvgIcon(
-              SvgIcons.calenderToday,
+              SvgIcons.calendar,
               size: 24,
               color: AppColor.shade5,
             ),
@@ -137,7 +137,7 @@ class _TaskTabState extends State<TaskTab> {
           _detailItem(
             title: widget.task.address.name,
             icon: SvgIcon(
-              SvgIcons.epLocation,
+              SvgIcons.locationOutline,
               size: 24,
               color: AppColor.shade5,
             ),
@@ -146,7 +146,7 @@ class _TaskTabState extends State<TaskTab> {
             _detailItem(
               title: price,
               icon: SvgIcon(
-                SvgIcons.dollar1,
+                SvgIcons.dollar,
                 size: 24,
                 color: AppColor.shade5,
               ),

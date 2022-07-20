@@ -147,7 +147,7 @@ class _SearchLocationState extends State<SearchLocation> {
                   color: AppColor.transparent,
                   highlightColor: AppColor.white,
                   child: SvgIcon(
-                    SvgIcons.map1,
+                    SvgIcons.map,
                     color: AppColor.primary1,
                     size: 24,
                   ),
@@ -186,7 +186,7 @@ class _SearchLocationState extends State<SearchLocation> {
                         child: Row(
                           children: [
                             SvgIcon(
-                              SvgIcons.epLocation,
+                              SvgIcons.locationOutline,
                               size: 24,
                               color: AppColor.shade5,
                             ),
@@ -262,7 +262,7 @@ class _SearchLocationState extends State<SearchLocation> {
                         child: Row(
                           children: [
                             SvgIcon(
-                              SvgIcons.epLocation,
+                              SvgIcons.locationOutline,
                               size: 24,
                               color: AppColor.shade5,
                             ),

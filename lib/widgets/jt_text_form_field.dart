@@ -42,11 +42,11 @@ class _JTTextFormFieldState extends State<JTTextFormField> {
               ? TextButton(
                   child: widget.obscureText
                       ? SvgIcon(
-                          SvgIcons.removeredEye,
+                          SvgIcons.removeRedEye,
                           color: Colors.white,
                         )
                       : SvgIcon(
-                          SvgIcons.eyeOff1,
+                          SvgIcons.eyeOff,
                           color: Colors.white,
                         ),
                   onPressed: widget.passwordIconOnPressed,

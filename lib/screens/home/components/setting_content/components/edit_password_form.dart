@@ -204,11 +204,11 @@ class _EditPasswordFormState extends State<EditPasswordForm> {
               suffixIcon: TextButton(
                 child: obscureText
                     ? SvgIcon(
-                        SvgIcons.removeredEye,
+                        SvgIcons.removeRedEye,
                         color: AppColor.black,
                       )
                     : SvgIcon(
-                        SvgIcons.eyeOff1,
+                        SvgIcons.eyeOff,
                         color: AppColor.black,
                       ),
                 onPressed: passwordIconOnPressed,

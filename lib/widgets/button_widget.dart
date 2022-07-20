@@ -42,7 +42,7 @@ class ButtonLogin extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: SvgIcon(
-                  SvgIcons.google1,
+                  SvgIcons.google,
                   size: 18,
                 ),
               ),

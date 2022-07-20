@@ -7,228 +7,226 @@ class SvgIconData {
 }
 
 class SvgIcons {
-  static SvgIconData accessTime = SvgIconData(
-    path: 'assets/svg/Accesstime.svg',
+  static SvgIconData checkBox = SvgIconData(
+    path: 'assets/svg/checkbox.svg',
+  );
+  static SvgIconData feedback = SvgIconData(
+    path: 'assets/svg/feedback.svg',
+  );
+  static SvgIconData more = SvgIconData(
+    path: 'assets/svg/more.svg',
   );
   static SvgIconData add = SvgIconData(
-    path: 'assets/svg/Add.svg',
+    path: 'assets/svg/add.svg',
   );
   static SvgIconData alternateEmail = SvgIconData(
-    path: 'assets/svg/Alternateemail.svg',
-  );
-  static SvgIconData antDesignEditOutlined = SvgIconData(
-    path: 'assets/svg/ant-design_edit-outlined.svg',
-  );
-  static SvgIconData arrowBack = SvgIconData(
-    path: 'assets/svg/Arrowback.svg',
+    path: 'assets/svg/alternate_email.svg',
   );
   static SvgIconData arrowBackIos = SvgIconData(
-    path: 'assets/svg/Arrowbackios.svg',
+    path: 'assets/svg/arrow_back_ios.svg',
   );
   static SvgIconData arrowForwardIos = SvgIconData(
-    path: 'assets/svg/Arrowforwardios.svg',
+    path: 'assets/svg/arrow_forward_ios.svg',
   );
-  static SvgIconData barChart2_1 = SvgIconData(
-    path: 'assets/svg/bar-chart-2_1.svg',
+  static SvgIconData barChart = SvgIconData(
+    path: 'assets/svg/bar_chart.svg',
   );
-  static SvgIconData bellRing1 = SvgIconData(
-    path: 'assets/svg/bell-ring1.svg',
+  static SvgIconData bellRing = SvgIconData(
+    path: 'assets/svg/bell_ring.svg',
   );
-  static SvgIconData broom1 = SvgIconData(
-    path: 'assets/svg/broom1.svg',
+  static SvgIconData broom = SvgIconData(
+    path: 'assets/svg/broom.svg',
   );
-  static SvgIconData bxTrashAlt = SvgIconData(
-    path: 'assets/svg/bx_trash-alt.svg',
-  );
-  static SvgIconData calenderToday = SvgIconData(
-    path: 'assets/svg/Calendartoday.svg',
+  static SvgIconData calendar = SvgIconData(
+    path: 'assets/svg/calendar.svg',
   );
   static SvgIconData callReceived = SvgIconData(
     path: 'assets/svg/call_received.svg',
   );
-  static SvgIconData carSide1 = SvgIconData(
-    path: 'assets/svg/car-side1.svg',
+  static SvgIconData camera = SvgIconData(
+    path: 'assets/svg/camera.svg',
   );
-  static SvgIconData check = SvgIconData(
-    path: 'assets/svg/Check.svg',
+  static SvgIconData carSide = SvgIconData(
+    path: 'assets/svg/car_side.svg',
   );
-  static SvgIconData checkBox = SvgIconData(
-    path: 'assets/svg/Checkbox.svg',
-  );
-  static SvgIconData checkBoxOutlinedBlank = SvgIconData(
-    path: 'assets/svg/Checkboxoutlineblank.svg',
-  );
-  static SvgIconData checkCircle = SvgIconData(
-    path: 'assets/svg/Checkcircle.svg',
+  static SvgIconData checkBoxOutlineBlank = SvgIconData(
+    path: 'assets/svg/check_box_outline_blank.svg',
   );
   static SvgIconData checkCircleOutline = SvgIconData(
-    path: 'assets/svg/Checkcircleoutline.svg',
+    path: 'assets/svg/check_circle_outline.svg',
   );
-  static SvgIconData clipboard1 = SvgIconData(
-    path: 'assets/svg/clipboard1.svg',
+  static SvgIconData checkCircle = SvgIconData(
+    path: 'assets/svg/check_circle.svg',
+  );
+  static SvgIconData check = SvgIconData(
+    path: 'assets/svg/check.svg',
+  );
+  static SvgIconData clipboard = SvgIconData(
+    path: 'assets/svg/clipboard.svg',
   );
   static SvgIconData close = SvgIconData(
-    path: 'assets/svg/Close.svg',
+    path: 'assets/svg/close.svg',
   );
-  static SvgIconData commentAlt1 = SvgIconData(
-    path: 'assets/svg/comment-alt1.svg',
+  static SvgIconData message = SvgIconData(
+    path: 'assets/svg/comment_alt.svg',
+  );
+  static SvgIconData copy = SvgIconData(
+    path: 'assets/svg/content_paste_black.svg',
+  );
+  static SvgIconData clipboardCheck = SvgIconData(
+    path: 'assets/svg/clipboard-check.svg',
   );
 
-  static SvgIconData contentPasteBlack = SvgIconData(
-    path: 'assets/svg/content_paste_black_24dp1.svg',
+  static SvgIconData delete = SvgIconData(
+    path: 'assets/svg/delete.svg',
   );
-  static SvgIconData dollar1 = SvgIconData(
-    path: 'assets/svg/dollar1.svg',
+  static SvgIconData dollar = SvgIconData(
+    path: 'assets/svg/dollar.svg',
   );
-  static SvgIconData dragindicator = SvgIconData(
-    path: 'assets/svg/Dragindicator.svg',
+  static SvgIconData dragIndicator = SvgIconData(
+    path: 'assets/svg/drag_indicator.svg',
   );
-  static SvgIconData epLocation = SvgIconData(
-    path: 'assets/svg/ep_location.svg',
+  static SvgIconData editOutline = SvgIconData(
+    path: 'assets/svg/edit_outline.svg',
+  );
+  static SvgIconData edit = SvgIconData(
+    path: 'assets/svg/edit.svg',
   );
   static SvgIconData expandMore = SvgIconData(
-    path: 'assets/svg/Expandmore.svg',
+    path: 'assets/svg/expand_more.svg',
   );
-  static SvgIconData filter1 = SvgIconData(
-    path: 'assets/svg/filter1.svg',
+  static SvgIconData removeRedEye = SvgIconData(
+    path: 'assets/svg/remove_red_eye.svg',
   );
-  static SvgIconData eyeOff1 = SvgIconData(
-    path: 'assets/svg/eye-off1.svg',
+  static SvgIconData eyeOff = SvgIconData(
+    path: 'assets/svg/eye_off.svg',
   );
-  static SvgIconData frame131 = SvgIconData(
-    path: 'assets/svg/Frame131.svg',
+  static SvgIconData frame = SvgIconData(
+    path: 'assets/svg/frame.svg',
   );
-  static SvgIconData google1 = SvgIconData(
-    path: 'assets/svg/google1.svg',
+  static SvgIconData google = SvgIconData(
+    path: 'assets/svg/google.svg',
+  );
+  static SvgIconData locationOutline = SvgIconData(
+    path: 'assets/svg/location.svg',
+  );
+
+  static SvgIconData group = SvgIconData(
+    path: 'assets/svg/users.svg',
   );
   static SvgIconData home1 = SvgIconData(
-    path: 'assets/svg/home1.svg',
+    path: 'assets/svg/home_1.svg',
   );
   static SvgIconData home2 = SvgIconData(
-    path: 'assets/svg/home2.svg',
+    path: 'assets/svg/home_2.svg',
   );
-  static SvgIconData info1 = SvgIconData(
-    path: 'assets/svg/info1.svg',
+  static SvgIconData info = SvgIconData(
+    path: 'assets/svg/info.svg',
   );
-  static SvgIconData keyboardBackspace = SvgIconData(
-    path: 'assets/svg/Keyboardbackspace.svg',
+  static SvgIconData arrowBack = SvgIconData(
+    path: 'assets/svg/keyboard_backspace.svg',
   );
   static SvgIconData language = SvgIconData(
-    path: 'assets/svg/Language.svg',
+    path: 'assets/svg/language.svg',
   );
-  static SvgIconData listCheck1 = SvgIconData(
-    path: 'assets/svg/list-check1.svg',
+  static SvgIconData listCheck = SvgIconData(
+    path: 'assets/svg/list_check.svg',
   );
-  static SvgIconData loadingFour1 = SvgIconData(
-    path: 'assets/svg/loading-four1.svg',
+  static SvgIconData loadingFour = SvgIconData(
+    path: 'assets/svg/loading_four.svg',
   );
   static SvgIconData locationOn = SvgIconData(
     path: 'assets/svg/location_on.svg',
   );
   static SvgIconData locationSearching = SvgIconData(
-    path: 'assets/svg/Locationsearching.svg',
+    path: 'assets/svg/location_searching.svg',
   );
   static SvgIconData logout = SvgIconData(
-    path: 'assets/svg/Logout.svg',
+    path: 'assets/svg/logout.svg',
   );
-  static SvgIconData map1 = SvgIconData(
-    path: 'assets/svg/map1.svg',
+  static SvgIconData map = SvgIconData(
+    path: 'assets/svg/map.svg',
   );
-  static SvgIconData mbriCustFeedback2 = SvgIconData(
-    path: 'assets/svg/mbri-cust-feedback2.svg',
-  );
-  static SvgIconData dailyTask = SvgIconData(
-    path: 'assets/svg/DailyTask.svg',
-  );
-  static SvgIconData menu1 = SvgIconData(
-    path: 'assets/svg/menu1.svg',
-  );
-  static SvgIconData modeEdit = SvgIconData(
-    path: 'assets/svg/Modeedit.svg',
-  );
-  static SvgIconData moreEvert = SvgIconData(
-    path: 'assets/svg/Morevert.svg',
+  static SvgIconData menu = SvgIconData(
+    path: 'assets/svg/menu.svg',
   );
   static SvgIconData myLocation = SvgIconData(
-    path: 'assets/svg/Mylocation.svg',
+    path: 'assets/svg/my_location.svg',
   );
-  static SvgIconData navigation1 = SvgIconData(
-    path: 'assets/svg/navigation1.svg',
+  static SvgIconData navigation = SvgIconData(
+    path: 'assets/svg/navigation.svg',
   );
-  static SvgIconData noteblocTextLine1 = SvgIconData(
-    path: 'assets/svg/noteblock-text-line1.svg',
+  static SvgIconData noteblockTextLine = SvgIconData(
+    path: 'assets/svg/noteblock_text_line.svg',
   );
-  static SvgIconData noteBook1 = SvgIconData(
-    path: 'assets/svg/notebook1.svg',
+  static SvgIconData notebook = SvgIconData(
+    path: 'assets/svg/notebook.svg',
   );
-  static SvgIconData notificationsOne = SvgIconData(
-    path: 'assets/svg/Notificationsnone.svg',
-  );
-  static SvgIconData removeredEye = SvgIconData(
-    path: 'assets/svg/Removeredeye.svg',
-  );
-  static SvgIconData rotateRight1 = SvgIconData(
-    path: 'assets/svg/rotate-right1.svg',
+
+  static SvgIconData refresh = SvgIconData(
+    path: 'assets/svg/rotate_right.svg',
   );
   static SvgIconData search = SvgIconData(
-    path: 'assets/svg/Search.svg',
+    path: 'assets/svg/search.svg',
   );
-  static SvgIconData settingTwo1 = SvgIconData(
-    path: 'assets/svg/setting-two1.svg',
+  static SvgIconData setting = SvgIconData(
+    path: 'assets/svg/setting.svg',
   );
-  static SvgIconData sidebarLeft1 = SvgIconData(
-    path: 'assets/svg/sidebar-left1.svg',
+  static SvgIconData sidebarLeft = SvgIconData(
+    path: 'assets/svg/sidebar_left.svg',
   );
-  static SvgIconData sortTwo1 = SvgIconData(
-    path: 'assets/svg/sort-two1.svg',
+  static SvgIconData sortTwo = SvgIconData(
+    path: 'assets/svg/sort.svg',
   );
-  static SvgIconData star = SvgIconData(
-    path: 'assets/svg/Star.svg',
-  );
-  static SvgIconData star1 = SvgIconData(
-    path: 'assets/svg/star1.svg',
+  static SvgIconData starSticker = SvgIconData(
+    path: 'assets/svg/star_sticker.svg',
   );
   static SvgIconData starHalf = SvgIconData(
-    path: 'assets/svg/Starhalf.svg',
+    path: 'assets/svg/star_half.svg',
   );
   static SvgIconData starOutline = SvgIconData(
-    path: 'assets/svg/Staroutline.svg',
+    path: 'assets/svg/star_out_line.svg',
   );
-  static SvgIconData tablePlusLine1 = SvgIconData(
-    path: 'assets/svg/table-plus-line1.svg',
+  static SvgIconData starOutlineRounded = SvgIconData(
+    path: 'assets/svg/star_outline.svg',
   );
-  static SvgIconData tag1 = SvgIconData(
-    path: 'assets/svg/tag1.svg',
+  static SvgIconData star = SvgIconData(
+    path: 'assets/svg/star.svg',
   );
-  static SvgIconData telephone1 = SvgIconData(
-    path: 'assets/svg/telephone1.svg',
+  static SvgIconData tablePlusLine = SvgIconData(
+    path: 'assets/svg/table_plus_line.svg',
   );
-  static SvgIconData trophy1 = SvgIconData(
-    path: 'assets/svg/trophy1.svg',
+  static SvgIconData tag = SvgIconData(
+    path: 'assets/svg/tag.svg',
   );
-  static SvgIconData user1 = SvgIconData(
-    path: 'assets/svg/user1.svg',
+  static SvgIconData telephone = SvgIconData(
+    path: 'assets/svg/telephone.svg',
   );
-  static SvgIconData users1 = SvgIconData(
-    path: 'assets/svg/users1.svg',
+  static SvgIconData trophy = SvgIconData(
+    path: 'assets/svg/trophy.svg',
   );
+  static SvgIconData user = SvgIconData(
+    path: 'assets/svg/user.svg',
+  );
+  static SvgIconData time = SvgIconData(
+    path: 'assets/svg/time.svg',
+  );
+
   static SvgIconData viewDetails = SvgIconData(
-    path: 'assets/svg/view-details1.svg',
+    path: 'assets/svg/view_details.svg',
   );
-  static SvgIconData wallet1 = SvgIconData(
-    path: 'assets/svg/wallet1.svg',
+  static SvgIconData wallet = SvgIconData(
+    path: 'assets/svg/wallet.svg',
   );
-  static SvgIconData checkboxTask = SvgIconData(
-    path: 'assets/svg/Check_box_task.svg',
+  static SvgIconData notifications = SvgIconData(
+    path: 'assets/svg/notifications.svg',
   );
-  static SvgIconData checkboxOutlineTask = SvgIconData(
-    path: 'assets/svg/Check_box_outline_blank.svg',
+  static SvgIconData filter = SvgIconData(
+    path: 'assets/svg/filter.svg',
   );
-  static SvgIconData starReview = SvgIconData(
-    path: 'assets/svg/Star.svg',
-  );
-  static SvgIconData starHalfReview = SvgIconData(
-    path: 'assets/svg/Star_half.svg',
+
+  static SvgIconData logo = SvgIconData(
+    path: 'assets/svg/logo.svg',
   );
 }
 

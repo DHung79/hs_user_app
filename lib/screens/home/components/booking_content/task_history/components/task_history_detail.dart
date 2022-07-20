@@ -6,11 +6,11 @@ import '../../../../../../core/user/user.dart';
 import '../../../../../../main.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
 
-class TaskDetailContent extends StatefulWidget {
+class TaskHistoryDetail extends StatefulWidget {
   final TaskModel task;
   final UserModel user;
   final Function()? onChangeContent;
-  const TaskDetailContent({
+  const TaskHistoryDetail({
     Key? key,
     required this.task,
     required this.user,
@@ -18,10 +18,10 @@ class TaskDetailContent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TaskDetailContent> createState() => _TaskDetailContentState();
+  State<TaskHistoryDetail> createState() => _TaskHistoryDetailState();
 }
 
-class _TaskDetailContentState extends State<TaskDetailContent> {
+class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
   bool _isShowCheckList = false;
   final _taskBloc = TaskBloc();
 
@@ -70,7 +70,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                   ),
                 ),
                 onPressed: () {
-                  navigateTo(taskBookedRoute);
+                  navigateTo(taskHistoryRoute);
                 },
               ),
               Center(
@@ -194,7 +194,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgIcon(
-                      SvgIcons.star1,
+                      SvgIcons.starSticker,
                       size: 24,
                     ),
                     Padding(
@@ -252,7 +252,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.epLocation,
+              icon: SvgIcons.locationOutline,
               text: widget.task.address.name,
             ),
             const SizedBox(
@@ -266,7 +266,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.telephone1,
+              icon: SvgIcons.telephone,
               text: widget.user.phoneNumber,
             ),
           ],
@@ -373,21 +373,21 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               ),
             ),
             _detailItem(
-                icon: SvgIcons.accessTime,
+                icon: SvgIcons.time,
                 text:
                     '${widget.task.selectedOption.quantity} $optionType, $startTime $endTime'),
             const SizedBox(
               height: 10,
             ),
             _detailItem(
-              icon: SvgIcons.calenderToday,
+              icon: SvgIcons.calendar,
               text: date,
             ),
             const SizedBox(
               height: 10,
             ),
             _detailItem(
-              icon: SvgIcons.dollar1,
+              icon: SvgIcons.dollar,
               text: price,
             ),
             Padding(
@@ -480,7 +480,7 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                                       color: AppColor.shade9,
                                     )
                                   : SvgIcon(
-                                      SvgIcons.checkBoxOutlinedBlank,
+                                      SvgIcons.checkBoxOutlineBlank,
                                       size: 24,
                                       color: AppColor.others1,
                                     ),
@@ -518,9 +518,15 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: _listImage(title: 'Trước'),
+                    child: _buildImages(
+                      title: 'Trước',
+                      images: widget.task.listPicturesBefore,
+                    ),
                   ),
-                  _listImage(title: 'Sau'),
+                  _buildImages(
+                    title: 'Sau',
+                    images: widget.task.listPicturesAfter,
+                  ),
                 ],
               ),
           ],
@@ -529,7 +535,10 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
     );
   }
 
-  Widget _listImage({required String title}) {
+  Widget _buildImages({
+    required String title,
+    required List<String> images,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -542,59 +551,23 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
         ),
         SizedBox(
           height: 100,
-          child: ListView(
-            physics: const ScrollPhysics(),
+          child: ListView.builder(
+            physics: const ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
+            itemCount: images.length,
+            itemBuilder: (BuildContext context, int index) {
+              final url = images[index];
+              final isLast = index != images.length - 1;
+              return Padding(
+                padding: EdgeInsets.only(right: isLast ? 16 : 0),
+                child: Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                  height: 100,
+                  width: 100,
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ],
@@ -636,21 +609,21 @@ class _TaskDetailContentState extends State<TaskDetailContent> {
               ),
             ),
             _detailItem(
-              icon: SvgIcons.wallet1,
+              icon: SvgIcons.wallet,
               text: 'MOMO, *******756',
             ),
             const SizedBox(
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.dollar1,
+              icon: SvgIcons.dollar,
               text: price,
             ),
             const SizedBox(
               height: 12,
             ),
             _detailItem(
-              icon: SvgIcons.tag1,
+              icon: SvgIcons.tag,
               text: 'JOYTECH07',
             ),
           ],
