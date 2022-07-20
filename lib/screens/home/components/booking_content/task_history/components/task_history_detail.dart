@@ -1,10 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import '../../../../../../core/task/task.dart';
+import '../../../../../../core/tasker/tasker.dart';
 import '../../../../../../core/user/user.dart';
 import '../../../../../../main.dart';
+import '../../../../../../theme/validator_text.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
+import '../../book_task/components/components.dart';
+import 'rating_dialog.dart';
 
 class TaskHistoryDetail extends StatefulWidget {
   final TaskModel task;
@@ -96,6 +101,10 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 _userProfile(),
                 _detailTask(),
                 _paymentField(),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _actions(),
+                ),
               ],
             ),
           ),
@@ -629,6 +638,105 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _actions() {
+    return AppButtonTheme.fillRounded(
+      constraints: const BoxConstraints(
+        minHeight: 52,
+      ),
+      borderRadius: BorderRadius.circular(4),
+      color: AppColor.primary2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgIcon(
+            SvgIcons.starOutlineRounded,
+            color: AppColor.white,
+            size: 24,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              'Đánh giá',
+              style: AppTextTheme.headerTitle(AppColor.white),
+            ),
+          ),
+        ],
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          barrierColor: Colors.black12,
+          builder: (BuildContext context) {
+            final editModel = EditReviewModel.fromModel(null);
+            final controller = TextEditingController();
+            return RatingDialog(
+              contentHeader: Column(
+                children: [
+                  Center(
+                    child: RatingBar.builder(
+                      initialRating: editModel.rating,
+                      minRating: 1,
+                      itemCount: 5,
+                      itemSize: 48,
+                      direction: Axis.horizontal,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 6),
+                      unratedColor: AppColor.primary2,
+                      itemBuilder: (context, index) {
+                        final isOutRate = editModel.rating < index + 1;
+                        return SvgIcon(
+                          isOutRate ? SvgIcons.starOutline : SvgIcons.star,
+                          color: AppColor.primary2,
+                        );
+                      },
+                      onRatingUpdate: (value) {
+                        setState(() {
+                          editModel.rating = value;
+                        });
+                      },
+                    ),
+                  ),
+                  TextAreaInput(
+                    controller: controller,
+                    maxLines: 5,
+                    hintText: 'Nhập đánh giá',
+                    hintStyle: AppTextTheme.normalText(AppColor.text7),
+                  ),
+                ],
+              ),
+              onPressed: () {
+                setState(() {
+                  editModel.comment = controller.text;
+                });
+                _ratingTasker(editModel);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  _ratingTasker(EditReviewModel editModel) {
+    TaskerBloc()
+        .ratingTasker(
+      editModel: editModel,
+      taskId: widget.task.id,
+    )
+        .then((value) {
+      Navigator.of(context).pop();
+      navigateTo(taskHistoryRoute);
+      JTToast.successToast(message: 'Đã đánh giá');
+    }).onError((ApiError error, stackTrace) {
+      logDebug('onError: ${error.errorMessage}');
+      JTToast.errorToast(message: showError(error.errorCode, context));
+    }).catchError(
+      (error, stackTrace) {
+        logDebug('catchError: $error');
+      },
     );
   }
 }

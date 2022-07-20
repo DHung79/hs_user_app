@@ -185,10 +185,10 @@ class SvgIcons {
     path: 'assets/svg/star_half.svg',
   );
   static SvgIconData starOutline = SvgIconData(
-    path: 'assets/svg/star_out_line.svg',
+    path: 'assets/svg/star_outline.svg',
   );
   static SvgIconData starOutlineRounded = SvgIconData(
-    path: 'assets/svg/star_outline.svg',
+    path: 'assets/svg/star_outline_rounded.svg',
   );
   static SvgIconData star = SvgIconData(
     path: 'assets/svg/star.svg',

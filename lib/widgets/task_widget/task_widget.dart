@@ -342,7 +342,7 @@ String getStatusName(TaskModel task) {
     case 1:
       final date = DateTime.fromMillisecondsSinceEpoch(task.date);
       if (date.difference(now).inDays <= 0 &&
-          task.startTime <= now.millisecondsSinceEpoch) {
+          task.startTime > now.millisecondsSinceEpoch) {
         return 'Đã nhận';
       } else {
         return 'Đang làm';

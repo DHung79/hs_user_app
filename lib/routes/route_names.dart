@@ -12,7 +12,6 @@ const String bookNewTaskRoute = '/book-new-task';
 const String rebookTaskRoute = '/rebook-task';
 const String taskBookedRoute = '/task-booked';
 const String taskHistoryRoute = '/task-history';
-const String taskerInfoRoute = '/tasker-info';
 
 const String notificationRoute = '/notification';
 const String otpRegisterRoute = 'otp-register';

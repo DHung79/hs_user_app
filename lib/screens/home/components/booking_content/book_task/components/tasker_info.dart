@@ -4,10 +4,12 @@ import '../../../../../../core/tasker/tasker.dart';
 import '../../../../../../main.dart';
 
 class TaskerInfo extends StatefulWidget {
-  final String taskerId;
+  final TaskerBloc taskerBloc;
+  final Function() onBack;
   const TaskerInfo({
     Key? key,
-    required this.taskerId,
+    required this.taskerBloc,
+    required this.onBack,
   }) : super(key: key);
 
   @override
@@ -15,14 +17,51 @@ class TaskerInfo extends StatefulWidget {
 }
 
 class _TaskerInfoState extends State<TaskerInfo> {
-  final _taskerBloc = TaskerBloc();
+  final List<MedalModel> medals = [
+    MedalModel.fromJson({
+      'name': 'Thân thiện',
+      'total': 10,
+      'image': 'assets/images/medal_1.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Vui vẻ',
+      'total': 3,
+      'image': 'assets/images/medal_2.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Nhanh nhẹn',
+      'total': 4,
+      'image': 'assets/images/medal_3.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Đúng giờ',
+      'total': 47,
+      'image': 'assets/images/medal_3.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Đúng giờ',
+      'total': 37,
+      'image': 'assets/images/medal_2.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Đúng giờ',
+      'total': 17,
+      'image': 'assets/images/medal_1.png',
+    }),
+    MedalModel.fromJson({
+      'name': 'Đúng giờ',
+      'total': 9,
+      'image': 'assets/images/medal_1.png',
+    }),
+  ];
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     return StreamBuilder(
-        stream: _taskerBloc.fetchDataById(widget.taskerId).asStream(),
-        builder: (context, AsyncSnapshot<TaskerModel> snapshot) {
+        stream: widget.taskerBloc.taskerData,
+        builder: (context, AsyncSnapshot<ApiResponse<TaskerModel?>> snapshot) {
           if (snapshot.hasData) {
-            final tasker = snapshot.data!;
+            final tasker = snapshot.data!.model!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -53,7 +92,9 @@ class _TaskerInfoState extends State<TaskerInfo> {
                             color: AppColor.black,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.onBack();
+                        },
                       ),
                       Center(
                         child: Text(
@@ -72,113 +113,7 @@ class _TaskerInfoState extends State<TaskerInfo> {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: ClipOval(
-                              child: tasker.avatar.isNotEmpty
-                                  ? Image.network(
-                                      tasker.avatar,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      "assets/images/logo.png",
-                                      width: 100,
-                                      height: 100,
-                                    ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Text(
-                            tasker.name,
-                            style: AppTextTheme.mediumBigText(AppColor.text3),
-                          ),
-                        ),
-                        RatingBarIndicator(
-                          rating: 2.75,
-                          itemBuilder: (context, index) => SvgIcon(
-                            SvgIcons.starSticker,
-                            color: Colors.amber,
-                          ),
-                          itemCount: 5,
-                          itemSize: 50.0,
-                          direction: Axis.vertical,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
-                          child: Text(
-                            '(643 đánh giá)',
-                            style: AppTextTheme.normalText(AppColor.text1),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _profileTasker(
-                                title: 'Tham gia từ', profile: '3/2019'),
-                            _linevertical(context),
-                            _profileTasker(title: 'Công việc', profile: '320'),
-                            _linevertical(context),
-                            _profileTasker(
-                                title: 'Đánh giá tích cực', profile: '90%'),
-                          ],
-                        ),
-                        _titleMedal(),
-                        listmedal(),
-                        const SizedBox(
-                          height: 28,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 16,
-                              ),
-                              child: Text(
-                                'Đánh giá tiêu biểu',
-                                style: AppTextTheme.mediumHeaderTitle(
-                                    AppColor.text1),
-                              ),
-                            ),
-                            // ListView.builder(
-                            //   shrinkWrap: true,
-                            //   scrollDirection: Axis.vertical,
-                            //   itemCount: _listRateModel?.length,
-                            //   itemBuilder: (context, index) {
-                            //     return _buildComments(
-                            //       comment: _listRateModel?[index]
-                            //               .comments
-                            //               .first
-                            //               .description ??
-                            //           '',
-                            //       user: _listRateModel?[index]
-                            //               .comments
-                            //               .first
-                            //               .description ??
-                            //           '',
-                            //       rate: _listRateModel?[index]
-                            //               .comments
-                            //               .first
-                            //               .rating
-                            //               .toString() ??
-                            //           '',
-                            //     );
-                            //   },
-                            // ),
-                          ],
-                        )
-                      ],
-                    ),
+                    child: _buildContent(tasker),
                   ),
                 ),
               ],
@@ -188,7 +123,179 @@ class _TaskerInfoState extends State<TaskerInfo> {
         });
   }
 
-  Widget _profileTasker({required String title, required String profile}) {
+  Widget _buildContent(TaskerModel tasker) {
+    final dayJoin = formatFromInt(
+      displayedFormat: 'MM/yyyy',
+      value: tasker.createdTime,
+      context: context,
+    );
+    final positiveReviews = tasker.reviews.where((e) => e.rating > 2.5).length /
+        tasker.reviews.length *
+        100;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: ClipOval(
+              child: tasker.avatar.isNotEmpty
+                  ? Image.network(
+                      tasker.avatar,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      "assets/images/logo.png",
+                      width: 100,
+                      height: 100,
+                    ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Text(
+            tasker.name,
+            style: AppTextTheme.mediumBigText(AppColor.text3),
+          ),
+        ),
+        _buildReviewField(tasker),
+        Padding(
+          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+          child: Text(
+            '(${tasker.numReview} đánh giá)',
+            style: AppTextTheme.normalText(AppColor.text1),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _taskerDetail(
+                  title: 'Tham gia từ',
+                  detail: dayJoin,
+                ),
+                VerticalDivider(
+                  thickness: 1,
+                  color: AppColor.shade1,
+                ),
+                _taskerDetail(
+                  title: 'Công việc',
+                  detail: '${tasker.totalTask.length}',
+                ),
+                VerticalDivider(
+                  thickness: 1,
+                  color: AppColor.shade1,
+                ),
+                _taskerDetail(
+                  title: 'Đánh giá tích cực',
+                  detail: '${positiveReviews.ceil()}%',
+                ),
+              ],
+            ),
+          ),
+        ),
+        _titleMedal(),
+        // ListView.builder(
+        //   shrinkWrap: true,
+        //   physics: const NeverScrollableScrollPhysics(),
+        //   itemCount: tasker.medals.length,
+        //   itemBuilder: (context, index) {
+        //     final medal = tasker.medals[index];
+        //     return _buildComments(review);
+        //   },
+        // ),
+        SizedBox(
+          height: 114,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: medals.length,
+            itemBuilder: (context, index) {
+              final medal = medals[index];
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildMedal(medal),
+              );
+            },
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 16,
+              ),
+              child: Text(
+                'Đánh giá tiêu biểu',
+                style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: tasker.reviews.length,
+              itemBuilder: (context, index) {
+                final review = tasker.reviews[index];
+                return _buildComments(review);
+              },
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildReviewField(TaskerModel tasker) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RatingBar.builder(
+          ignoreGestures: true,
+          allowHalfRating: true,
+          initialRating: tasker.totalRating,
+          minRating: 1,
+          itemCount: 5,
+          itemSize: 24,
+          direction: Axis.horizontal,
+          itemPadding: const EdgeInsets.symmetric(horizontal: 6),
+          unratedColor: AppColor.primary2,
+          itemBuilder: (context, index) {
+            final isOutRate = tasker.totalRating.ceil() < index + 1;
+            final isHalf = tasker.totalRating.ceil() == index + 1;
+            return SvgIcon(
+              isOutRate
+                  ? SvgIcons.starOutline
+                  : isHalf
+                      ? SvgIcons.starHalf
+                      : SvgIcons.star,
+              color: AppColor.primary2,
+            );
+          },
+          onRatingUpdate: (value) {},
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            tasker.totalRating.toString(),
+            style: AppTextTheme.normalHeaderTitle(
+              AppColor.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _taskerDetail({required String title, required String detail}) {
     return Column(
       children: [
         Padding(
@@ -199,23 +306,14 @@ class _TaskerInfoState extends State<TaskerInfo> {
           ),
         ),
         Text(
-          profile,
+          detail,
           style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
         )
       ],
     );
   }
 
-  Container _linevertical(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxHeight: 42),
-      width: 1,
-      height: MediaQuery.of(context).size.height,
-      color: AppColor.shade1,
-    );
-  }
-
-  Padding _titleMedal() {
+  Widget _titleMedal() {
     return Padding(
       padding: const EdgeInsets.only(
           top: 16.0, right: 16.0, bottom: 8.0, left: 16.0),
@@ -235,74 +333,58 @@ class _TaskerInfoState extends State<TaskerInfo> {
     );
   }
 
-  Widget listmedal() {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 50, maxHeight: 120),
-      child: ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        children: [
-          medal(),
-          medal(),
-          medal(),
-          medal(),
-          medal(),
-          medal(),
-        ],
-      ),
-    );
-  }
-
-  Padding medal() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Stack(
+  Widget _buildMedal(MedalModel medal) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 60,
+          height: 60,
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
             children: [
-              const SizedBox(
-                width: 60,
-                height: 60,
-                child: CircleAvatar(
-                  backgroundColor: Colors.red,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColor.primary2),
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    medal.image,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                left: 15,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppColor.primary1,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                    child: Text(
-                      '10',
-                      style: AppTextTheme.subText(AppColor.text2),
-                    ),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColor.primary1,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2,
+                    horizontal: 8,
+                  ),
+                  child: Text(
+                    '${medal.total}',
+                    style: AppTextTheme.subText(AppColor.text2),
                   ),
                 ),
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              'Nhanh nhẹn',
-              style: AppTextTheme.subText(AppColor.text1),
-            ),
-          )
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            medal.name,
+            style: AppTextTheme.subText(AppColor.text1),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildComments({
-    required String comment,
-    required String user,
-    required String rate,
-  }) {
+  Widget _buildComments(ReviewModel review) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -316,12 +398,12 @@ class _TaskerInfoState extends State<TaskerInfo> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    comment,
+                    review.comment,
                     style: AppTextTheme.normalText(AppColor.text1),
                   ),
                 ),
                 Text(
-                  user,
+                  review.user.name,
                   style: AppTextTheme.subText(AppColor.text7),
                 ),
               ],
@@ -339,14 +421,13 @@ class _TaskerInfoState extends State<TaskerInfo> {
                 children: [
                   SvgIcon(
                     SvgIcons.starSticker,
-                    color: AppColor.primary2,
                     size: 24,
                   ),
                   const SizedBox(
                     width: 9,
                   ),
                   Text(
-                    rate,
+                    review.rating.toString(),
                     style: AppTextTheme.normalText(AppColor.text1),
                   ),
                 ],

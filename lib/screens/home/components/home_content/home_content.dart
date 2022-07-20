@@ -168,7 +168,7 @@ class _HomeContentState extends State<HomeContent> {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.asset('assets/images/logodemo.png'),
+            child: Image.asset('assets/images/logo_cover.png'),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

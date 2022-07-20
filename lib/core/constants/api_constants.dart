@@ -2,6 +2,7 @@ class ApiConstants {
   static String apiDomain = 'https://homeservicedev-348702.as.r.appspot.com';
   static String apiVersion = '/api';
   static String tasks = '/tasks';
+  static String task = '/task';
   static String users = '/users';
   static String user = '/user';
   static String taskers = '/taskers';

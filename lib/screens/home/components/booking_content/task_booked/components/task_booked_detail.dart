@@ -5,6 +5,7 @@ import '../../../../../../core/task/task.dart';
 import '../../../../../../core/user/user.dart';
 import '../../../../../../main.dart';
 import '../../../../../../theme/validator_text.dart';
+import '../../../../../../widgets/task_widget/cancel_task_dialog.dart';
 import '../../../../../../widgets/task_widget/task_widget.dart';
 
 class TaskBookedDetail extends StatefulWidget {
@@ -93,13 +94,17 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (widget.task.tasker.id.isNotEmpty) _profile(),
                 _userProfile(),
                 _detailTask(),
                 _paymentMethod(),
                 if (widget.task.startTime > _now.millisecondsSinceEpoch)
-                  _actions(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _actions(),
+                  ),
               ],
             ),
           ),
@@ -498,104 +503,9 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
                   ),
                 ),
               ),
-            if (widget.task.tasker.id.isNotEmpty && widget.task.status > 1)
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Divider(
-                      color: AppColor.shade1,
-                      height: 1,
-                    ),
-                  ),
-                  Text(
-                    'Chụp hình thành quả',
-                    style: AppTextTheme.mediumBodyText(AppColor.primary1),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: _listImage(title: 'Trước'),
-                  ),
-                  _listImage(title: 'Sau'),
-                ],
-              ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _listImage({required String title}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextTheme.mediumBodyText(AppColor.text1),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        SizedBox(
-          height: 100,
-          child: ListView(
-            physics: const ScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                width: 100,
-                height: 100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -658,12 +568,12 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
   }
 
   Widget _actions() {
-    return Container(
-      margin: const EdgeInsets.all(16),
+    return SizedBox(
       height: 52,
       child: TextButton(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16),
+          primary: AppColor.white,
           backgroundColor: AppColor.text2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
@@ -674,7 +584,21 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
           style: AppTextTheme.headerTitle(AppColor.others1),
         ),
         onPressed: () {
-          _userCancelTask();
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            barrierColor: Colors.black12,
+            builder: (BuildContext context) {
+              return CancelTaskDialog(
+                  contentHeader: Text(
+                    'Bạn có chắc chắn hủy công việc?',
+                    style: AppTextTheme.normalText(AppColor.black),
+                  ),
+                  onConfirmed: () {
+                    _userCancelTask();
+                  });
+            },
+          );
         },
       ),
     );
@@ -685,6 +609,7 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
       navigateTo(taskBookedRoute);
       JTToast.successToast(message: 'Đã huỷ');
     }).onError((ApiError error, stackTrace) {
+      logDebug('onError: ${error.errorMessage}');
       JTToast.errorToast(message: showError(error.errorCode, context));
     }).catchError(
       (error, stackTrace) {

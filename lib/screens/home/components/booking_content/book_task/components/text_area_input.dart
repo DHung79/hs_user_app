@@ -12,7 +12,7 @@ class TextAreaInput extends StatelessWidget {
   final String? Function(String?)? validator;
   const TextAreaInput({
     Key? key,
-    required this.title,
+    this.title = '',
     required this.controller,
     this.hintText,
     this.hintStyle,
@@ -27,10 +27,11 @@ class TextAreaInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-        ),
+        if (title.isNotEmpty)
+          Text(
+            title,
+            style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: TextFormField(

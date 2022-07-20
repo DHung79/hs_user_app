@@ -1,10 +1,9 @@
-import 'package:hs_user_app/core/service/service.dart';
-import 'package:hs_user_app/core/task/model/task_model.dart';
-
 import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
-import '../../rate/model/rate_model.dart';
+import '../../service/service.dart';
+import '../../task/task.dart';
+import '../../tasker/tasker.dart';
 
 class ApiError implements Exception {
   String _errorCode = '';
@@ -57,9 +56,6 @@ class BaseModel {
     if (T == ListTaskModel) {
       return ListTaskModel.fromJson(json) as T;
     }
-    if (T == PostedUserModel) {
-      return PostedUserModel.fromJson(json) as T;
-    }
     if (T == AddressModel) {
       return AddressModel.fromJson(json) as T;
     }
@@ -81,28 +77,17 @@ class BaseModel {
     if (T == PaymentModel) {
       return PaymentModel.fromJson(json) as T;
     }
-
     if (T == CheckListModel) {
       return CheckListModel.fromJson(json) as T;
-    }
-
-    if (T == AddServiceModel) {
-      return AddServiceModel.fromJson(json) as T;
     }
     if (T == OtpModel) {
       return OtpModel.fromJson(json) as T;
     }
-    if (T == CommentModel) {
-      return CommentModel.fromJson(json) as T;
+    if (T == ReviewModel) {
+      return ReviewModel.fromJson(json) as T;
     }
     if (T == MedalModel) {
       return MedalModel.fromJson(json) as T;
-    }
-    if (T == RateModel) {
-      return RateModel.fromJson(json) as T;
-    }
-    if (T == ListRateModel) {
-      return ListRateModel.fromJson(json) as T;
     }
     logError("Unknown BaseModel class: $T");
     throw Exception("Unknown BaseModel class: $T");
@@ -158,21 +143,27 @@ class BaseModel {
 
 class EditBaseModel {
   static T fromModel<T extends EditBaseModel>(BaseModel model) {
-    // if (model is EditRoleModel) {
-    //   return EditRoleModel.fromModel(model as RoleModel) as T;
-    // }
-    // if (T == EditVehicleModel) {
-    //   return EditVehicleModel.fromModel(model as VehicleEventModel) as T;
-    // }
-    // if (T == EditFaceRoleModel) {
-    //   return EditFaceRoleModel.fromModel(model as FaceUserModel) as T;
-    // }
+    if (model is EditTaskModel) {
+      return EditTaskModel.fromModel(model as TaskModel) as T;
+    }
+    if (T == EditReviewModel) {
+      return EditReviewModel.fromModel(model as ReviewModel) as T;
+    }
+    if (T == EditServiceModel) {
+      return EditServiceModel.fromModel(model as ServiceModel) as T;
+    }
+    if (T == EditUserModel) {
+      return EditUserModel.fromModel(model as UserModel) as T;
+    }
     logError("Unknown EditBaseModel class: $T");
     throw Exception("Unknown EditBaseModel class: $T");
   }
 
   static Map<String, dynamic> toCreateJson(EditBaseModel model) {
     if (model is EditTaskModel) {
+      return model.toCreateJson();
+    }
+    if (model is EditReviewModel) {
       return model.toCreateJson();
     }
     return {};
@@ -202,21 +193,6 @@ class EditBaseModel {
   static Map<String, dynamic> toEditJson(EditBaseModel model) {
     if (model is EditUserModel) {
       return model.toEditJson();
-    }
-
-    return {};
-  }
-
-  static Map<String, dynamic> toEditRateJson(EditBaseModel model) {
-    if (model is EditRateModel) {
-      return model.toEditJson();
-    }
-    return {};
-  }
-
-  static Map<String, dynamic> toCreateRateJson(EditBaseModel model) {
-    if (model is EditRateModel) {
-      return model.toCreateJson();
     }
     return {};
   }
