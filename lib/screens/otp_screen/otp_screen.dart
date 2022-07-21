@@ -58,40 +58,38 @@ class _OtpScreenState extends State<OtpScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.only(top: 65, left: 16, right: 16),
+          padding: const EdgeInsets.only(top: 42, left: 16, right: 16),
           alignment: Alignment.centerLeft,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 151,
+                width: 155,
                 decoration: BoxDecoration(
                     color: AppColor.secondary1,
                     borderRadius: BorderRadius.circular(22)),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      child: IconButton(
-                        icon: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: SvgIcon(
-                            SvgIcons.keyboardBackspace,
-                            color: AppColor.primary1,
-                            size: 24,
-                          ),
-                        ),
-                        onPressed: () {
-                          if (currentRoute == otpForgotPassWordRoute) {
-                     
+                    InkWell(
+                      onTap: () {
+                        if (currentRoute == otpForgotPassWordRoute) {
                             navigateTo(forgotPasswordRoute);
-                          } else {
-      
+                        } else {
                             navigateTo(registerRoute);
                           }
                         },
+                      child: SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: CircleAvatar(
+                          child: SvgIcon(
+                            SvgIcons.arrowBack,
+                            size: 24,
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
                       ),
-                      backgroundColor: Colors.white,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(

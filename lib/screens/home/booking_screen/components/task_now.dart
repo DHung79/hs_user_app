@@ -88,23 +88,32 @@ class _TaskNowState extends State<TaskNow> {
               accepteds,
               waitings,
             ].expand((x) => x).toList();
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: statuses.length,
-              itemBuilder: (context, index) {
-                return TasksWidget(
-                  nameButton: 'Xem chi tiết',
-                  task: statuses[index],
-                  name: statuses[index].tasker.name,
-                  url: statuses[index].tasker.avatar,
-                  onPressed: (model) {
-                    value = index;
-                    navigateTo(viewDetailRoute);
-                    task = model;
-                  },
-                );
-              },
-            );
+            if (statuses.isNotEmpty) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: statuses.length,
+                itemBuilder: (context, index) {
+                  return TasksWidget(
+                    nameButton: 'Xem chi tiết',
+                    task: statuses[index],
+                    name: statuses[index].tasker.name,
+                    url: statuses[index].tasker.avatar,
+                    onPressed: (model) {
+                      value = index;
+                      navigateTo(viewDetailRoute);
+                      task = model;
+                    },
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  "Không có dữ liệu",
+                  style: AppTextTheme.mediumHeaderTitle(AppColor.primary2),
+                ),
+              );
+            }
           }
           return Center(
               child: CircularProgressIndicator(

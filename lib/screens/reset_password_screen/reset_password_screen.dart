@@ -23,7 +23,7 @@ class _ChangePasswordScreenState extends State<ResetPasswordScreen> {
         body: Container(
       alignment: Alignment.centerLeft,
       color: AppColor.primary1,
-      padding: const EdgeInsets.only(top: 65, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 42, left: 16, right: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,21 +34,22 @@ class _ChangePasswordScreenState extends State<ResetPasswordScreen> {
                 borderRadius: BorderRadius.circular(22)),
             child: Row(
               children: [
-                CircleAvatar(
-                  child: IconButton(
-                    icon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                InkWell(
+                  onTap: () {
+                    navigateTo(otpRoute);
+                  },
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: CircleAvatar(
+                      backgroundColor: AppColor.text2,
                       child: SvgIcon(
                         SvgIcons.arrowBack,
-                        color: AppColor.primary2,
-                        size: 18,
+                        size: 24,
+                        color: AppColor.text1,
                       ),
                     ),
-                    onPressed: () {
-                      navigateTo(otpRoute);
-                    },
                   ),
-                  backgroundColor: Colors.white,
                 ),
                 const SizedBox(
                   width: 16,

@@ -121,10 +121,16 @@ class _SettingScreenState extends State<SettingScreen> {
             Container(
               padding: const EdgeInsets.only(top: 8, bottom: 24),
               child: Row(children: [
+                if (user?.avatar != '')
                 CircleAvatar(
                   radius: 40,
                   backgroundImage: NetworkImage(user!.avatar),
                 ),
+                if (user?.avatar == '')
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: AppColor.primary1,
+                  ),     
                 const SizedBox(
                   width: 16,
                 ),
@@ -135,7 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
-                          user.name,
+                          user!.name,
                           style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
                         ),
                       ),

@@ -49,7 +49,7 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
                   : const EdgeInsets.all(30),
               child: Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: size.maxWidth - 32),
+                  constraints: BoxConstraints(maxWidth: size.maxWidth),
                   child: Column(
                     children: [
                       _buildErrorMessage(),

@@ -11,10 +11,10 @@ class CreatePasswordScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CreatePasswordScreen> createState() => _ChangePasswordScreenState();
+  State<CreatePasswordScreen> createState() => _CreatePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
+class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   AuthenticationState? state;
 
   @override
@@ -30,25 +30,26 @@ class _ChangePasswordScreenState extends State<CreatePasswordScreen> {
           Container(
             width: 145,
             decoration: BoxDecoration(
-                color: AppColor.secondary1,
+                color: AppColor.text2,
                 borderRadius: BorderRadius.circular(22)),
             child: Row(
               children: [
-                CircleAvatar(
-                  child: IconButton(
-                    icon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                InkWell(
+                  onTap: () {
+                    navigateTo(otpRoute);
+                  },
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: CircleAvatar(
                       child: SvgIcon(
                         SvgIcons.arrowBack,
-                        color: AppColor.primary2,
-                        size: 18,
+                        color: AppColor.text1,
+                        size: 24,
                       ),
+                    
                     ),
-                    onPressed: () {
-                      navigateTo(otpRoute);
-                    },
                   ),
-                  backgroundColor: Colors.white,
                 ),
                 const SizedBox(
                   width: 16,

@@ -74,11 +74,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               onTap: () {
                                 navigateTo(authenticationRoute);
                               },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: SvgIcon(SvgIcons.close),
+                              child: SizedBox(
+                                width: 44,
+                                height: 44,
+                                child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: SvgIcon(
+                                      SvgIcons.close,
+                                      size: 24,
+                                      color: AppColor.text1,
+                                    )
                                 ),
                               ),
                             ),

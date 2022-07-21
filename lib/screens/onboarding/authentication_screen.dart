@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../theme/svg_constants.dart';
 import '/routes/route_names.dart';
 import '../../../main.dart';
 import '../../core/authentication/auth.dart';
@@ -13,9 +14,16 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  final _currentRoute = getCurrentRoute();
+  bool _isLoading = false;
   @override
   void initState() {
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      _isLoading = true;
+    });
+
     AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
+    logDebug(_currentRoute);
     super.initState();
   }
 
@@ -42,14 +50,91 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: size.maxHeight / 3,
+                      height: size.maxHeight / 5,
                       child: Image.asset(
                         'assets/images/logo.png',
                         fit: BoxFit.fitWidth,
                       ),
                     ),
                     LoginForm(state: state),
-                    const Spacer(),
+                    const SizedBox(
+                      height: 47,
+                    ),
+                    if (_isLoading)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          height: 92,
+                          decoration: BoxDecoration(
+                            color: AppColor.text2,
+                            gradient: LinearGradient(
+                                stops: const [0.031, 0.02],
+                                colors: [AppColor.shade9, Colors.white]),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Đăng kí thành công',
+                                          style: AppTextTheme.mediumHeaderTitle(
+                                              AppColor.primary1),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          'Giờ đây bạn có thể đăng nhập với tài khoản vừa tạo',
+                                          style: AppTextTheme.normalText(
+                                              AppColor.text3),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    child: Container(
+                                      width: 1,
+                                      color: AppColor.shade1,
+                                    ),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isLoading = !_isLoading;
+                                        });
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        minimumSize: const Size(0, 0),
+                                      ),
+                                      child: SvgIcon(
+                                        SvgIcons.close,
+                                        size: 24,
+                                        color: AppColor.text1,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 );
               }),

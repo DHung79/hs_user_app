@@ -76,24 +76,69 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: ListView(
         // scrollDirection: Axis.horizontal,
         children: <Widget>[
-          _taskerremove(
+          _taskerRemove(
             name: 'Tasker hủy công việc',
             content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
             time: '30 phút trước',
           ),
-          _taskerremove(
+          _taskerRemove(
             name: 'Tasker hủy công việc',
             content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
             time: '1 giờ trước',
           ),
-          _taskerremove(
+          _taskerRemove(
             name: 'Tasker hủy công việc',
             content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
             time: '3 giờ trước',
           ),
-          _taskerremove(
+          _taskerRemove(
             name: 'Tasker hủy công việc',
             content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn',
+            time: '3 ngày trước',
+          ),
+          _taskerRemove(
+            name: 'Tasker hủy công việc',
+            content: 'Nguyễn Phúc Vĩnh Kỳ đã hủy công việc của bạn ahihihii',
             time: '3 ngày trước',
           ),
         ],
@@ -101,65 +146,60 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget _taskerremove({
+  Widget _taskerRemove({
     required String name,
     required String content,
     required String time,
   }) {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(width: 4, color: AppColor.primary2),
-                bottom: BorderSide(width: 1, color: AppColor.shade1),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(width: 4, color: AppColor.primary2),
+          bottom: BorderSide(width: 1, color: AppColor.shade1),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: CircleAvatar(
+                backgroundColor: AppColor.primary1,
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
+            const SizedBox(
+              width: 19,
+            ),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircleAvatar(
-                      backgroundColor: AppColor.primary1,
-                    ),
+                  Text(
+                    name,
+                    style: AppTextTheme.normalText(AppColor.primary1),
                   ),
                   const SizedBox(
-                    width: 19,
+                    height: 4,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: AppTextTheme.normalText(AppColor.primary1),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        content,
-                        style: AppTextTheme.normalText(AppColor.text1),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        time,
-                        style: AppTextTheme.normalText(AppColor.text7),
-                      )
-                    ],
+                  Text(
+                    content,
+                    style: AppTextTheme.normalText(AppColor.text1),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    time,
+                    style: AppTextTheme.normalText(AppColor.text7),
                   )
                 ],
               ),
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
