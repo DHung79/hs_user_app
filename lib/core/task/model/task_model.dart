@@ -19,6 +19,7 @@ class TaskModel extends BaseModel {
   final int _failureReason;
   final int _typeHome;
   final bool _isDeleted;
+  final bool _isRating;
   final int _createdTime;
   final int _updatedTime;
   final int _totalPrice;
@@ -59,6 +60,7 @@ class TaskModel extends BaseModel {
         _failureReason = json['failure_reason'] ?? 0,
         _typeHome = json['type_home'] ?? 0,
         _isDeleted = json['is_deleted'] ?? false,
+        _isRating = json['is_rating'] ?? false,
         _createdTime = json['created_time'] ?? 0,
         _updatedTime = json['updated_time'] ?? 0,
         _totalPrice = json['total_price'] ?? 0,
@@ -104,6 +106,7 @@ class TaskModel extends BaseModel {
         'failure_reason': _failureReason,
         'type_home': _typeHome,
         'is_deleted': _isDeleted,
+        'is_rating': _isRating,
         'created_time': _createdTime,
         'updated_time': _updatedTime,
         'total_price': _totalPrice,
@@ -128,6 +131,7 @@ class TaskModel extends BaseModel {
   int get failureReason => _failureReason;
   int get typeHome => _typeHome;
   bool get isDeleted => _isDeleted;
+  bool get isRating => _isRating;
   int get createdTime => _createdTime;
   int get updatedTime => _updatedTime;
   int get totalPrice => _totalPrice;

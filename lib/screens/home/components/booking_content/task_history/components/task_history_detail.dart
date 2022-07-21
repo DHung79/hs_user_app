@@ -98,7 +98,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 _userProfile(),
                 _detailTask(),
                 _paymentField(),
-                if (widget.task.status == 2)
+                if (widget.task.status == 2 && widget.task.isRating)
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: _actions(),
@@ -514,7 +514,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                   ),
                 ),
               ),
-            if (widget.task.tasker.id.isNotEmpty && widget.task.status > 1)
+            if (widget.task.status == 2)
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -762,7 +762,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                       initialRating: editModel.rating,
                       minRating: 1,
                       itemCount: 5,
-                      itemSize: 48,
+                      itemSize: 32,
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 6),
                       unratedColor: AppColor.primary2,
@@ -812,7 +812,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
       navigateTo(taskHistoryRoute);
       JTToast.successToast(message: 'Đã đánh giá');
     }).onError((ApiError error, stackTrace) {
-      logDebug('onError: ${error.errorMessage}');
+      logDebug('onError: ${error.errorMessage} \n code:  ${error.errorCode}');
       JTToast.errorToast(message: showError(error.errorCode, context));
     }).catchError(
       (error, stackTrace) {
