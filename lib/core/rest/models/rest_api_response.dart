@@ -64,7 +64,6 @@ class BaseModel {
     if (T == ListTaskModel) {
       return ListTaskModel.fromJson(json) as T;
     }
-
     if (T == PostedUserModel) {
       return PostedUserModel.fromJson(json) as T;
     }
@@ -79,6 +78,9 @@ class BaseModel {
     }
     if (T == LocationGpsModel) {
       return LocationGpsModel.fromJson(json) as T;
+    }
+    if (T == FailureReasonModel) {
+      return FailureReasonModel.fromJson(json) as T;
     }
     if (T == ServiceModel) {
       return ServiceModel.fromJson(json) as T;

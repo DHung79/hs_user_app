@@ -1,4 +1,5 @@
 import 'package:hs_user_app/core/rate/model/rate_model.dart';
+import 'package:hs_user_app/core/tasker/model/tasker_model.dart';
 
 import '../../service/model/service_model.dart';
 import '/core/user/user.dart';
@@ -6,11 +7,11 @@ import '../../base/models/common_model.dart';
 import '../../rest/models/rest_api_response.dart';
 
 class TaskModel extends BaseModel {
-  final OptionModel _selectedOption;
-  final LocationGpsModel _locationGps;
+  final List<OptionModel> _selectedOption = [];
   final UserModel _postedUser;
   final TaskerTaskModel _tasker;
   final ServiceModel _service;
+  final FailureReasonModel _failureReason;
   final String __id;
   final AddressModel _address;
   final String _estimateTime;
@@ -19,7 +20,6 @@ class TaskModel extends BaseModel {
   final int _date;
   final String _note;
   final int _status;
-  final int _failureReason;
   final int _typeHome;
   final bool _isDeleted;
   final int _createdTime;
@@ -30,15 +30,7 @@ class TaskModel extends BaseModel {
   final List<CommentsModel> _comments = [];
 
   TaskModel.fromJson(Map<String, dynamic> json)
-      : _selectedOption = BaseModel.map<OptionModel>(
-          json: json,
-          key: 'selected_option',
-        ),
-        _locationGps = BaseModel.map<LocationGpsModel>(
-          json: json,
-          key: 'locationGps',
-        ),
-        _postedUser = BaseModel.map<UserModel>(
+      : _postedUser = BaseModel.map<UserModel>(
           json: json,
           key: 'posted_user',
         ),
@@ -54,6 +46,10 @@ class TaskModel extends BaseModel {
           json: json,
           key: 'address',
         ),
+        _failureReason = BaseModel.map<FailureReasonModel>(
+          json: json,
+          key: 'failure_reason',
+        ),
         __id = json['_id'] ?? '',
         _estimateTime = json['estimate_time'] ?? '',
         _startTime = json['start_time'] ?? 0,
@@ -61,7 +57,6 @@ class TaskModel extends BaseModel {
         _date = json['date'] ?? 0,
         _note = json['note'] ?? '',
         _status = json['status'] ?? 0,
-        _failureReason = json['failure_reason'] ?? 0,
         _typeHome = json['type_home'] ?? 0,
         _isDeleted = json['is_deleted'] ?? false,
         _createdTime = json['created_time'] ?? 0,
@@ -76,12 +71,15 @@ class TaskModel extends BaseModel {
       json: json,
       key: 'comments',
     ));
+    _selectedOption.addAll(BaseModel.mapList<OptionModel>(
+      json: json,
+      key: 'selected_option',
+    ));
   }
 
   Map<String, dynamic> toJson() => {
-        'location_gps': _locationGps.toJson(),
         'posted_user': _postedUser.toJson(),
-        'selected_option': _selectedOption.toJson(),
+        'selected_option': _selectedOption,
         'tasker': _tasker.toJson(),
         'service': _service.toJson(),
         '_id': __id,
@@ -103,7 +101,6 @@ class TaskModel extends BaseModel {
         'comments': _comments,
       };
 
-  LocationGpsModel get locationGps => _locationGps;
   UserModel get postedUser => _postedUser;
   TaskerTaskModel get tasker => _tasker;
   ServiceModel get service => _service;
@@ -115,7 +112,7 @@ class TaskModel extends BaseModel {
   int get date => _date;
   String get note => _note;
   int get status => _status;
-  int get failureReason => _failureReason;
+  FailureReasonModel get failureReason => _failureReason;
   int get typeHome => _typeHome;
   bool get isDeleted => _isDeleted;
   int get createdTime => _createdTime;
@@ -124,13 +121,13 @@ class TaskModel extends BaseModel {
   List<CheckListModel> get checkList => _checkList;
   String get addressTitle => _addressTitle;
   List<CommentsModel> get comments => _comments;
-  OptionModel get selectedOption => _selectedOption;
+  List<OptionModel> get selectedOption => _selectedOption;
 }
 
 class EditTaskModel extends EditBaseModel {
   ServiceModel? service = ServiceModel.fromJson({});
   List<CheckListModel> checkList = [];
-  OptionModel? selectedOption = OptionModel.fromJson({});
+  List<OptionModel> selectedOption = [];
   AddressModel? address = AddressModel.fromJson({});
   String estimateTime = '';
   int startTime = 0;
@@ -155,7 +152,7 @@ class EditTaskModel extends EditBaseModel {
     totalPrice = model?.totalPrice ?? 0;
     checkList = model?.checkList ?? [];
     addressTitle = model?.addressTitle ?? '';
-    selectedOption = model?.selectedOption;
+    selectedOption = model?.selectedOption ?? [];
   }
 
   Map<String, dynamic> toCreateJson() {
@@ -191,8 +188,7 @@ class EditTaskModel extends EditBaseModel {
       'total_price': totalPrice,
       'check_list': checkList,
       'address_title': addressTitle,
-      'selected_option': selectedOption!.toJson(),
-
+      'selected_option': selectedOption,
     };
     return params;
   }
@@ -214,6 +210,33 @@ class ListTaskModel extends BaseModel {
 
   List<TaskModel> get records => _data;
   Paging get meta => _metaData;
+}
+
+class FailureReasonModel extends BaseModel {
+  final UserModel _user;
+  final String _reason;
+  final TaskerTaskModel _tasker;
+
+  FailureReasonModel.fromJson(Map<String, dynamic> json)
+      : _user = BaseModel.map<UserModel>(
+          json: json,
+          key: 'user',
+        ),
+        _reason = json['reason'] ?? '',
+        _tasker = BaseModel.map<TaskerTaskModel>(
+          json: json,
+          key: 'tasker',
+        );
+
+  Map<String, dynamic> toJson() => {
+        'user': _user,
+        'reason': _reason,
+        'tasker': _tasker,
+      };
+
+  UserModel get user => _user;
+  String get reason => _reason;
+  TaskerTaskModel get tasker => _tasker;
 }
 
 class LocationGpsModel extends BaseModel {
@@ -364,7 +387,7 @@ class OptionModel extends BaseModel {
         _price = json['price'] ?? 0,
         _quantity = json['quantity'] ?? 0,
         _note = json['note'] ?? '',
-        __id = json['id'] ?? '';
+        __id = json['_id'] ?? '';
 
   Map<String, dynamic> toJson() => {
         'name': _name,
