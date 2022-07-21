@@ -95,9 +95,11 @@ class _TaskTabState extends State<TaskTab> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: _contentHeader(
-                            headerTitle: 'Người hủy công việc',
-                            contentTitle: _getWhoCancelTask(),
+                          child: Center(
+                            child: _contentHeader(
+                              headerTitle: 'Người hủy',
+                              contentTitle: _getWhoCancelTask(),
+                            ),
                           ),
                         ),
                         VerticalDivider(
@@ -106,9 +108,11 @@ class _TaskTabState extends State<TaskTab> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: _contentHeader(
-                            headerTitle: 'Tổng tiền (VND)',
-                            contentTitle: price,
+                          child: Center(
+                            child: _contentHeader(
+                              headerTitle: 'Tổng tiền (VND)',
+                              contentTitle: price,
+                            ),
                           ),
                         ),
                       ],

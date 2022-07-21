@@ -63,16 +63,13 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppButtonTheme.fillRounded(
-                constraints: const BoxConstraints(minHeight: 56, maxWidth: 40),
+                constraints: const BoxConstraints(minHeight: 56),
                 color: AppColor.transparent,
                 highlightColor: AppColor.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: SvgIcon(
-                    SvgIcons.arrowBack,
-                    size: 24,
-                    color: AppColor.black,
-                  ),
+                child: SvgIcon(
+                  SvgIcons.arrowBack,
+                  size: 24,
+                  color: AppColor.black,
                 ),
                 onPressed: () {
                   navigateTo(taskHistoryRoute);
@@ -101,10 +98,11 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 _userProfile(),
                 _detailTask(),
                 _paymentField(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: _actions(),
-                ),
+                if (widget.task.status == 2)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: _actions(),
+                  ),
               ],
             ),
           ),
@@ -359,10 +357,13 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: AppColor.shade1),
-                  padding: const EdgeInsets.only(
-                      top: 4, bottom: 4, right: 12, left: 12),
+                    borderRadius: BorderRadius.circular(50),
+                    color: AppColor.shade1,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 12,
+                  ),
                   child: Text(
                     getStatusName(widget.task),
                     style: AppTextTheme.mediumBodyText(
@@ -374,6 +375,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 ),
               ],
             ),
+            if (widget.task.status == 3) _buildFailReason(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Divider(
@@ -438,28 +440,31 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                   'Danh sách nhắc việc',
                   style: AppTextTheme.mediumBodyText(AppColor.primary1),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      '$hadDone/${widget.task.checkList.length}',
-                      style: AppTextTheme.normalText(AppColor.text3),
-                    ),
-                    InkWell(
-                      child: Transform.rotate(
-                        angle: angle * pi / 180,
-                        child: SvgIcon(
-                          SvgIcons.expandMore,
-                          color: AppColor.black,
-                          size: 24,
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          '$hadDone/${widget.task.checkList.length}',
+                          style: AppTextTheme.normalText(AppColor.text3),
                         ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _isShowCheckList = !_isShowCheckList;
-                        });
-                      },
+                        Transform.rotate(
+                          angle: angle * pi / 180,
+                          child: SvgIcon(
+                            SvgIcons.expandMore,
+                            color: AppColor.black,
+                            size: 24,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _isShowCheckList = !_isShowCheckList;
+                    });
+                  },
                 ),
               ],
             ),
@@ -544,6 +549,59 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
     );
   }
 
+  Widget _buildFailReason() {
+    final cancelTime = formatFromInt(
+      displayedFormat: 'HH:mm - dd/MM/yyyy',
+      value: widget.task.updatedTime,
+      context: context,
+    );
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Divider(
+            color: AppColor.shade1,
+            height: 1,
+          ),
+        ),
+        Wrap(
+          runSpacing: 12,
+          children: [
+            _buildFailItem(
+              title: 'Lý do hủy',
+              text: 'Bận việc đột xuất',
+            ),
+            _buildFailItem(
+              title: 'Thời điểm hủy',
+              text: cancelTime,
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildFailItem({required String title, required String text}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: AppTextTheme.normalText(AppColor.primary2),
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              text,
+              style: AppTextTheme.normalText(AppColor.others1),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildImages({
     required String title,
     required List<String> images,
@@ -586,6 +644,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
   Widget _paymentField() {
     final price =
         NumberFormat('#,##0 VND', 'vi').format(widget.task.totalPrice);
+    final paymentStatus = widget.task.status == 2 ? 'Thành công' : 'Thất bại';
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -608,6 +667,21 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                   'Hình thức thanh toán',
                   style: AppTextTheme.mediumHeaderTitle(AppColor.primary1),
                 ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColor.shade1),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                  child: Text(
+                    paymentStatus,
+                    style: AppTextTheme.mediumBodyText(
+                      colorStatus(
+                        index: widget.task.status,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             Padding(
@@ -617,24 +691,31 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 height: 1,
               ),
             ),
-            _detailItem(
-              icon: SvgIcons.wallet,
-              text: 'MOMO, *******756',
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _detailItem(
-              icon: SvgIcons.dollar,
-              text: price,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _detailItem(
-              icon: SvgIcons.tag,
-              text: 'JOYTECH07',
-            ),
+            widget.task.status == 2
+                ? Wrap(
+                    runSpacing: 12,
+                    children: [
+                      _detailItem(
+                        icon: SvgIcons.wallet,
+                        text: 'Tiền mặt',
+                      ),
+                      _detailItem(
+                        icon: SvgIcons.dollar,
+                        text: price,
+                      ),
+                      _detailItem(
+                        icon: SvgIcons.tag,
+                        text: 'JOYTECH07',
+                      ),
+                    ],
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: _buildFailItem(
+                      title: 'Phí hủy',
+                      text: price,
+                    ),
+                  ),
           ],
         ),
       ),

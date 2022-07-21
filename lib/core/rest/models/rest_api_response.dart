@@ -1,6 +1,7 @@
 import '../../../core/user/model/user_model.dart';
 import '../../authentication/models/status.dart';
 import '../../logger/logger.dart';
+import '../../notification/notification.dart';
 import '../../service/service.dart';
 import '../../task/task.dart';
 import '../../tasker/tasker.dart';
@@ -88,6 +89,12 @@ class BaseModel {
     }
     if (T == MedalModel) {
       return MedalModel.fromJson(json) as T;
+    }
+    if (T == NotificationModel) {
+      return NotificationModel.fromJson(json) as T;
+    }
+    if (T == NotificationListModel) {
+      return NotificationListModel.fromJson(json) as T;
     }
     logError("Unknown BaseModel class: $T");
     throw Exception("Unknown BaseModel class: $T");

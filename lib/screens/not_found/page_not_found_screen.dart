@@ -14,6 +14,7 @@ class _PageNotFoundScreenState extends State<PageNotFoundScreen> {
     ScreenUtil.init(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColor.primary1,
         leading: InkWell(
           child: const Icon(
             Icons.arrow_back_ios_outlined,
@@ -37,7 +38,7 @@ class _PageNotFoundScreenState extends State<PageNotFoundScreen> {
           Center(
             child: Text(
               'Không tìm thấy trang!',
-              style: AppTextTheme.bigText(Colors.black),
+              style: AppTextTheme.bigText(AppColor.black),
             ),
           ),
         ],
