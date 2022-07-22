@@ -11,6 +11,7 @@ class UserModel extends BaseModel {
   final int _createdTime;
   final int _updatedTime;
   final String _avatar;
+  final bool _isDeleted;
   String _password;
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -20,6 +21,7 @@ class UserModel extends BaseModel {
         _address = json['address'] ?? '',
         _phoneNumber = json['phoneNumber']?.toString() ?? '',
         _gender = json['gender'] ?? '',
+        _isDeleted = json['is_deleted'] ?? false,
         _createdTime = json['created_time'] ?? 0,
         _updatedTime = json['updated_time'] ?? 0,
         _avatar = json['avatar'] ?? '',
@@ -32,6 +34,7 @@ class UserModel extends BaseModel {
         "address": _address,
         "phoneNumber": _phoneNumber,
         "gender": _gender,
+        "is_deleted": _isDeleted,
         "created_time": _createdTime,
         "updated_time": _updatedTime,
         "avatar": _avatar,
@@ -47,6 +50,7 @@ class UserModel extends BaseModel {
   int get updatedTime => _updatedTime;
   String get password => _password;
   String get avatar => _avatar;
+  bool get isDeleted => _isDeleted;
   set password(value) {
     _password = value;
   }

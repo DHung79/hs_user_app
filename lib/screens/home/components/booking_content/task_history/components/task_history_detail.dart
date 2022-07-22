@@ -569,7 +569,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
           children: [
             _buildFailItem(
               title: 'Lý do hủy',
-              text: 'Bận việc đột xuất',
+              text: widget.task.failureReason!.reason,
             ),
             _buildFailItem(
               title: 'Thời điểm hủy',

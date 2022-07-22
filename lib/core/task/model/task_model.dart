@@ -16,7 +16,6 @@ class TaskModel extends BaseModel {
   final int _date;
   final String _note;
   final int _status;
-  final int _failureReason;
   final int _typeHome;
   final bool _isDeleted;
   final bool _isRating;
@@ -28,6 +27,7 @@ class TaskModel extends BaseModel {
   final OptionModel _selectedOption;
   final List<String> _listPicturesBefore = [];
   final List<String> _listPicturesAfter = [];
+  final FailureReasonModel? _failureReason;
 
   TaskModel.fromJson(Map<String, dynamic> json)
       : _address = BaseModel.map<AddressModel>(
@@ -50,6 +50,10 @@ class TaskModel extends BaseModel {
           json: json,
           key: 'selected_option',
         ),
+        _failureReason = BaseModel.map<FailureReasonModel>(
+          json: json,
+          key: 'failure_reason',
+        ),
         __id = json['_id'] ?? '',
         _estimateTime = json['estimate_time'] ?? '',
         _startTime = json['start_time'] ?? 0,
@@ -57,7 +61,6 @@ class TaskModel extends BaseModel {
         _date = json['date'] ?? 0,
         _note = json['note'] ?? '',
         _status = json['status'] ?? 0,
-        _failureReason = json['failure_reason'] ?? 0,
         _typeHome = json['type_home'] ?? 0,
         _isDeleted = json['is_deleted'] ?? false,
         _isRating = json['is_rating'] ?? false,
@@ -128,7 +131,6 @@ class TaskModel extends BaseModel {
   int get date => _date;
   String get note => _note;
   int get status => _status;
-  int get failureReason => _failureReason;
   int get typeHome => _typeHome;
   bool get isDeleted => _isDeleted;
   bool get isRating => _isRating;
@@ -140,6 +142,27 @@ class TaskModel extends BaseModel {
   OptionModel get selectedOption => _selectedOption;
   List<String> get listPicturesBefore => _listPicturesBefore;
   List<String> get listPicturesAfter => _listPicturesAfter;
+  FailureReasonModel? get failureReason => _failureReason;
+}
+
+class FailureReasonModel extends BaseModel {
+  final UserModel? _user;
+  final String _reason;
+
+  FailureReasonModel.fromJson(Map<String, dynamic> json)
+      : _user = BaseModel.map<UserModel>(
+          json: json,
+          key: 'user',
+        ),
+        _reason = json['reason'] ?? '';
+
+  Map<String, dynamic> toJson() => {
+        'posted_user': _user?.toJson(),
+        'reason': _reason,
+      };
+
+  UserModel? get user => _user;
+  String get reason => _reason;
 }
 
 class EditTaskModel extends EditBaseModel {
