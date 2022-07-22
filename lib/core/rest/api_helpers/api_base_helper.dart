@@ -93,11 +93,13 @@ class ApiBaseHelper {
 
   Future<ApiResponse<T>> delete<T extends BaseModel>({
     required String path,
+    dynamic body,
     Map<String, String>? headers,
   }) async {
     ApiResponse<T> apiResponse;
     try {
-      final response = await http.delete(Uri.parse(path), headers: headers);
+      final response =
+          await http.delete(Uri.parse(path), headers: headers, body: body);
       apiResponse = _returnDeleteResponse<T>(response);
     } on SocketException {
       return ApiResponse(

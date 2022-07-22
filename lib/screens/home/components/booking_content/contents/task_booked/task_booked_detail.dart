@@ -601,7 +601,12 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
   }
 
   _userCancelTask() {
-    _taskBloc.deleteTask(id: widget.task.id).then((value) {
+    _taskBloc
+        .deleteTask(
+      id: widget.task.id,
+      reason: '',
+    )
+        .then((value) {
       navigateTo(taskBookedRoute);
       JTToast.successToast(message: 'Đã huỷ');
     }).onError((ApiError error, stackTrace) {

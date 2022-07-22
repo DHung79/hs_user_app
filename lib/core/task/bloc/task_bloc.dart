@@ -64,11 +64,17 @@ class TaskBloc {
     _isFetching = false;
   }
 
-  Future<TaskModel> deleteTask({String? id}) async {
+  Future<TaskModel> deleteTask({
+    required String id,
+    required String reason,
+  }) async {
     try {
       // Await response from server.
 
-      final data = await _repository.deleteTask<TaskModel>(id: id);
+      final data = await _repository.deleteTask<TaskModel>(
+        id: id,
+        reason: reason,
+      );
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);

@@ -41,17 +41,23 @@ class TaskApiProvider {
   }
 
   Future<ApiResponse<T?>> deleteTask<T extends BaseModel>({
-    String? id,
+    required String id,
+    required String reason,
   }) async {
     final path = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
         ApiConstants.tasks +
         ApiConstants.user +
         '/$id';
-    logDebug('path: $path');
+
+    final body = convert.jsonEncode({
+      "failure_reason": {"reason": reason}
+    });
+    logDebug('path: $path \n body: $body');
     final token = await ApiHelper.getUserToken();
     final response = await RestApiHandlerData.deleteData<T>(
       path: path,
+      body: body,
       headers: ApiHelper.headers(token),
     );
     return response;

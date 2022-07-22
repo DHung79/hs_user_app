@@ -57,10 +57,12 @@ class RestApiHandlerData {
 
   static Future<ApiResponse<T>> deleteData<T extends BaseModel>({
     required String path,
+    dynamic body,
     Map<String, String>? headers,
   }) async {
     final response = await _apiBaseHelper.delete<T>(
       path: path,
+      body: body,
       headers: headers,
     );
     return response;

@@ -7,10 +7,12 @@ class TaskRepository {
   final _provider = TaskApiProvider();
 
   Future<ApiResponse<T?>> deleteTask<T extends BaseModel>({
-    String? id,
+    required String id,
+    required String reason,
   }) =>
       _provider.deleteTask<T>(
         id: id,
+        reason: reason,
       );
 
   Future<ApiResponse<T?>> fetchAllData<T extends BaseModel>({
