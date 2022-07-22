@@ -108,7 +108,7 @@ class TaskBloc {
 
       final data = await _repository.editTask<TaskModel, EditTaskModel>(
         editModel: editModel,
-        id: idTask,
+        id: id,
       );
       if (data.error != null) {
         // Error exist

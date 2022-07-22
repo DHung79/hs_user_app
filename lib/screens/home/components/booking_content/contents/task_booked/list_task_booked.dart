@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/task/task.dart';
-import '../../../../../widgets/task_widget/task_widget.dart';
-import '/main.dart';
-import '/core/user/user.dart';
+import 'components/components.dart';
 
 class ListTaskBooked extends StatefulWidget {
   final UserModel user;

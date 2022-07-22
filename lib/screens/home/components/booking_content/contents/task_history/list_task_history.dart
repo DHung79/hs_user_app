@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/task/task.dart';
-import '../../../../../widgets/task_widget/task_widget.dart';
+import '../../../../../../core/task/task.dart';
+import '../../../../../../widgets/task_widget/task_widget.dart';
 import '/main.dart';
 import '/core/user/user.dart';
 

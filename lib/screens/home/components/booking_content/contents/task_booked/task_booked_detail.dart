@@ -1,12 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../../../../core/task/task.dart';
-import '../../../../../../core/user/user.dart';
-import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
-import '../../../../../../widgets/task_widget/cancel_task_dialog.dart';
-import '../../../../../../widgets/task_widget/task_widget.dart';
+import '../../../../../../../widgets/task_widget/cancel_task_dialog.dart';
+import 'components/components.dart';
 
 class TaskBookedDetail extends StatefulWidget {
   final TaskModel task;

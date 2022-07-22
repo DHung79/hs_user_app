@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../../main.dart';
-import '../../../../../../widgets/jt_dialog.dart';
+import '../../../../../../../widgets/jt_dialog.dart';
+import 'components.dart';
 
 class RatingDialog extends StatelessWidget {
   final Widget contentHeader;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
+import 'components.dart';
 
 class CreateToDoDialog extends StatefulWidget {
   final Function(String) onPressed;

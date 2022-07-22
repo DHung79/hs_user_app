@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/task/task.dart';
-import '../../../../../core/user/user.dart';
-import '../../../../../main.dart';
+import '../../components/components.dart';
 import 'tabs/book_new_task.dart';
 import 'tabs/rebook_task.dart';
 

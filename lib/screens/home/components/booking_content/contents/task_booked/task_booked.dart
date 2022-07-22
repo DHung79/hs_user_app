@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/task/task.dart';
-import '../../../../../../core/tasker/tasker.dart';
-import '../../book_task/components/tasker_info.dart';
-import '/main.dart';
-import '/core/user/user.dart';
+import '../book_task/components/tasker_info.dart';
 import '/core/authentication/auth.dart';
+import 'components/components.dart';
 import 'task_booked_detail.dart';
 
 class TaskBookedScreen extends StatefulWidget {

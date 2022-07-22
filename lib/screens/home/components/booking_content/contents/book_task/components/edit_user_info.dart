@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/user/user.dart';
-import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
+import 'components.dart';
 
 class EditUserInfo extends StatefulWidget {
   final UserBloc userBloc;

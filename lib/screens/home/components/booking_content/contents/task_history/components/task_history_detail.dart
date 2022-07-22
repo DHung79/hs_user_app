@@ -2,14 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
-import '../../../../../../core/task/task.dart';
-import '../../../../../../core/tasker/tasker.dart';
-import '../../../../../../core/user/user.dart';
-import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
-import '../../../../../../widgets/task_widget/task_widget.dart';
 import '../../book_task/components/components.dart';
-import 'rating_dialog.dart';
+import 'components.dart';
 
 class TaskHistoryDetail extends StatefulWidget {
   final TaskModel task;

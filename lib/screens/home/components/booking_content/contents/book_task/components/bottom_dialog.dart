@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../main.dart';
-import '../../../../../../widgets/task_widget/task_warning_dialog.dart';
+import 'components.dart';
 
 bottomDialog(
   BuildContext context, {

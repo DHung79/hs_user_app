@@ -5,3 +5,4 @@ export './edit_user_info.dart';
 export './pick_location.dart';
 export './search_location.dart';
 export './text_area_input.dart';
+export '../../../components/components.dart';

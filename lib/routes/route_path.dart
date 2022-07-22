@@ -55,15 +55,15 @@ class AppRoutePath {
         routeId = '',
         isUnknown = false;
   AppRoutePath.rebookTask(String id)
-      : name = rebookTaskRoute + id,
+      : name = rebookTaskRoute + '/$id',
         routeId = '',
         isUnknown = false;
   AppRoutePath.taskBooked(String id)
-      : name = taskBookedRoute + id,
+      : name = taskBookedRoute + '/$id',
         routeId = '',
         isUnknown = false;
   AppRoutePath.taskHistory(String id)
-      : name = taskHistoryRoute + id,
+      : name = taskHistoryRoute + '/$id',
         routeId = '',
         isUnknown = false;
 
@@ -146,16 +146,16 @@ class AppRoutePath {
       }
       return AppRoutePath.bookTask();
     }
-    if (name != null && name.startsWith(rebookTaskRoute)) {
-      if (name.length > rebookTaskRoute.length) {
-        final id = name.substring(rebookTaskRoute.length + 1, name.length);
+    if (name != null && name.startsWith(taskBookedRoute)) {
+      if (name.length > taskBookedRoute.length) {
+        final id = name.substring(taskBookedRoute.length + 1, name.length);
         if (id.isNotEmpty) return AppRoutePath.taskBooked(id);
       }
       return AppRoutePath.bookTask();
     }
-    if (name != null && name.startsWith(rebookTaskRoute)) {
-      if (name.length > rebookTaskRoute.length) {
-        final id = name.substring(rebookTaskRoute.length + 1, name.length);
+    if (name != null && name.startsWith(taskHistoryRoute)) {
+      if (name.length > taskHistoryRoute.length) {
+        final id = name.substring(taskHistoryRoute.length + 1, name.length);
         if (id.isNotEmpty) return AppRoutePath.taskHistory(id);
       }
       return AppRoutePath.bookTask();

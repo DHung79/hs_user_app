@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/user/user.dart';
-import '/main.dart';
-import 'book_task/list_rebook_task.dart';
-import 'task_history/list_task_history.dart';
-import 'task_booked/list_task_booked.dart';
+import 'components/components.dart';
 
 class BookingContent extends StatefulWidget {
   final int tab;
@@ -20,12 +16,6 @@ class BookingContent extends StatefulWidget {
 
 class _BookingContentState extends State<BookingContent> {
   final _userBloc = UserBloc();
-  late int _currentTab;
-  @override
-  void initState() {
-    _currentTab = widget.tab;
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -57,29 +47,23 @@ class _BookingContentState extends State<BookingContent> {
             children: [
               _buildHeaderItem(
                 title: 'Đăng việc',
-                isActive: _currentTab == 0,
+                isActive: widget.tab == 0,
                 onPressed: () {
-                  setState(() {
-                    _currentTab = 0;
-                  });
+                  navigateTo(bookTaskRoute);
                 },
               ),
               _buildHeaderItem(
                 title: 'Hiện tại',
-                isActive: _currentTab == 1,
+                isActive: widget.tab == 1,
                 onPressed: () {
-                  setState(() {
-                    _currentTab = 1;
-                  });
+                  navigateTo(taskBookedRoute);
                 },
               ),
               _buildHeaderItem(
                 title: 'Lịch sử',
-                isActive: _currentTab == 2,
+                isActive: widget.tab == 2,
                 onPressed: () {
-                  setState(() {
-                    _currentTab = 2;
-                  });
+                  navigateTo(taskHistoryRoute);
                 },
               ),
             ],
@@ -124,11 +108,11 @@ class _BookingContentState extends State<BookingContent> {
   }
 
   Widget _getContent() {
-    if (_currentTab == 1) {
+    if (widget.tab == 1) {
       return ListTaskBooked(
         user: widget.user,
       );
-    } else if (_currentTab == 2) {
+    } else if (widget.tab == 2) {
       return TaskHistory(
         user: widget.user,
       );

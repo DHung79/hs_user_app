@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/task/task.dart';
-import '../../../../../../core/tasker/tasker.dart';
+import '../../../../../../../core/task/task.dart';
+import '../../../../../../../core/tasker/tasker.dart';
 import '../../book_task/components/tasker_info.dart';
 import '/main.dart';
 import '/core/user/user.dart';

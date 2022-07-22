@@ -97,80 +97,103 @@ class _PageTemplateState extends State<PageTemplate> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
-      bloc: _authenticationBloc,
-      listener: (BuildContext context, AuthenticationState state) async {
-        if (state is AuthenticationStart) {
-          navigateTo(authenticationRoute);
-        } else if (state is UserLogoutState) {
-          navigateTo(authenticationRoute);
-        } else if (state is AuthenticationFailure) {
-          _showError(state.errorCode);
-        } else if (state is UserTokenExpired) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                ScreenUtil.t(I18nKey.signInSessionExpired)!,
-              ),
-            ),
-          );
-          navigateTo(authenticationRoute);
-        } else if (state is AppAutheticated) {
-          _authenticationBloc.add(GetUserData());
-        } else if (state is SetUserData<UserModel>) {
-          setState(() {
-            _currentUser = Future.value(state.currentUser);
-          });
+    return WillPopScope(
+      onWillPop: () async {
+        final listPageCanPop = [
+          initialRoute,
+          authenticationRoute,
+          homeRoute,
+        ];
+        final listTabCanPop = [
+          bookTaskRoute,
+          settingRoute,
+        ];
+        final currentRoute = getCurrentRoute();
+        if (preRoute.isNotEmpty && !listPageCanPop.contains(currentRoute)) {
+          if (listTabCanPop.contains(currentRoute)) {
+            navigateTo(homeRoute);
+          } else {
+            navigateTo(preRoute);
+          }
         }
+        return false;
       },
-      child: StreamBuilder(
-        stream: _currentUser?.asStream(),
-        builder: (context, snapshot) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            key: _key,
-            backgroundColor: Colors.white,
-            appBar: widget.showAppBar
-                ? PreferredSize(
-                    preferredSize: Size.fromHeight(widget.appBarHeight),
-                    child: widget.appBar ??
-                        AppBar(
-                          backgroundColor: Colors.white,
-                          flexibleSpace: widget.flexibleSpace,
-                          centerTitle: widget.currentTab != 0,
-                          leading: widget.leading,
-                          actions: widget.actions,
-                          title: widget.tabTitle,
-                          elevation: widget.elevation,
-                        ),
-                  )
-                : null,
-            drawer: widget.drawer,
-            bottomNavigationBar: widget.navItem,
-            body: LayoutBuilder(
-              builder: (context, size) {
-                return BlocListener<AuthenticationBloc, AuthenticationState>(
-                  bloc: AuthenticationBlocController().authenticationBloc,
-                  listener: (BuildContext context, AuthenticationState state) {
-                    if (state is SetUserData<UserModel>) {
-                      // App.of(context)!.setLocale(
-                      //   supportedLocales.firstWhere(
-                      //       (e) => e.languageCode == state.currentLang),
-                      // );
-                      setState(() {
-                        widget.pageState!.currentUser = Future.value(
-                          state.currentUser,
-                        );
-                        widget.onUserFetched(state.currentUser);
-                      });
-                    }
-                  },
-                  child: widget.child,
-                );
-              },
-            ),
-          );
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
+        bloc: _authenticationBloc,
+        listener: (BuildContext context, AuthenticationState state) async {
+          if (state is AuthenticationStart) {
+            navigateTo(authenticationRoute);
+          } else if (state is UserLogoutState) {
+            navigateTo(authenticationRoute);
+          } else if (state is AuthenticationFailure) {
+            _showError(state.errorCode);
+          } else if (state is UserTokenExpired) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  ScreenUtil.t(I18nKey.signInSessionExpired)!,
+                ),
+              ),
+            );
+            navigateTo(authenticationRoute);
+          } else if (state is AppAutheticated) {
+            _authenticationBloc.add(GetUserData());
+          } else if (state is SetUserData<UserModel>) {
+            setState(() {
+              _currentUser = Future.value(state.currentUser);
+            });
+          }
         },
+        child: StreamBuilder(
+          stream: _currentUser?.asStream(),
+          builder: (context, snapshot) {
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              key: _key,
+              backgroundColor: Colors.white,
+              appBar: widget.showAppBar
+                  ? PreferredSize(
+                      preferredSize: Size.fromHeight(widget.appBarHeight),
+                      child: widget.appBar ??
+                          AppBar(
+                            backgroundColor: Colors.white,
+                            flexibleSpace: widget.flexibleSpace,
+                            centerTitle: widget.currentTab != 0,
+                            leading: widget.leading,
+                            actions: widget.actions,
+                            title: widget.tabTitle,
+                            elevation: widget.elevation,
+                          ),
+                    )
+                  : null,
+              drawer: widget.drawer,
+              bottomNavigationBar: widget.navItem,
+              body: LayoutBuilder(
+                builder: (context, size) {
+                  return BlocListener<AuthenticationBloc, AuthenticationState>(
+                    bloc: AuthenticationBlocController().authenticationBloc,
+                    listener:
+                        (BuildContext context, AuthenticationState state) {
+                      if (state is SetUserData<UserModel>) {
+                        // App.of(context)!.setLocale(
+                        //   supportedLocales.firstWhere(
+                        //       (e) => e.languageCode == state.currentLang),
+                        // );
+                        setState(() {
+                          widget.pageState!.currentUser = Future.value(
+                            state.currentUser,
+                          );
+                          widget.onUserFetched(state.currentUser);
+                        });
+                      }
+                    },
+                    child: widget.child,
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

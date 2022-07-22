@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '/core/task/bloc/task_bloc.dart';
-import '../../../../../../widgets/debouncer.dart';
-import '/main.dart';
+import 'components.dart';
 
 class SearchLocation extends StatefulWidget {
   final Function(String) changeLocation;

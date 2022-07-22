@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../screens/home/components/booking_content/book_task/book_task_screen.dart';
+import '../main.dart';
 import '../screens/home/components/booking_content/components/promotion.dart';
-import '../screens/home/components/booking_content/task_booked/components/task_booked.dart';
-import '../screens/home/components/booking_content/task_history/components/task_history.dart';
+import '../screens/home/components/booking_content/contents/book_task/book_task_screen.dart';
+import '../screens/home/components/booking_content/contents/task_booked/task_booked.dart';
+import '../screens/home/components/booking_content/contents/task_history/components/task_history.dart';
 import '/screens/create_password_screen/create_password_screen.dart';
 import '../screens/home/home_screen.dart';
 import '/screens/notification_screen/notification_screen.dart';
@@ -13,7 +14,6 @@ import '/screens/forgot_password_screen/forgot_password_screen.dart';
 import '/screens/onboarding/authentication_screen.dart';
 import '../screens/not_found/page_not_found_screen.dart';
 import 'no_animation_transition_delegate.dart';
-import 'route_names.dart';
 import 'route_path.dart';
 
 class AppRouterDelegate extends RouterDelegate<AppRoutePath>
@@ -155,6 +155,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
   }
 
   void navigateTo(String name) {
+    preRoute = _routePath;
     _routePath = name;
     notifyListeners();
   }

@@ -1,13 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../../../../../core/service/service.dart';
-import '../../../../../../theme/validator_text.dart';
-import '../../../../../../widgets/task_widget/task_widget.dart';
 import '../components/components.dart';
-import '/core/task/task.dart';
-import '/main.dart';
 import 'package:intl/intl.dart';
-import '/core/user/user.dart';
 
 class BookNewTaskContent extends StatefulWidget {
   final UserModel user;

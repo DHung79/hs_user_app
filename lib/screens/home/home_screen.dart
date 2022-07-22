@@ -41,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
             child: snapshot.hasData
-                ? buildContent(userModel != null ? userModel! : snapshot.data!)
+                ? buildContent(
+                    userModel != null ? userModel! : snapshot.data!)
                 : const SizedBox(),
             pageState: _pageState,
             onFetch: () {

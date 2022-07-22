@@ -28,24 +28,15 @@ export '/widgets/jt_toast.dart';
 export '/routes/route_names.dart';
 export '/screens/layout_template/content_screen.dart';
 
-String serviceId = '';
-int notiBadges = 0;
-String locationAddress = '';
-bool loginGoogle = false;
+//page index
 int homePageIndex = 0;
 int selectIndexBooking = 0;
-String email = '';
-Map<String, dynamic> positionTask = {};
-int startTime = 0;
-int endTime = 0;
-String address = '';
-int date = 0;
-String noteTasker = '';
-int dateActive = 0;
-List listTaskForTasker = [];
-String idTask = '';
-int estimateTime = 0;
+//count Noti
+int notiBadges = 0;
+//get fcm
 String? currentFcmToken;
+String preRoute = '';
+
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 GlobalKey globalKey = GlobalKey();
 
@@ -128,4 +119,3 @@ Future<PackageInfo> loadVersion() async {
 
   return packageInfo;
 }
-

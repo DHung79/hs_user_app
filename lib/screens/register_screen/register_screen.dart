@@ -177,7 +177,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   _register() {
     setState(() {
       _errorMessage = '';
-      loginGoogle = false;
     });
 
     if (_key.currentState!.validate()) {

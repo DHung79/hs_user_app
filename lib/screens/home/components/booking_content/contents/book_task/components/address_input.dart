@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/task/task.dart';
-import '../../../../../../main.dart';
-import '../../../../../../theme/validator_text.dart';
-import 'text_area_input.dart';
+import 'components.dart';
 
 class AddressInput extends StatefulWidget {
   final EditTaskModel editTaskModel;
