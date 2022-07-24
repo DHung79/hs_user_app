@@ -29,6 +29,8 @@ class _AddressInputState extends State<AddressInput> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -77,13 +79,16 @@ class _AddressInputState extends State<AddressInput> {
             ],
           ),
         ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Form(
-              key: _key,
-              autovalidateMode: _autovalidate,
-              child: _buildContent(),
+        SizedBox(
+          height: screenSize.height - 90,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Form(
+                key: _key,
+                autovalidateMode: _autovalidate,
+                child: _buildContent(),
+              ),
             ),
           ),
         ),
@@ -170,27 +175,30 @@ class _AddressInputState extends State<AddressInput> {
               )
             ],
           ),
-          AppButtonTheme.fillRounded(
-            constraints: const BoxConstraints(minHeight: 52),
-            color: AppColor.primary2,
-            highlightColor: AppColor.transparent,
-            borderRadius: BorderRadius.circular(4),
-            child: Center(
-              child: Text(
-                'Đồng ý'.toUpperCase(),
-                style: AppTextTheme.headerTitle(AppColor.text2),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: AppButtonTheme.fillRounded(
+              constraints: const BoxConstraints(minHeight: 52),
+              color: AppColor.primary2,
+              highlightColor: AppColor.transparent,
+              borderRadius: BorderRadius.circular(4),
+              child: Center(
+                child: Text(
+                  'Đồng ý'.toUpperCase(),
+                  style: AppTextTheme.headerTitle(AppColor.text2),
+                ),
               ),
+              onPressed: () {
+                if (_key.currentState!.validate()) {
+                  _key.currentState!.save();
+                  widget.onPressed();
+                } else {
+                  setState(() {
+                    _autovalidate = AutovalidateMode.onUserInteraction;
+                  });
+                }
+              },
             ),
-            onPressed: () {
-              if (_key.currentState!.validate()) {
-                _key.currentState!.save();
-                widget.onPressed();
-              } else {
-                setState(() {
-                  _autovalidate = AutovalidateMode.onUserInteraction;
-                });
-              }
-            },
           ),
         ],
       ),
