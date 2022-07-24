@@ -74,6 +74,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
               return ValidatorText.empty(
                   fieldName: ScreenUtil.t(I18nKey.name)!);
             }
+            if (value.trim().length < 5) {
+              return ValidatorText.atLeast(
+                  fieldName: ScreenUtil.t(I18nKey.name)!, atLeast: 5);
+            }
+            if (value.trim().length > 50) {
+              return ValidatorText.moreThan(
+                  fieldName: ScreenUtil.t(I18nKey.name)!, moreThan: 50);
+            }
             return null;
           },
         ),
@@ -124,6 +132,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
             if (value!.isEmpty || value.trim().isEmpty) {
               return ValidatorText.empty(
                   fieldName: ScreenUtil.t(I18nKey.address)!);
+            }
+            if (value.trim().length < 5) {
+              return ValidatorText.atLeast(
+                  fieldName: ScreenUtil.t(I18nKey.address)!, atLeast: 5);
+            }
+            if (value.trim().length > 300) {
+              return ValidatorText.moreThan(
+                  fieldName: ScreenUtil.t(I18nKey.address)!, moreThan: 300);
             }
             return null;
           },
