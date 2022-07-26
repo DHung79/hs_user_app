@@ -83,6 +83,10 @@ class AppRouteInforParser extends RouteInformationParser<AppRoutePath> {
     if (name == paymentRoute) {
       return AppRoutePath.payment();
     }
+
+    if (name == notificationRoute) {
+      return AppRoutePath.notification();
+    }
     return AppRoutePath.unknown();
   }
 

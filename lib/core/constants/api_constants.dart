@@ -17,8 +17,9 @@ class ApiConstants {
   static String forgotPassword = '/forgot-password';
   static String registers = '/registers';
   static String fcmToken = '/fcm-token';
-  static String notification = '/notification';
+  static String notifications = '/notifications';
   static String read = '/read';
   static String all = '/all';
-  static String unreadTotal = '/unread-total';
+  static String unread = '/unread';
+  static String total = '/total';
 }

@@ -1,33 +1,30 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../main.dart';
 import '../../base/blocs/block_state.dart';
 import '../../rest/api_helpers/api_exception.dart';
-import '../service.dart';
+import '../notification.dart';
 
-class ServiceBloc {
-  final _repository = ServiceRepository();
-  final BehaviorSubject<ApiResponse<ListServiceModel?>> _allDataFetcher =
-      BehaviorSubject<ApiResponse<ListServiceModel>>();
+class NotificationBloc {
+  final _repository = NotificationRepository();
+  final _allDataFetcher =
+      BehaviorSubject<ApiResponse<NotificationListModel?>>();
   final _allDataState = BehaviorSubject<BlocState>();
 
-  Stream<ApiResponse<ListServiceModel?>> get allData => _allDataFetcher.stream;
+  Stream<ApiResponse<NotificationListModel?>> get allData =>
+      _allDataFetcher.stream;
   Stream<BlocState> get allDataState => _allDataState.stream;
   bool _isFetching = false;
 
-  fetchAllData({Map<String, dynamic>? params}) async {
+  fetchAllData({required Map<String, dynamic> params}) async {
     if (_isFetching) return;
     _isFetching = true;
     // Start fetching data.
     _allDataState.sink.add(BlocState.fetching);
     try {
-      final SharedPreferences sharedPreferences = await prefs;
-
       // Await response from server.
       final data =
-          await _repository.fetchAllData<ListServiceModel>(params: params!);
-      sharedPreferences.setString('id', data.model!.records.first.id);
-      
+          await _repository.fetchAllData<NotificationListModel>(params: params);
+
       if (_allDataFetcher.isClosed) return;
       if (data.error != null) {
         // Error exist
@@ -44,10 +41,10 @@ class ServiceBloc {
     _isFetching = false;
   }
 
-  Future<ServiceModel> fetchDataById(String id) async {
+  Future<NotificationModel> getTotalUnread() async {
     try {
       // Await response from server.
-      final data = await _repository.fetchDataById<ServiceModel>(id: id);
+      final data = await _repository.getTotalUnread<NotificationModel>();
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);
@@ -60,10 +57,26 @@ class ServiceBloc {
     }
   }
 
-  Future<ServiceModel> deleteObject({String? id}) async {
+  Future<NotificationModel> readAllNoti() async {
     try {
       // Await response from server.
-      final data = await _repository.deleteObject<ServiceModel>(id: id);
+      final data = await _repository.readAllNoti<NotificationModel>();
+      if (data.error != null) {
+        // Error exist
+        return Future.error(data.error!);
+      } else {
+        // Adding response data.
+        return Future.value(data.model);
+      }
+    } on AppException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<NotificationModel> readNotiById({required String id}) async {
+    try {
+      // Await response from server.
+      final data = await _repository.readNotiById<NotificationModel>(id: id);
       if (data.error != null) {
         // Error exist
         return Future.error(data.error!);

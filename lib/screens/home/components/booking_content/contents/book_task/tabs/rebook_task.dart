@@ -43,9 +43,11 @@ class _RebookTaskState extends State<RebookTask> {
     }
     final _now = DateTime.now();
     if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+      _editTaskModel.startTime = _now.millisecondsSinceEpoch;
+    }
+    if (_editTaskModel.date < _now.millisecondsSinceEpoch) {
       _editTaskModel.date = DateTime(_now.year, _now.month, _now.day, 0, 0, 0)
           .millisecondsSinceEpoch;
-      _editTaskModel.startTime = _now.millisecondsSinceEpoch;
     }
     _locationController.text = _editTaskModel.address.name;
     _addressController.text = _editTaskModel.address.location;
@@ -242,11 +244,6 @@ class _RebookTaskState extends State<RebookTask> {
       value: _editTaskModel.startTime,
       context: context,
     );
-    // final endTime = formatFromInt(
-    //   displayedFormat: '- HH:mm',
-    //   value: _editTaskModel.endTime,
-    //   context: context,
-    // );
     final date = formatFromInt(
       displayedFormat: 'E, dd/MM/yyyy',
       value: _editTaskModel.date,

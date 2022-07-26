@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/notification/notification.dart';
 import '/main.dart';
 import '../../core/user/model/user_model.dart';
 import 'components/booking_content/book_task_content.dart';
@@ -41,8 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, AsyncSnapshot<UserModel> snapshot) {
           return PageContent(
             child: snapshot.hasData
-                ? buildContent(
-                    userModel != null ? userModel! : snapshot.data!)
+                ? buildContent(userModel != null ? userModel! : snapshot.data!)
                 : const SizedBox(),
             pageState: _pageState,
             onFetch: () {
@@ -178,5 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  _fetchDataOnPage() {}
+  _fetchDataOnPage() {
+    NotificationBloc().getTotalUnread().then((value) {
+      setState(() {
+        notiBadges = value.totalUnreadNoti;
+      });
+    });
+  }
 }

@@ -20,10 +20,9 @@ class TaskTimePicker extends StatefulWidget {
 }
 
 class _TaskTimePickerState extends State<TaskTimePicker> {
-  final _now = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
+    final _now = DateTime.now();
     final List<DateTime> listDayOfWeek = [
       for (int i = 0; i < 7; i++)
         DateTime(
@@ -98,6 +97,7 @@ class _TaskTimePickerState extends State<TaskTimePicker> {
     required EditTaskModel task,
     required void Function()? onPressed,
   }) {
+    final _now = DateTime.now();
     final dayOfWeek = DateFormat('E').format(date);
     final isActive = task.date > _now.millisecondsSinceEpoch
         ? task.date == date.millisecondsSinceEpoch
