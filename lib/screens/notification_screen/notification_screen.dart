@@ -118,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     size: 24,
                   ),
                   onPressed: () {
-                    _fetchDataOnPage(1);
+                    refreshData();
                   },
                 ),
               ],
@@ -227,11 +227,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         onTap: () {
-          _notiBloc.readNotiById(id: noti.id).then((value) {
-            setState(() {
-              isRead = value.read;
+          logDebug(noti.notificationType.toJson());
+          if (noti.notificationType.name == 'Notification Task') {
+            if (noti.notificationType.status == 0) {
+              navigateTo(taskBookedRoute + '/${noti.taskId}');
+            } else if (noti.notificationType.status! <= 2) {
+              navigateTo(taskHistoryRoute + '/${noti.taskId}');
+            }
+            _notiBloc.readNotiById(id: noti.id);
+          } else {
+            _notiBloc.readNotiById(id: noti.id).then((value) {
+              setState(() {
+                isRead = value.read;
+              });
             });
-          });
+          }
         },
       );
     });

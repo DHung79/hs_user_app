@@ -96,6 +96,9 @@ class BaseModel {
     if (T == NotificationListModel) {
       return NotificationListModel.fromJson(json) as T;
     }
+    if (T == NotificationType) {
+      return NotificationType.fromJson(json) as T;
+    }
     if (T == FailureReasonModel) {
       return FailureReasonModel.fromJson(json) as T;
     }

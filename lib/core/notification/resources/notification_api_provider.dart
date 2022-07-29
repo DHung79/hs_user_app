@@ -12,7 +12,8 @@ class NotificationApiProvider {
   }) async {
     var path = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
-        ApiConstants.notifications;
+        ApiConstants.notifications +
+        ApiConstants.user;
     if (params.isNotEmpty) {
       var queries = <String>[];
       params.forEach((key, value) => queries.add('$key=$value'));
