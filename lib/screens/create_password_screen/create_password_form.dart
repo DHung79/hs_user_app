@@ -28,6 +28,12 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
   }
 
   @override
+  void initState() {
+    JTToast.init(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -37,6 +43,12 @@ class _CreatePasswordFormState extends State<CreatePasswordForm> {
             _showError(state.errorCode);
           } else if (state is ResetPasswordDoneState) {
             navigateTo(authenticationRoute);
+            await Future.delayed(const Duration(milliseconds: 500));
+            JTToast.successToast(
+              width: 327,
+              height: 53,
+              message: 'Đăng ký thành công',
+            );
           }
         },
         child: LayoutBuilder(

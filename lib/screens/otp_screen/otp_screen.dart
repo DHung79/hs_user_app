@@ -27,8 +27,23 @@ class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController _otpController = TextEditingController();
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  bool _processing = false;
+  Timer? _delayResend;
+  Timer? _delayCheckOtp;
+  bool _lockResend = false;
 
-  late StreamController<ErrorAnimationType> errorController;
+  @override
+  void initState() {
+    if (forgotPasswordEmailController.text.isNotEmpty) {
+      AuthenticationBlocController().authenticationBloc.add(
+            SendOTP(
+              email: forgotPasswordEmailController.text,
+            ),
+          );
+    }
+    JTToast.init(context);
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -37,14 +52,20 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   @override
+  void dispose() {
+    _delayCheckOtp?.cancel();
+    _delayResend?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    JTToast.init(context);
     ScreenUtil.init(context);
     return Scaffold(
       backgroundColor: AppColor.primary1,
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: AuthenticationBlocController().authenticationBloc,
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
           } else if (state is CheckOTPDoneState) {
@@ -53,6 +74,12 @@ class _OtpScreenState extends State<OtpScreen> {
             } else {
               navigateTo(resetPasswordRoute);
             }
+          } else if (state is SendOTPDoneState) {
+            JTToast.successToast(
+              width: 327,
+              height: 53,
+              message: ScreenUtil.t(I18nKey.checkYourEmail)!,
+            );
           }
         },
         child: Container(
@@ -132,11 +159,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       autovalidateMode: _autovalidate,
                       child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 60),
+                            vertical: 8.0,
+                            horizontal: 60,
+                          ),
                           child: PinCodeTextField(
                             backgroundColor: AppColor.primary1,
                             appContext: context,
-                            autoDismissKeyboard: false,
                             pastedTextStyle: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -193,7 +221,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       login: true,
                       style: AppTextTheme.headerTitle(AppColor.primary1),
                       otp: true,
-                      onPressed: _checkOTP,
+                      onPressed: !_processing ? _checkOTP : null,
                     ),
                     const SizedBox(
                       height: 24,
@@ -205,9 +233,11 @@ class _OtpScreenState extends State<OtpScreen> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       child: Text(
                         'Gửi lại',
-                        style: AppTextTheme.normalHeaderTitle(AppColor.text2),
+                        style: AppTextTheme.normalHeaderTitle(
+                          !_lockResend ? AppColor.text2 : AppColor.text6,
+                        ),
                       ),
-                      onPressed: () {},
+                      onPressed: _resendOTP,
                     )
                   ],
                 ),
@@ -219,12 +249,40 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
+  _resendOTP() {
+    setState(() {
+      _otpController.clear();
+      _errorMessage = '';
+      _lockResend = true;
+      _delayResend = Timer.periodic(const Duration(minutes: 5), (timer) {
+        if (timer.tick == 1) {
+          timer.cancel();
+          setState(() {
+            _lockResend = false;
+          });
+        }
+      });
+    });
+    AuthenticationBlocController().authenticationBloc.add(
+          SendOTP(
+            email: forgotPasswordEmailController.text,
+          ),
+        );
+  }
+
   _checkOTP() {
     setState(() {
+      _processing = true;
+      _delayCheckOtp = Timer.periodic(const Duration(seconds: 2), (timer) {
+        if (timer.tick == 1) {
+          timer.cancel();
+          setState(() {
+            _processing = false;
+          });
+        }
+      });
       _errorMessage = '';
-      AuthenticationBlocController().authenticationBloc.add(AppLoadedup());
     });
-
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       if (currentRoute == otpForgotPassWordRoute) {

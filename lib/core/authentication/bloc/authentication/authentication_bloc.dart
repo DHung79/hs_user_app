@@ -179,15 +179,12 @@ class AuthenticationBloc
       }
     });
 
-    on<CheckEmail>(
+    on<CheckRegisterEmail>(
       (event, emit) async {
         try {
-          final data = await authenticationService.checkEmail(
+          final data = await authenticationService.checkRegisterEmail(
             event.email,
           );
-
-          final SharedPreferences sharedPreferences = await prefs;
-          sharedPreferences.setString('resend_otp_email', event.email);
           if (data is ApiResponse) {
             if (data.error == null) {
               emit(CheckEmailDoneState());
@@ -218,37 +215,6 @@ class AuthenticationBloc
         }
       },
     );
-    on<ForgotPassword>((event, emit) async {
-      try {
-        final SharedPreferences sharedPreferences = await prefs;
-        sharedPreferences.setString('resend_otp_email', event.email);
-        final data = await authenticationService.forgotPassword(event.email);
-        if (data is ApiResponse) {
-          if (data.error == null) {
-            emit(ForgotPasswordDoneState());
-          } else {
-            emit(AuthenticationFailure(
-              message: data.error!.errorMessage,
-              errorCode: data.error!.errorCode,
-            ));
-          }
-        } else {
-          if (data["error_message"] == null) {
-            emit(ForgotPasswordDoneState());
-          } else {
-            emit(AuthenticationFailure(
-              message: data["error_message"],
-              errorCode: data["error_code"].toString(),
-            ));
-          }
-        }
-      } on Error catch (e) {
-        emit(AuthenticationFailure(
-          message: e.toString(),
-          errorCode: '',
-        ));
-      }
-    });
 
     on<UserLogOut>((event, emit) async {
       await _cleanupCache();
@@ -349,12 +315,12 @@ class AuthenticationBloc
     );
 
     on<CheckOTPForgot>((event, emit) async {
+      emit(AuthenticationLoading());
       try {
         final SharedPreferences sharedPreferences = await prefs;
         final data = await authenticationService.checkOTPForgot(event.otp);
         if (data is ApiResponse<OtpModel>) {
           if (data.model != null) {
-            sharedPreferences.remove('resend_otp_email');
             sharedPreferences.setString('reset_id', data.model!.userId);
             emit(CheckOTPDoneState());
           } else {
@@ -382,12 +348,12 @@ class AuthenticationBloc
     });
 
     on<CheckOTPRegister>((event, emit) async {
+      emit(AuthenticationLoading());
       try {
         final SharedPreferences sharedPreferences = await prefs;
         final data = await authenticationService.checkOTPRegister(event.otp);
         if (data is ApiResponse<OtpModel>) {
           if (data.model != null) {
-            sharedPreferences.remove('resend_otp_email');
             sharedPreferences.setString('reset_id', data.model!.userId);
             emit(CheckOTPDoneState());
           } else {
@@ -414,11 +380,10 @@ class AuthenticationBloc
       }
     });
 
-    on<ResendOTP>((event, emit) async {
+    on<ForgotPassword>((event, emit) async {
+      emit(AuthenticationLoading());
       try {
-        final SharedPreferences sharedPreferences = await prefs;
-        final email = sharedPreferences.getString('resend_otp_email') ?? '';
-        final data = await authenticationService.forgotPassword(email);
+        final data = await authenticationService.checkEmail(event.email);
         if (data is ApiResponse) {
           if (data.error == null) {
             emit(ForgotPasswordDoneState());
@@ -431,6 +396,37 @@ class AuthenticationBloc
         } else {
           if (data["error_message"] == null) {
             emit(ForgotPasswordDoneState());
+          } else {
+            emit(AuthenticationFailure(
+              message: data["error_message"],
+              errorCode: data["error_code"].toString(),
+            ));
+          }
+        }
+      } on Error catch (e) {
+        emit(AuthenticationFailure(
+          message: e.toString(),
+          errorCode: '',
+        ));
+      }
+    });
+
+    on<SendOTP>((event, emit) async {
+      emit(AuthenticationLoading());
+      try {
+        final data = await authenticationService.forgotPassword(event.email);
+        if (data is ApiResponse) {
+          if (data.error == null) {
+            emit(SendOTPDoneState());
+          } else {
+            emit(AuthenticationFailure(
+              message: data.error!.errorMessage,
+              errorCode: data.error!.errorCode,
+            ));
+          }
+        } else {
+          if (data["error_message"] == null) {
+            emit(SendOTPDoneState());
           } else {
             emit(AuthenticationFailure(
               message: data["error_message"],

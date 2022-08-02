@@ -28,6 +28,12 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
   }
 
   @override
+  void initState() {
+    JTToast.init(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -37,6 +43,12 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
             _showError(state.errorCode);
           } else if (state is ResetPasswordDoneState) {
             navigateTo(authenticationRoute);
+            await Future.delayed(const Duration(milliseconds: 500));
+            JTToast.successToast(
+              width: 327,
+              height: 53,
+              message: 'Đổi mật khẩu thành công',
+            );
           }
         },
         child: LayoutBuilder(

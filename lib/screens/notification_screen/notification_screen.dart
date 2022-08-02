@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hs_user_app/core/notification/notification.dart';
 import 'package:hs_user_app/main.dart';
+import '../../core/base/blocs/block_state.dart';
 import '../../core/user/user.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -141,18 +142,49 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     notifications = snapshot.data!.model!.records;
                   }
                   maxPage = snapshot.data!.model!.meta.totalPage;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    controller: _scrollController,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: notifications.length,
-                    itemBuilder: (context, index) {
-                      final noti = notifications[index];
-                      return _buildNoti(
-                        noti,
-                        isLast: notifications.length - 1 == index,
-                      );
-                    },
+                  return Stack(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        controller: _scrollController,
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: notifications.length,
+                        itemBuilder: (context, index) {
+                          final noti = notifications[index];
+                          return _buildNoti(
+                            noti,
+                            isLast: notifications.length - 1 == index,
+                          );
+                        },
+                      ),
+                      StreamBuilder(
+                          stream: _notiBloc.allDataState,
+                          builder: (context, state) {
+                            if (!state.hasData ||
+                                state.data == BlocState.fetching) {
+                              return Center(
+                                child: Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            AppColor.shadow.withOpacity(0.32),
+                                        blurStyle: BlurStyle.outer,
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                  child: const JTIndicator(),
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          }),
+                    ],
                   );
                 }
                 return const SizedBox();
@@ -255,19 +287,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
       'page': page,
     });
     _notiBloc.getTotalUnread().then((value) {
-      setState(() {
-        notiBadges = value.totalUnreadNoti;
-      });
+      notiBadges = value.totalUnreadNoti;
     });
   }
 
-  refreshData() {
+  refreshData() async {
     maxPage = 0;
     currentPage = 1;
     notifications.clear();
-    _notiBloc.fetchAllData(params: {
+    await _notiBloc.fetchAllData(params: {
       'limit': 10,
       'page': currentPage,
     });
+    _scrollController.jumpTo(0);
   }
 }

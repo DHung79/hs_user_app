@@ -185,9 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _fetchDataOnPage() {
     NotificationBloc().getTotalUnread().then((value) {
-      setState(() {
-        notiBadges = value.totalUnreadNoti;
-      });
+      notiBadges = value.totalUnreadNoti;
     });
   }
 }

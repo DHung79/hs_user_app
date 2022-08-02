@@ -15,7 +15,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   // bool _passwordSecure = true;
   String? _errorMessage = '';
@@ -37,14 +36,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         listener: (context, state) async {
           if (state is AuthenticationFailure) {
             _showError(state.errorCode);
-          } else if (state is ForgotPasswordDoneState) {
-            JTToast.init(context);
+          }
+          if (state is ForgotPasswordDoneState) {
             navigateTo(otpForgotPassWordRoute);
-            await Future.delayed(const Duration(milliseconds: 400));
-            JTToast.successToast(
-                width: 327,
-                height: 53,
-                message: ScreenUtil.t(I18nKey.checkYourEmail)!);
           }
         },
         child: SafeArea(
@@ -113,9 +107,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   child: JTTextFormField(
                                     hintText: 'NHẬP EMAIL',
                                     keyboardType: TextInputType.emailAddress,
-                                    controller: emailController,
+                                    controller: forgotPasswordEmailController,
                                     onSaved: (value) {
-                                      emailController.text = value!.trim();
+                                      forgotPasswordEmailController.text =
+                                          value!.trim();
                                     },
                                     onChanged: (value) {
                                       setState(() {
@@ -180,7 +175,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(
-            ForgotPassword(email: emailController.text),
+            ForgotPassword(email: forgotPasswordEmailController.text),
           );
     } else {
       setState(() {

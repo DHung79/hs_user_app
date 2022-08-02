@@ -12,9 +12,7 @@ class AppAutheticated extends AuthenticationState {}
 
 class AuthenticationInitial extends AuthenticationState {}
 
-class AuthenticationLoading extends AuthenticationState {
-  
-}
+class AuthenticationLoading extends AuthenticationState {}
 
 class AuthenticationStart extends AuthenticationState {}
 
@@ -23,6 +21,8 @@ class UserLogoutState extends AuthenticationState {}
 class ResetPasswordState extends AuthenticationState {}
 
 class ForgotPasswordState extends AuthenticationState {}
+
+class SendOTPDoneState extends AuthenticationState {}
 
 class UserTokenExpired extends AuthenticationState {}
 
@@ -63,7 +63,6 @@ class LoginLastUser extends AuthenticationState {
 
   @override
   List<Object> get props => [username, isKeepSession, forgotPasswordEmail!];
-
 }
 
 class CheckEmailDoneState extends AuthenticationState {}

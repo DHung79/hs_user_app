@@ -182,7 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       AuthenticationBlocController().authenticationBloc.add(
-            CheckEmail(
+            CheckRegisterEmail(
               email: emailController.text,
             ),
           );

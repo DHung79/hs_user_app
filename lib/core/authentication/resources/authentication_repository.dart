@@ -86,6 +86,14 @@ class AuthenticationRepository {
     return response;
   }
 
+  Future<dynamic> checkRegisterEmail(String? email) async {
+    await Future.delayed(
+        const Duration(seconds: 1)); // simulate a network delay
+    final body = convert.jsonEncode({'email': email});
+    final response = await provider.checkRegisterEmail(body);
+    return response;
+  }
+
   Future<dynamic> checkOTPForgot(String otp) async {
     await Future.delayed(
       const Duration(seconds: 1),

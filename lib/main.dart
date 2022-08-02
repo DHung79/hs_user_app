@@ -36,7 +36,7 @@ int notiBadges = 0;
 //get fcm
 String? currentFcmToken;
 String preRoute = '';
-
+final forgotPasswordEmailController = TextEditingController();
 Future<SharedPreferences> prefs = SharedPreferences.getInstance();
 GlobalKey globalKey = GlobalKey();
 

@@ -74,10 +74,10 @@ class ResetPassword extends AuthenticationEvent {
   List<Object> get props => [password];
 }
 
-class CheckEmail extends AuthenticationEvent {
+class CheckRegisterEmail extends AuthenticationEvent {
   final String email;
 
-  const CheckEmail({
+  const CheckRegisterEmail({
     required this.email,
   });
 
@@ -122,4 +122,13 @@ class CheckOTPRegister extends AuthenticationEvent {
   List<Object> get props => [otp];
 }
 
-class ResendOTP extends AuthenticationEvent {}
+class SendOTP extends AuthenticationEvent {
+  final String email;
+
+  const SendOTP({
+    required this.email,
+  });
+
+  @override
+  List<Object> get props => [email];
+}

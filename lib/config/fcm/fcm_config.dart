@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../core/notification/notification.dart';
@@ -79,7 +80,6 @@ void registerNotification({
         );
 
         notificationInfo = notification;
-        // _totalNotifications++;
 
         if (notificationInfo != null) {
           // For displaying the notification as a n overlay
@@ -95,6 +95,7 @@ void registerNotification({
               title: notificationInfo!.title,
               body: notificationInfo!.body,
             );
+
             logDebug('shownotification: ${notificationInfo!.body}');
           }
         }
@@ -143,6 +144,17 @@ void checkForInitialMessage(
 }
 
 initLocalPushNotification() async {
+  NotificationModel? noti;
+  NotificationType? notiModel;
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    notiModel = NotificationType.fromJson(
+      jsonDecode(message.data['type_notification']),
+    );
+    noti = NotificationModel.fromJson(message.data);
+    NotificationBloc().getTotalUnread().then((value) {
+      notiBadges = value.totalUnreadNoti;
+    });
+  });
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final IOSInitializationSettings initializationSettingsIOS =
@@ -162,6 +174,15 @@ initLocalPushNotification() async {
       onSelectNotification: (String? payload) async {
     if (payload != null) {
       logDebug('notification payload: $payload');
+      if (noti != null && notiModel != null && notiModel!.status != null) {
+        if (notiModel!.status == 0) {
+          navigateTo(taskBookedRoute + '/${noti!.taskId}');
+        } else if (notiModel!.status! <= 2) {
+          navigateTo(taskHistoryRoute + '/${noti!.taskId}');
+        }
+      } else {
+        navigateTo(notificationRoute);
+      }
     }
     selectedNotificationPayload = payload;
     selectNotificationSubject.add(payload);

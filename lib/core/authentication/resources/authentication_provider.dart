@@ -71,12 +71,12 @@ class AuthenticationProvider {
   }
 
   forgotPassword(dynamic body) async {
-    final url = ApiConstants.apiDomain +
+    final path = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
         ApiConstants.forgotPassword +
         ApiConstants.user;
     final response = await RestApiHandlerData.postData<Status>(
-      path: url,
+      path: path,
       body: body,
       headers: ApiHelper.headers(null),
     );
@@ -127,6 +127,23 @@ class AuthenticationProvider {
   }
 
   checkEmail(dynamic body) async {
+    final url = ApiConstants.apiDomain +
+        ApiConstants.apiVersion +
+        ApiConstants.forgotPassword +
+        ApiConstants.user +
+        '/check-email';
+
+    final response = await RestApiHandlerData.checkEmail(
+      path: url,
+      body: body,
+      headers: ApiHelper.headers(null),
+    );
+    logDebug('path: $url, body: $body');
+
+    return response;
+  }
+
+  checkRegisterEmail(dynamic body) async {
     final url = ApiConstants.apiDomain +
         ApiConstants.apiVersion +
         '/registers/user/email';
