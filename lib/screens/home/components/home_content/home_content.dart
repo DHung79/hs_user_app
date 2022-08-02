@@ -25,75 +25,82 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 24),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 16,
-                  blurStyle: BlurStyle.outer,
-                  color: AppColor.shadow.withOpacity(0.16),
-                ),
-              ],
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.zero,
-                bottom: Radius.circular(10),
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 24),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 16,
+                blurStyle: BlurStyle.outer,
+                color: AppColor.shadow.withOpacity(0.16),
               ),
-            ),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: _avatarHome(),
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      _buildHeader(),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: _buildNotification(),
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ],
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.zero,
+              bottom: Radius.circular(10),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      'Dịch vụ',
-                      style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          width: MediaQuery.of(context).size.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    InkWell(
+                      splashColor: AppColor.transparent,
+                      highlightColor: AppColor.transparent,
+                      onTap: () {
+                        navigateTo(settingRoute);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Container(
+                          width: 64,
+                          padding: const EdgeInsets.fromLTRB(0, 28, 24, 28),
+                          child: _userAvatar(),
+                        ),
+                      ),
                     ),
-                  ),
-                  _buildTab(),
-                ],
+                    _buildHeader(),
+                  ],
+                ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: _buildNotification(),
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Text(
+                    'Dịch vụ',
+                    style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                  ),
+                ),
+                _buildTab(),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _avatarHome() {
+  Widget _userAvatar() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: widget.user.avatar.isNotEmpty
@@ -160,7 +167,11 @@ class _HomeContentState extends State<HomeContent> {
         color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
-          BoxShadow(color: AppColor.shadow.withOpacity(0.24), blurRadius: 16)
+          BoxShadow(
+            color: AppColor.shadow.withOpacity(0.24),
+            blurRadius: 16,
+            blurStyle: BlurStyle.outer,
+          ),
         ],
       ),
       child: Column(
@@ -202,20 +213,22 @@ class _HomeContentState extends State<HomeContent> {
               const Divider(
                 height: 2,
               ),
-              const SizedBox(
-                height: 16,
-              ),
             ],
           ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              'Trải nghiệm dịch vụ',
-              style: AppTextTheme.normalHeaderTitle(AppColor.primary2),
+          InkWell(
+            onTap: () {
+              navigateTo(bookNewTaskRoute);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  'Trải nghiệm dịch vụ',
+                  style: AppTextTheme.normalHeaderTitle(AppColor.primary2),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 16,
           ),
         ],
       ),
