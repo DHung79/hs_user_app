@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../core/notification/notification.dart';
@@ -50,7 +49,6 @@ void registerNotification({
   PushNotification? notificationInfo,
   required Function(String?) getFcmToken,
 }) async {
-  await Firebase.initializeApp();
   FirebaseMessaging? _messaging = FirebaseMessaging.instance;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -127,7 +125,6 @@ void registerNotification({
 // For handling notification when the app is in terminated state
 void checkForInitialMessage(
     {required Function(PushNotification) getNotification}) async {
-  await Firebase.initializeApp();
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {

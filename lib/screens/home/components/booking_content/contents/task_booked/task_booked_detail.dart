@@ -294,9 +294,11 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
         const SizedBox(
           width: 8,
         ),
-        Text(
-          text,
-          style: AppTextTheme.normalText(AppColor.text1),
+        Expanded(
+          child: Text(
+            text,
+            style: AppTextTheme.normalText(AppColor.text1),
+          ),
         )
       ],
     );

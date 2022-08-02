@@ -55,17 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildContent(UserModel user) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final screenSize = MediaQuery.of(context).size;
+
+    return Stack(
       children: [
-        Expanded(
-          child: _getContent(user),
-        ),
+        _getContent(user),
         if (widget.settingTab == 0)
-          Container(
-            height: 100,
-            padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
-            decoration: BoxDecoration(
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: 100,
+              width: screenSize.width,
+              padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
+              decoration: BoxDecoration(
+                color: AppColor.white,
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(20)),
                 boxShadow: [
@@ -74,41 +77,43 @@ class _HomeScreenState extends State<HomeScreen> {
                     blurStyle: BlurStyle.outer,
                     blurRadius: 8,
                   ),
-                ]),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _navigaButton(
-                  icon: SvgIcons.home1,
-                  name: 'Trang chủ',
-                  activeColor: AppColor.primary1,
-                  isActive: widget.homeTab == 0,
-                  paddingActiveColor: AppColor.shade3,
-                  onPressed: () {
-                    navigateTo(homeRoute);
-                  },
-                ),
-                _navigaButton(
-                  icon: SvgIcons.clipboardCheck,
-                  name: 'Đặt lịch',
-                  activeColor: AppColor.primary2,
-                  isActive: widget.homeTab == 1,
-                  paddingActiveColor: AppColor.shade4,
-                  onPressed: () {
-                    navigateTo(bookTaskRoute);
-                  },
-                ),
-                _navigaButton(
-                  icon: SvgIcons.user,
-                  name: 'Cài đặt',
-                  activeColor: AppColor.shade6,
-                  isActive: widget.homeTab == 2,
-                  paddingActiveColor: AppColor.shade10,
-                  onPressed: () {
-                    navigateTo(settingRoute);
-                  },
-                ),
-              ],
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _navigaButton(
+                    icon: SvgIcons.home1,
+                    name: 'Trang chủ',
+                    activeColor: AppColor.primary1,
+                    isActive: widget.homeTab == 0,
+                    paddingActiveColor: AppColor.shade3,
+                    onPressed: () {
+                      navigateTo(homeRoute);
+                    },
+                  ),
+                  _navigaButton(
+                    icon: SvgIcons.clipboardCheck,
+                    name: 'Đặt lịch',
+                    activeColor: AppColor.primary2,
+                    isActive: widget.homeTab == 1,
+                    paddingActiveColor: AppColor.shade4,
+                    onPressed: () {
+                      navigateTo(bookTaskRoute);
+                    },
+                  ),
+                  _navigaButton(
+                    icon: SvgIcons.user,
+                    name: 'Cài đặt',
+                    activeColor: AppColor.shade6,
+                    isActive: widget.homeTab == 2,
+                    paddingActiveColor: AppColor.shade10,
+                    onPressed: () {
+                      navigateTo(settingRoute);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
       ],

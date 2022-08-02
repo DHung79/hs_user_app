@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:oktoast/oktoast.dart';
@@ -11,7 +12,6 @@ import 'locales/i18n.dart';
 import 'scroll_behavior.dart';
 import 'theme/app_theme.dart';
 import 'utils/app_state_notifier.dart';
-
 export 'core/authentication/bloc/authentication_bloc_controller.dart';
 export '../core/rest/models/rest_api_response.dart';
 export '../core/logger/logger.dart';
@@ -55,6 +55,7 @@ final List<Locale> supportedLocales = <Locale>[
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await loadVersion();
   setupLocator();
   runApp(
@@ -91,7 +92,7 @@ class _AppState extends State<App> {
     return Consumer<AppStateNotifier>(
       builder: (context, appState, child) {
         return MaterialApp.router(
-          title: 'Home Service User',
+          title: 'Home Service',
           debugShowCheckedModeBanner: false,
           theme: ThemeConfig.lightTheme,
           darkTheme: ThemeConfig.darkTheme,

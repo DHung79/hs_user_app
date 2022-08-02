@@ -10,9 +10,9 @@
 
 <application
         android:requestLegacyExternalStorage="true"
-        android:label="Home Service User"
+        android:label="Home Service"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
         <meta-data 
             android:name="com.google.android.geo.API_KEY"
