@@ -69,7 +69,7 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
                   ),
                 ),
                 onPressed: () {
-                  navigateTo(taskBookedRoute);
+                  navigateTo(preRoute);
                 },
               ),
               Center(
@@ -96,7 +96,7 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
                 _userProfile(),
                 _detailTask(),
                 _paymentMethod(),
-                if (widget.task.startTime > _now.millisecondsSinceEpoch)
+                if (widget.task.status != 3)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _actions(),

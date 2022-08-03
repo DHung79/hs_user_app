@@ -286,9 +286,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
       'limit': 10,
       'page': page,
     });
-    _notiBloc.getTotalUnread().then((value) {
-      notiBadges = value.totalUnreadNoti;
-    });
   }
 
   refreshData() async {

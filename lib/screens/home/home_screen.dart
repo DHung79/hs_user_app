@@ -25,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool backHome = true;
   final PageState _pageState = PageState();
   late UserModel? userModel;
+  final _notiBloc = NotificationBloc();
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -179,13 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
         tab: widget.settingTab,
       );
     } else {
-      return HomeContent(user: user);
+      return HomeContent(
+        user: user,
+        notiBloc: _notiBloc,
+      );
     }
   }
 
   _fetchDataOnPage() {
-    NotificationBloc().getTotalUnread().then((value) {
-      notiBadges = value.totalUnreadNoti;
-    });
+    _notiBloc.getTotalUnread();
   }
 }

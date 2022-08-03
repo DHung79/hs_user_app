@@ -67,6 +67,7 @@ class _PageTemplateState extends State<PageTemplate> {
         currentFcmToken = fcmToken;
       },
       notificationInfo: _notificationInfo,
+      onMessage: widget.onFetch,
     );
     checkForInitialMessage(getNotification: (notification) {
       setState(() {
@@ -107,6 +108,7 @@ class _PageTemplateState extends State<PageTemplate> {
         final listTabCanPop = [
           bookTaskRoute,
           settingRoute,
+          notificationRoute,
         ];
         final currentRoute = getCurrentRoute();
         if (preRoute.isNotEmpty && !listPageCanPop.contains(currentRoute)) {

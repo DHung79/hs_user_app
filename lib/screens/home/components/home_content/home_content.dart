@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../../../core/notification/notification.dart';
 import '../../../../core/user/user.dart';
 import '/main.dart';
 
 class HomeContent extends StatefulWidget {
   final UserModel user;
+  final NotificationBloc notiBloc;
   const HomeContent({
     Key? key,
     required this.user,
+    required this.notiBloc,
   }) : super(key: key);
 
   @override
@@ -267,21 +270,30 @@ class _HomeContentState extends State<HomeContent> {
                 color: AppColor.text1,
                 size: 24,
               ),
-              if (notiBadges > 0)
-                Padding(
-                  padding: const EdgeInsets.only(left: 13),
-                  child: SizedBox(
-                    width: 26,
-                    height: 26,
-                    child: CircleAvatar(
-                      backgroundColor: AppColor.others1,
-                      child: Text(
-                        notiBadges > 10 ? '9+' : '$notiBadges',
-                        style: AppTextTheme.mediumBodyText(AppColor.text2),
-                      ),
-                    ),
-                  ),
-                )
+              StreamBuilder(
+                  stream: widget.notiBloc.getNotiBadges,
+                  builder: (context,
+                      AsyncSnapshot<ApiResponse<NotificationModel?>> snapshot) {
+                    if (snapshot.hasData) {
+                      final notiBadges = snapshot.data!.model!.totalUnreadNoti;
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 13),
+                        child: SizedBox(
+                          width: 26,
+                          height: 26,
+                          child: CircleAvatar(
+                            backgroundColor: AppColor.others1,
+                            child: Text(
+                              notiBadges > 9 ? '9+' : '$notiBadges',
+                              style:
+                                  AppTextTheme.mediumBodyText(AppColor.text2),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  }),
             ],
           ),
         ),

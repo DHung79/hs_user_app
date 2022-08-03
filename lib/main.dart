@@ -31,8 +31,6 @@ export '/screens/layout_template/content_screen.dart';
 //page index
 int homePageIndex = 0;
 int selectIndexBooking = 0;
-//count Noti
-int notiBadges = 0;
 //get fcm
 String? currentFcmToken;
 String preRoute = '';

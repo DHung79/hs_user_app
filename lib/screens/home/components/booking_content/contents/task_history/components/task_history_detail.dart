@@ -66,7 +66,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                   color: AppColor.black,
                 ),
                 onPressed: () {
-                  navigateTo(taskHistoryRoute);
+                  navigateTo(preRoute);
                 },
               ),
               Center(
