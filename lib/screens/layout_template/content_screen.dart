@@ -98,6 +98,7 @@ class _PageTemplateState extends State<PageTemplate> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
+    JTToast.init(context);
     return WillPopScope(
       onWillPop: () async {
         final listPageCanPop = [
@@ -126,6 +127,11 @@ class _PageTemplateState extends State<PageTemplate> {
           if (state is AuthenticationStart) {
             navigateTo(authenticationRoute);
           } else if (state is UserLogoutState) {
+            if (preRoute == userProfileRoute) {
+              JTToast.successToast(
+                message: 'Đổi mật khẩu thành công, đăng nhập lại để sử dụng',
+              );
+            }
             navigateTo(authenticationRoute);
           } else if (state is AuthenticationFailure) {
             _showError(state.errorCode);

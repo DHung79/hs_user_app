@@ -30,7 +30,7 @@ class _AddressInputState extends State<AddressInput> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
+    final bottomHeight = MediaQuery.of(context).viewInsets.bottom;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -80,7 +80,7 @@ class _AddressInputState extends State<AddressInput> {
           ),
         ),
         SizedBox(
-          height: screenSize.height - 90,
+          height: screenSize.height - 90 - bottomHeight,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -97,111 +97,105 @@ class _AddressInputState extends State<AddressInput> {
   }
 
   Widget _buildContent() {
-    final screenSize = MediaQuery.of(context).size;
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: screenSize.height - 90,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
-                child: TextAreaInput(
-                  title: 'Tên địa chỉ',
-                  controller: widget.subNameController,
-                  maxLines: 1,
-                  hintText: 'Nhập tên địa chỉ',
-                  hintStyle: AppTextTheme.normalText(AppColor.text7),
-                  validator: (value) {
-                    if (value!.trim().isEmpty) {
-                      return ValidatorText.empty(fieldName: 'Tên địa chỉ');
-                    }
-                    if (value.trim().length > 50) {
-                      return ValidatorText.moreThan(
-                        fieldName: 'Tên địa chỉ',
-                        moreThan: 50,
-                      );
-                    }
-                    return null;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+            //   child: TextAreaInput(
+            //     title: 'Tên địa chỉ',
+            //     controller: widget.subNameController,
+            //     maxLines: 1,
+            //     hintText: 'Nhập tên địa chỉ',
+            //     hintStyle: AppTextTheme.normalText(AppColor.text7),
+            //     validator: (value) {
+            //       if (value!.trim().isEmpty) {
+            //         return ValidatorText.empty(fieldName: 'Tên địa chỉ');
+            //       }
+            //       if (value.trim().length > 50) {
+            //         return ValidatorText.moreThan(
+            //           fieldName: 'Tên địa chỉ',
+            //           moreThan: 50,
+            //         );
+            //       }
+            //       return null;
+            //     },
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'Loại nhà',
+                style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _homeTypes.length,
+              itemBuilder: (BuildContext context, int index) {
+                final homeType = _homeTypes[index];
+                return _typeHomeList(
+                  isSelected: index == widget.editTaskModel.typeHome,
+                  homeType: homeType,
+                  onTap: () {
+                    widget.selectedHomeType(index);
                   },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  'Loại nhà',
-                  style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _homeTypes.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final homeType = _homeTypes[index];
-                  return _typeHomeList(
-                    isSelected: index == widget.editTaskModel.typeHome,
-                    homeType: homeType,
-                    onTap: () {
-                      widget.selectedHomeType(index);
-                    },
-                  );
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: TextAreaInput(
-                  title: 'Địa chỉ cụ thể',
-                  controller: widget.addressController,
-                  maxLines: 4,
-                  hintText: 'Số nhà 1, hẻm 2',
-                  hintStyle: AppTextTheme.normalText(AppColor.text7),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return ValidatorText.empty(fieldName: 'Địa chỉ cụ thể');
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Text(
-                '*Nhập địa chỉ cụ thể để người giúp việc có thể tìm chính xác nơi làm việc',
-                style: AppTextTheme.normalText(AppColor.text1),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: AppButtonTheme.fillRounded(
-              constraints: const BoxConstraints(minHeight: 52),
-              color: AppColor.primary2,
-              highlightColor: AppColor.transparent,
-              borderRadius: BorderRadius.circular(4),
-              child: Center(
-                child: Text(
-                  'Đồng ý'.toUpperCase(),
-                  style: AppTextTheme.headerTitle(AppColor.text2),
-                ),
-              ),
-              onPressed: () {
-                if (_key.currentState!.validate()) {
-                  _key.currentState!.save();
-                  widget.onPressed();
-                } else {
-                  setState(() {
-                    _autovalidate = AutovalidateMode.onUserInteraction;
-                  });
-                }
+                );
               },
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: TextAreaInput(
+                title: 'Địa chỉ cụ thể',
+                controller: widget.addressController,
+                maxLines: 4,
+                hintText: 'Số nhà 1, hẻm 2',
+                hintStyle: AppTextTheme.normalText(AppColor.text7),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return ValidatorText.empty(fieldName: 'Địa chỉ cụ thể');
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Text(
+              '*Nhập địa chỉ cụ thể để người giúp việc có thể tìm chính xác nơi làm việc',
+              style: AppTextTheme.normalText(AppColor.text1),
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: AppButtonTheme.fillRounded(
+            constraints: const BoxConstraints(minHeight: 52),
+            color: AppColor.primary2,
+            highlightColor: AppColor.transparent,
+            borderRadius: BorderRadius.circular(4),
+            child: Center(
+              child: Text(
+                'Đồng ý'.toUpperCase(),
+                style: AppTextTheme.headerTitle(AppColor.text2),
+              ),
+            ),
+            onPressed: () {
+              if (_key.currentState!.validate()) {
+                _key.currentState!.save();
+                widget.onPressed();
+              } else {
+                setState(() {
+                  _autovalidate = AutovalidateMode.onUserInteraction;
+                });
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

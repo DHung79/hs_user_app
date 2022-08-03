@@ -149,9 +149,7 @@ class _PickLocationState extends State<PickLocation> {
             children: [
               GoogleMap(
                 onCameraMove: (value) {
-                  setState(() {
-                    _location = value;
-                  });
+                  _location = value;
                   _debounce.debounce(
                     afterDuration: () async {
                       await placemarkFromCoordinates(

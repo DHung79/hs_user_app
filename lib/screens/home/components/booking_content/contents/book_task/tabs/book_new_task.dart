@@ -207,7 +207,10 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
               _editTaskModel.service = service;
               _editTaskModel.selectedOption ??= service.options.first;
               _editTaskModel.totalPrice = _editTaskModel.selectedOption!.price;
-              return Expanded(
+              final screenSize = MediaQuery.of(context).size;
+              final bottomHeight = MediaQuery.of(context).viewInsets.bottom;
+              return SizedBox(
+                height: screenSize.height - 80 - bottomHeight,
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   child: _buildTaskInfo(service),
@@ -225,7 +228,6 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
   Widget _buildTaskInfo(ServiceModel service) {
     final price = NumberFormat('#,##0 VND', 'vi')
         .format(_editTaskModel.selectedOption!.price);
-    final screenSize = MediaQuery.of(context).size;
     final startTime = formatFromInt(
       displayedFormat: 'HH:mm',
       value: _editTaskModel.startTime,
@@ -243,113 +245,75 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
     );
     final optionType =
         getOptionType(_editTaskModel.service!.optionType).toLowerCase();
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: screenSize.height - 80,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            children: [
-              if (_isCreateTask)
-                Column(
-                  children: [
-                    _location(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: _buildOptions(service),
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Column(
+          children: [
+            if (_isCreateTask)
+              Column(
+                children: [
+                  _location(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: _buildOptions(service),
+                  ),
+                ],
+              ),
+            if (_isCreateTask)
+              TaskTimePicker(
+                editModel: _editTaskModel,
+                onChangeDate: (date) {
+                  setState(() {
+                    _editTaskModel.date = date.millisecondsSinceEpoch;
+                    final startTimeData = DateTime.fromMillisecondsSinceEpoch(
+                      _editTaskModel.startTime.toInt(),
+                    );
+                    final startTime = DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                      startTimeData.hour,
+                      startTimeData.minute,
+                    );
+                    _editTaskModel.startTime = startTime.millisecondsSinceEpoch;
+                    final endTime = startTime.add(
+                      Duration(hours: _editTaskModel.selectedOption!.quantity),
+                    );
+                    _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
+                  });
+                },
+                onChangeTime: (time) {
+                  setState(() {
+                    final date = DateTime.fromMillisecondsSinceEpoch(
+                      _editTaskModel.date.toInt(),
+                    );
+                    final startTime = DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                      time.hour,
+                      time.minute,
+                    );
+                    _editTaskModel.startTime = startTime.millisecondsSinceEpoch;
+                    final endTime = startTime.add(
+                      Duration(hours: _editTaskModel.selectedOption!.quantity),
+                    );
+                    _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
+                  });
+                },
+              ),
+            if (!_isCreateTask)
+              Column(
+                children: [
+                  if (_isCreateTask)
+                    const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Divider(),
                     ),
-                  ],
-                ),
-              if (_isCreateTask)
-                TaskTimePicker(
-                  editModel: _editTaskModel,
-                  onChangeDate: (date) {
-                    setState(() {
-                      _editTaskModel.date = date.millisecondsSinceEpoch;
-                      final startTimeData = DateTime.fromMillisecondsSinceEpoch(
-                        _editTaskModel.startTime.toInt(),
-                      );
-                      final startTime = DateTime(
-                        date.year,
-                        date.month,
-                        date.day,
-                        startTimeData.hour,
-                        startTimeData.minute,
-                      );
-                      _editTaskModel.startTime =
-                          startTime.millisecondsSinceEpoch;
-                      final endTime = startTime.add(
-                        Duration(
-                            hours: _editTaskModel.selectedOption!.quantity),
-                      );
-                      _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
-                    });
-                  },
-                  onChangeTime: (time) {
-                    setState(() {
-                      final date = DateTime.fromMillisecondsSinceEpoch(
-                        _editTaskModel.date.toInt(),
-                      );
-                      final startTime = DateTime(
-                        date.year,
-                        date.month,
-                        date.day,
-                        time.hour,
-                        time.minute,
-                      );
-                      _editTaskModel.startTime =
-                          startTime.millisecondsSinceEpoch;
-                      final endTime = startTime.add(
-                        Duration(
-                            hours: _editTaskModel.selectedOption!.quantity),
-                      );
-                      _editTaskModel.endTime = endTime.millisecondsSinceEpoch;
-                    });
-                  },
-                ),
-              if (!_isCreateTask)
-                Column(
-                  children: [
-                    if (_isCreateTask)
-                      const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Divider(),
-                      ),
-                    _taskDetailField(
-                      title: 'Thông tin công việc',
-                      onPressed: () {
-                        setState(() {
-                          _isCreateTask = true;
-                        });
-                      },
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: [
-                          _detailItem(
-                            title:
-                                '${_editTaskModel.estimateTime} $optionType, $startTime $endTime',
-                            icon: SvgIcons.time,
-                          ),
-                          _detailItem(
-                            title: date,
-                            icon: SvgIcons.calendar,
-                          ),
-                          if (_editTaskModel.service != null)
-                            _detailItem(
-                              title: _editTaskModel.selectedOption!.note,
-                              icon: SvgIcons.clipboard,
-                            ),
-                          _detailItem(
-                            title: _editTaskModel.address.name,
-                            icon: SvgIcons.locationOutline,
-                          ),
-                        ],
-                      ),
-                    ),
+                  if (!_isCreateTask)
                     _taskDetailField(
                       title: 'Thông tin của bạn',
                       onPressed: () {
@@ -372,100 +336,159 @@ class _BookNewTaskContentState extends State<BookNewTaskContent> {
                         ],
                       ),
                     ),
+                  _taskDetailField(
+                    title: 'Thông tin công việc',
+                    onPressed: () {
+                      setState(() {
+                        _isCreateTask = true;
+                      });
+                    },
+                    child: Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: [
+                        _detailItem(
+                          title:
+                              '${_editTaskModel.estimateTime} $optionType, $startTime $endTime',
+                          icon: SvgIcons.time,
+                        ),
+                        _detailItem(
+                          title: date,
+                          icon: SvgIcons.calendar,
+                        ),
+                        if (_editTaskModel.service != null)
+                          _detailItem(
+                            title: _editTaskModel.selectedOption!.note,
+                            icon: SvgIcons.clipboard,
+                          ),
+                        _detailItem(
+                          title: _editTaskModel.address.name,
+                          icon: SvgIcons.locationOutline,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_isCreateTask)
                     _taskDetailField(
-                      title: 'Hình thức thanh toán',
-                      onPressed: () {},
-                      child: _detailItem(
-                        title: 'Thanh toán tiền mặt',
-                        icon: SvgIcons.wallet,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      title: 'Thông tin của bạn',
+                      onPressed: () {
+                        setState(() {
+                          _tab = 1;
+                        });
+                      },
+                      child: Wrap(
+                        spacing: 16,
+                        runSpacing: 16,
                         children: [
-                          Text(
-                            'Tổng cộng',
-                            style:
-                                AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                          _detailItem(
+                            title: _editUserModel.name,
+                            icon: SvgIcons.user,
                           ),
-                          Text(
-                            price,
-                            style: AppTextTheme.mediumBigText(AppColor.text1),
+                          _detailItem(
+                            title: _editUserModel.phoneNumber,
+                            icon: SvgIcons.telephone,
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              if (_isCreateTask)
-                Column(
-                  children: [
-                    _noteForTasker(),
-                    _checkList(),
-                  ],
-                ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 26, 16, 34),
-            child: AppButtonTheme.fillRounded(
-              constraints: const BoxConstraints(minHeight: 52),
-              color: AppColor.shade9,
-              borderRadius: BorderRadius.circular(4),
-              child: _isCreateTask
-                  ? Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 250),
-                            child: Text(
-                              '$price/${_editTaskModel.selectedOption?.quantity} $optionType',
-                              style: AppTextTheme.headerTitle(AppColor.text2),
-                            ),
-                          ),
-                          Text(
-                            'TIẾP THEO',
+                  _taskDetailField(
+                    title: 'Hình thức thanh toán',
+                    onPressed: () {},
+                    child: _detailItem(
+                      title: 'Thanh toán tiền mặt',
+                      icon: SvgIcons.wallet,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Tổng cộng',
+                          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                        ),
+                        Text(
+                          price,
+                          style: AppTextTheme.mediumBigText(AppColor.text1),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            if (_isCreateTask)
+              Column(
+                children: [
+                  _noteForTasker(),
+                  _checkList(),
+                ],
+              ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 26, 16, 34),
+          child: AppButtonTheme.fillRounded(
+            constraints: const BoxConstraints(minHeight: 52),
+            color: AppColor.shade9,
+            borderRadius: BorderRadius.circular(4),
+            child: _isCreateTask
+                ? Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 250),
+                          child: Text(
+                            '$price/${_editTaskModel.selectedOption?.quantity} $optionType',
                             style: AppTextTheme.headerTitle(AppColor.text2),
-                          )
-                        ],
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        'ĐĂNG VIỆC',
-                        style: AppTextTheme.headerTitle(AppColor.text2),
-                      ),
+                          ),
+                        ),
+                        Text(
+                          'TIẾP THEO',
+                          style: AppTextTheme.headerTitle(AppColor.text2),
+                        )
+                      ],
                     ),
-              onPressed: () {
-                final _now = DateTime.now();
-                if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
-                  bottomDialog(
-                    context,
-                    title: 'Thời gian không hợp lệ',
-                    content: 'Vui lòng chọn lại thời gian bắt đầu',
-                  );
-                } else if (_editTaskModel.address.name.isEmpty) {
-                  bottomDialog(
-                    context,
-                    title: 'Địa chỉ không được để trống',
-                    content: 'Vui lòng chọn địa chỉ',
-                  );
+                  )
+                : Center(
+                    child: Text(
+                      'ĐĂNG VIỆC',
+                      style: AppTextTheme.headerTitle(AppColor.text2),
+                    ),
+                  ),
+            onPressed: () {
+              final _now = DateTime.now();
+              if (_editTaskModel.startTime < _now.millisecondsSinceEpoch) {
+                bottomDialog(
+                  context,
+                  title: 'Thời gian không hợp lệ',
+                  content: 'Vui lòng chọn lại thời gian bắt đầu',
+                );
+              } else if (_editTaskModel.address.name.isEmpty) {
+                bottomDialog(
+                  context,
+                  title: 'Địa chỉ không được để trống',
+                  content: 'Vui lòng chọn địa chỉ',
+                );
+              } else if (_editUserModel.phoneNumber.isEmpty) {
+                bottomDialog(
+                  context,
+                  title: 'Số điện thoại không được để trống',
+                  content: 'Vui lòng nhập số điện thoại',
+                );
+              } else {
+                if (_isCreateTask) {
+                  _goToCreateTask();
                 } else {
-                  if (_isCreateTask) {
-                    _goToCreateTask();
-                  } else {
-                    _createTask();
-                  }
+                  _createTask();
                 }
-              },
-            ),
+              }
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

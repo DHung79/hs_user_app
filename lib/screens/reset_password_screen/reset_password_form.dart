@@ -45,9 +45,7 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
             navigateTo(authenticationRoute);
             await Future.delayed(const Duration(milliseconds: 500));
             JTToast.successToast(
-              width: 327,
-              height: 53,
-              message: 'Đổi mật khẩu thành công',
+              message: 'Đổi mật khẩu thành công, đăng nhập lại để sử dụng',
             );
           }
         },

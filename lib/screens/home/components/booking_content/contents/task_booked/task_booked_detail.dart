@@ -38,7 +38,6 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final _now = DateTime.now();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

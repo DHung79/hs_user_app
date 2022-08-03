@@ -262,9 +262,7 @@ class _EditPasswordFormState extends State<EditPasswordForm> {
   _editUserPassword() {
     _userBloc.changePassword(editModel: _editModel).then(
       (value) async {
-        AuthenticationBlocController().authenticationBloc.add(GetUserData());
-        navigateTo(userProfileRoute);
-        JTToast.successToast(message: ScreenUtil.t(I18nKey.updateSuccess)!);
+        AuthenticationBlocController().authenticationBloc.add(UserLogOut());
       },
     ).onError((ApiError error, stackTrace) {
       setState(() {
@@ -272,9 +270,7 @@ class _EditPasswordFormState extends State<EditPasswordForm> {
       });
     }).catchError(
       (error, stackTrace) {
-        setState(() {
-          _errorMessage = error.toString();
-        });
+        logDebug('error: ${error.toString()}');
       },
     );
   }
