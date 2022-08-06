@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../../../../../../../core/base/blocs/block_state.dart';
 import 'components.dart';
 
 class TaskerInfo extends StatefulWidget {
@@ -17,10 +18,17 @@ class TaskerInfo extends StatefulWidget {
 
 class _TaskerInfoState extends State<TaskerInfo> {
   final _taskerBloc = TaskerBloc();
+
   @override
   void initState() {
     _taskerBloc.fetchDataById(widget.taskerId);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _taskerBloc.dispose();
+    super.dispose();
   }
 
   final List<MedalModel> medals = [
@@ -128,7 +136,19 @@ class _TaskerInfoState extends State<TaskerInfo> {
                 ],
               );
             }
-            return const SizedBox();
+            return StreamBuilder(
+                stream: _taskerBloc.allDataState,
+                builder: (context, state) {
+                  if (!state.hasData || state.data == BlocState.fetching) {
+                    return const SizedBox();
+                  }
+                  return Center(
+                    child: Text(
+                      'Không tìm thấy thông tin người giúp việc',
+                      style: AppTextTheme.normalText(AppColor.text3),
+                    ),
+                  );
+                });
           });
     });
   }
