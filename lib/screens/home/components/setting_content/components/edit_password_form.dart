@@ -201,18 +201,18 @@ class _EditPasswordFormState extends State<EditPasswordForm> {
                 borderSide: BorderSide(color: AppColor.text7),
                 borderRadius: BorderRadius.circular(4),
               ),
-              suffixIcon: TextButton(
-                child: obscureText
-                    ? SvgIcon(
-                        SvgIcons.removeRedEye,
-                        color: AppColor.black,
-                      )
-                    : SvgIcon(
-                        SvgIcons.eyeOff,
-                        color: AppColor.black,
-                      ),
-                onPressed: passwordIconOnPressed,
-              ),
+              // suffixIcon: TextButton(
+              //   child: obscureText
+              //       ? SvgIcon(
+              //           SvgIcons.removeRedEye,
+              //           color: AppColor.black,
+              //         )
+              //       : SvgIcon(
+              //           SvgIcons.eyeOff,
+              //           color: AppColor.black,
+              //         ),
+              //   onPressed: passwordIconOnPressed,
+              // ),
             ),
             onSaved: onSaved,
             onChanged: onChanged,

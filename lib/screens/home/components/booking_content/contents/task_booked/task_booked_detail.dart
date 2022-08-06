@@ -248,26 +248,27 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
                 height: 1,
               ),
             ),
-            Text(
-              widget.task.address.subName,
-              style: AppTextTheme.normalText(AppColor.text1),
+            if (widget.task.address.subName.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  widget.task.address.subName,
+                  style: AppTextTheme.normalText(AppColor.text1),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _detailItem(
+                icon: SvgIcons.locationOutline,
+                text: widget.task.address.name,
+              ),
             ),
-            const SizedBox(
-              height: 12,
-            ),
-            _detailItem(
-              icon: SvgIcons.locationOutline,
-              text: widget.task.address.name,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _detailItem(
-              icon: SvgIcons.viewDetails,
-              text: widget.task.address.location,
-            ),
-            const SizedBox(
-              height: 12,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _detailItem(
+                icon: SvgIcons.viewDetails,
+                text: widget.task.address.location,
+              ),
             ),
             _detailItem(
               icon: SvgIcons.telephone,
@@ -396,70 +397,78 @@ class _TaskBookedDetailState extends State<TaskBookedDetail> {
               icon: SvgIcons.dollar,
               text: price,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Divider(
-                color: AppColor.shade1,
-                height: 1,
-              ),
-            ),
-            Text(
-              'Ghi chú cho người giúp việc',
-              style: AppTextTheme.mediumBodyText(AppColor.primary1),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: AppColor.shade1,
-              ),
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                widget.task.note,
-                style: AppTextTheme.normalText(AppColor.text1),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Divider(
-                color: AppColor.shade1,
-                height: 1,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Danh sách nhắc việc',
-                  style: AppTextTheme.mediumBodyText(AppColor.primary1),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '$hadDone/${widget.task.checkList.length}',
-                      style: AppTextTheme.normalText(AppColor.text3),
+            if (widget.task.note.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Divider(
+                      color: AppColor.shade1,
+                      height: 1,
                     ),
-                    InkWell(
-                      child: Transform.rotate(
-                        angle: angle * pi / 180,
-                        child: SvgIcon(
-                          SvgIcons.expandMore,
-                          color: AppColor.black,
-                          size: 24,
-                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'Ghi chú cho người giúp việc',
+                      style: AppTextTheme.mediumBodyText(AppColor.primary1),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: AppColor.shade1,
+                    ),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      widget.task.note,
+                      style: AppTextTheme.normalText(AppColor.text1),
+                    ),
+                  ),
+                ],
+              ),
+            if (widget.task.checkList.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Divider(
+                  color: AppColor.shade1,
+                  height: 1,
+                ),
+              ),
+            if (widget.task.checkList.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Danh sách nhắc việc',
+                    style: AppTextTheme.mediumBodyText(AppColor.primary1),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '$hadDone/${widget.task.checkList.length}',
+                        style: AppTextTheme.normalText(AppColor.text3),
                       ),
-                      onTap: () {
-                        setState(() {
-                          _isShowCheckList = !_isShowCheckList;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      InkWell(
+                        child: Transform.rotate(
+                          angle: angle * pi / 180,
+                          child: SvgIcon(
+                            SvgIcons.expandMore,
+                            color: AppColor.black,
+                            size: 24,
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _isShowCheckList = !_isShowCheckList;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             if (_isShowCheckList)
               Padding(
                 padding: const EdgeInsets.only(top: 12),

@@ -581,6 +581,12 @@ class _RebookTaskState extends State<RebookTask> {
   Widget _buildOptions(ServiceModel service) {
     if (_editTaskModel.selectedOption!.price == 0) {
       _editTaskModel.selectedOption = service.options.first;
+    } else {
+      if (service.options
+          .where((e) => e == _editTaskModel.selectedOption)
+          .isEmpty) {
+        _editTaskModel.selectedOption = service.options.first;
+      }
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -34,25 +34,29 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           bloc: AuthenticationBlocController().authenticationBloc,
           builder: (BuildContext context, AuthenticationState state) {
-            return SafeArea(
-              child: LayoutBuilder(builder: (context, size) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: size.maxHeight / 3,
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.fitWidth,
+            return LayoutBuilder(builder: (context, size) {
+              final screenSize = MediaQuery.of(context).size;
+              final bottomHeight = MediaQuery.of(context).viewInsets.bottom;
+              return SizedBox(
+                height: screenSize.height - bottomHeight,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: size.maxHeight / 3,
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
-                    ),
-                    LoginForm(state: state),
-                    const Spacer(),
-                  ],
-                );
-              }),
-            );
+                      LoginForm(state: state),
+                    ],
+                  ),
+                ),
+              );
+            });
           },
         ),
       ),

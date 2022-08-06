@@ -115,6 +115,8 @@ class _PageTemplateState extends State<PageTemplate> {
         if (preRoute.isNotEmpty && !listPageCanPop.contains(currentRoute)) {
           if (listTabCanPop.contains(currentRoute)) {
             navigateTo(homeRoute);
+          } else if (currentRoute == userProfileRoute) {
+            navigateTo(settingRoute);
           } else {
             navigateTo(preRoute);
           }
