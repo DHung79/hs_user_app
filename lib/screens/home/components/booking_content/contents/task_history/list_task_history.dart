@@ -74,6 +74,6 @@ class _TaskHistoryState extends State<TaskHistory> {
   }
 
   void _fetchDataOnPage() {
-    _taskBloc.fetchAllData(params: {});
+    _taskBloc.fetchAllData(params: {'user': widget.user.id});
   }
 }

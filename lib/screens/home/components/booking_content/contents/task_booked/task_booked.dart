@@ -19,7 +19,6 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
-  final _taskerBloc = TaskerBloc();
   bool _isTaskerInfo = false;
   @override
   void initState() {
@@ -29,7 +28,6 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
 
   @override
   void dispose() {
-    _taskerBloc.dispose();
     _userBloc.dispose();
     super.dispose();
   }
@@ -72,13 +70,12 @@ class _TaskBookedScreenState extends State<TaskBookedScreen> {
                   user: user,
                   task: task,
                   onChangeContent: () {
-                    _taskerBloc.fetchDataById(task.tasker.id);
                     setState(() {
                       _isTaskerInfo = !_isTaskerInfo;
                     });
                   })
               : TaskerInfo(
-                  taskerBloc: _taskerBloc,
+                  taskerId: task.tasker.id,
                   onBack: () {
                     setState(() {
                       _isTaskerInfo = false;

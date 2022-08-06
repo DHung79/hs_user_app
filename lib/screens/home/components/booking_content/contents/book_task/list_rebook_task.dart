@@ -109,6 +109,6 @@ class _ListRebookTaskState extends State<ListRebookTask> {
   }
 
   void _fetchDataOnPage() {
-    _taskBloc.fetchAllData(params: {});
+    _taskBloc.fetchAllData(params: {'user': widget.user.id});
   }
 }

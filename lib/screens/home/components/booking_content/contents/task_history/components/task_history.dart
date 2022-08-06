@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../core/task/task.dart';
-import '../../../../../../../core/tasker/tasker.dart';
 import '../../book_task/components/tasker_info.dart';
 import '/main.dart';
 import '/core/user/user.dart';
@@ -22,7 +21,6 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
   final PageState _pageState = PageState();
   final _userBloc = UserBloc();
   final _taskBloc = TaskBloc();
-  final _taskerBloc = TaskerBloc();
   bool _isTaskerInfo = false;
   @override
   void initState() {
@@ -32,8 +30,6 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
   @override
   void dispose() {
-    _taskerBloc.dispose();
-    _taskBloc.dispose();
     _userBloc.dispose();
     super.dispose();
   }
@@ -76,14 +72,13 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
                   user: user,
                   task: task,
                   onChangeContent: () {
-                    _taskerBloc.fetchDataById(task.tasker.id);
                     setState(() {
                       _isTaskerInfo = true;
                     });
                   },
                 )
               : TaskerInfo(
-                  taskerBloc: _taskerBloc,
+                  taskerId: task.tasker.id,
                   onBack: () {
                     setState(() {
                       _isTaskerInfo = false;

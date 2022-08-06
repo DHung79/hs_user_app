@@ -92,7 +92,7 @@ class _TaskHistoryDetailState extends State<TaskHistoryDetail> {
                 _userProfile(),
                 _detailTask(),
                 _paymentField(),
-                if (widget.task.status == 2 && widget.task.isRating)
+                if (widget.task.status == 2 && !widget.task.isRating)
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: _actions(),

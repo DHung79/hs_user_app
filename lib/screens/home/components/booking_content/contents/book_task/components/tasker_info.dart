@@ -3,12 +3,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'components.dart';
 
 class TaskerInfo extends StatefulWidget {
-  final TaskerBloc taskerBloc;
+  final String taskerId;
   final Function() onBack;
   const TaskerInfo({
     Key? key,
-    required this.taskerBloc,
     required this.onBack,
+    required this.taskerId,
   }) : super(key: key);
 
   @override
@@ -16,6 +16,13 @@ class TaskerInfo extends StatefulWidget {
 }
 
 class _TaskerInfoState extends State<TaskerInfo> {
+  final _taskerBloc = TaskerBloc();
+  @override
+  void initState() {
+    _taskerBloc.fetchDataById(widget.taskerId);
+    super.initState();
+  }
+
   final List<MedalModel> medals = [
     MedalModel.fromJson({
       'name': 'Thân thiện',
@@ -56,70 +63,74 @@ class _TaskerInfoState extends State<TaskerInfo> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    return StreamBuilder(
-        stream: widget.taskerBloc.taskerData,
-        builder: (context, AsyncSnapshot<ApiResponse<TaskerModel?>> snapshot) {
-          if (snapshot.hasData) {
-            final tasker = snapshot.data!.model!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.shadow.withOpacity(0.16),
-                        blurRadius: 16,
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppButtonTheme.fillRounded(
-                        constraints:
-                            const BoxConstraints(minHeight: 56, maxWidth: 40),
-                        color: AppColor.transparent,
-                        highlightColor: AppColor.white,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: SvgIcon(
-                            SvgIcons.arrowBack,
-                            size: 24,
-                            color: AppColor.black,
+    return LayoutBuilder(builder: (context, constraints) {
+      return StreamBuilder(
+          stream: _taskerBloc.taskerData,
+          builder:
+              (context, AsyncSnapshot<ApiResponse<TaskerModel?>> snapshot) {
+            if (snapshot.hasData) {
+              final tasker = snapshot.data!.model!;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.shadow.withOpacity(0.16),
+                          blurRadius: 16,
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppButtonTheme.fillRounded(
+                          constraints:
+                              const BoxConstraints(minHeight: 56, maxWidth: 40),
+                          color: AppColor.transparent,
+                          highlightColor: AppColor.white,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: SvgIcon(
+                              SvgIcons.arrowBack,
+                              size: 24,
+                              color: AppColor.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            widget.onBack();
+                          },
+                        ),
+                        Center(
+                          child: Text(
+                            'Thông tin người làm',
+                            style:
+                                AppTextTheme.mediumHeaderTitle(AppColor.text1),
                           ),
                         ),
-                        onPressed: () {
-                          widget.onBack();
-                        },
-                      ),
-                      Center(
-                        child: Text(
-                          'Thông tin người làm',
-                          style: AppTextTheme.mediumHeaderTitle(AppColor.text1),
+                        AppButtonTheme.fillRounded(
+                          constraints: const BoxConstraints(maxWidth: 40),
+                          color: Colors.transparent,
+                          highlightColor: AppColor.white,
+                          child: const SizedBox(),
                         ),
-                      ),
-                      AppButtonTheme.fillRounded(
-                        constraints: const BoxConstraints(maxWidth: 40),
-                        color: Colors.transparent,
-                        highlightColor: AppColor.white,
-                        child: const SizedBox(),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: _buildContent(tasker),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _buildContent(tasker),
+                    ),
                   ),
-                ),
-              ],
-            );
-          }
-          return const SizedBox();
-        });
+                ],
+              );
+            }
+            return const SizedBox();
+          });
+    });
   }
 
   Widget _buildContent(TaskerModel tasker) {
@@ -128,9 +139,13 @@ class _TaskerInfoState extends State<TaskerInfo> {
       value: tasker.createdTime,
       context: context,
     );
-    final positiveReviews = tasker.reviews.where((e) => e.rating > 2.5).length /
-        tasker.reviews.length *
-        100;
+    double positiveReviews = 0;
+    if (tasker.reviews.isNotEmpty) {
+      positiveReviews = tasker.reviews.where((e) => e.rating > 2.5).length /
+          tasker.reviews.length *
+          100;
+    }
+
     return Column(
       children: [
         Padding(
@@ -269,7 +284,8 @@ class _TaskerInfoState extends State<TaskerInfo> {
           unratedColor: AppColor.primary2,
           itemBuilder: (context, index) {
             final isOutRate = tasker.totalRating.ceil() < index + 1;
-            final isHalf = tasker.totalRating.ceil() == index + 1;
+            final isHalf = tasker.totalRating < 5 &&
+                tasker.totalRating.ceil() == index + 1;
             return SvgIcon(
               isOutRate
                   ? SvgIcons.starOutline
