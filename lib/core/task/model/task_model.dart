@@ -17,7 +17,6 @@ class TaskModel extends BaseModel {
   final String _note;
   final int _status;
   final int _typeHome;
-  final bool _isDeleted;
   final bool _isRating;
   final int _createdTime;
   final int _updatedTime;
@@ -28,6 +27,8 @@ class TaskModel extends BaseModel {
   final List<String> _listPicturesBefore = [];
   final List<String> _listPicturesAfter = [];
   final FailureReasonModel? _failureReason;
+  final bool _userDeleted;
+  final bool _taskerDeleted;
 
   TaskModel.fromJson(Map<String, dynamic> json)
       : _address = BaseModel.map<AddressModel>(
@@ -62,11 +63,12 @@ class TaskModel extends BaseModel {
         _note = json['note'] ?? '',
         _status = json['status'] ?? 0,
         _typeHome = json['type_home'] ?? 0,
-        _isDeleted = json['is_deleted'] ?? false,
         _isRating = json['is_rating'] ?? false,
         _createdTime = json['created_time'] ?? 0,
         _updatedTime = json['updated_time'] ?? 0,
         _totalPrice = json['total_price'] ?? 0,
+        _userDeleted = json['user_deleted'] ?? false,
+        _taskerDeleted = json['tasker_deleted'] ?? false,
         _addressTitle = json['address_title'] ?? '' {
     _checkList.addAll(BaseModel.mapList<CheckListModel>(
       json: json,
@@ -108,7 +110,6 @@ class TaskModel extends BaseModel {
         'status': _status,
         'failure_reason': _failureReason,
         'type_home': _typeHome,
-        'is_deleted': _isDeleted,
         'is_rating': _isRating,
         'created_time': _createdTime,
         'updated_time': _updatedTime,
@@ -118,6 +119,8 @@ class TaskModel extends BaseModel {
         'selected_option': _selectedOption.toJson(),
         'list_pictures_before': _listPicturesBefore,
         'list_pictures_after': _listPicturesAfter,
+        'user_deleted': _userDeleted,
+        'tasker_deleted': _taskerDeleted,
       };
 
   AddressModel get address => _address;
@@ -132,7 +135,6 @@ class TaskModel extends BaseModel {
   String get note => _note;
   int get status => _status;
   int get typeHome => _typeHome;
-  bool get isDeleted => _isDeleted;
   bool get isRating => _isRating;
   int get createdTime => _createdTime;
   int get updatedTime => _updatedTime;
@@ -143,6 +145,8 @@ class TaskModel extends BaseModel {
   List<String> get listPicturesBefore => _listPicturesBefore;
   List<String> get listPicturesAfter => _listPicturesAfter;
   FailureReasonModel? get failureReason => _failureReason;
+  bool get userDeleted => _userDeleted;
+  bool get taskerDeleted => _taskerDeleted;
 }
 
 class FailureReasonModel extends BaseModel {

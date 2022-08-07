@@ -265,9 +265,9 @@ class _TaskTabState extends State<TaskTab> {
   }
 
   String _getWhoCancelTask() {
-    final String name = widget.task.tasker.isDeleted
+    final String name = widget.task.taskerDeleted
         ? 'Người giúp việc'
-        : widget.task.user.isDeleted
+        : widget.task.userDeleted
             ? 'Người dùng'
             : 'Admin';
     return name;
